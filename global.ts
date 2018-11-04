@@ -1,7 +1,5 @@
-import { SceneManager } from "./index";
+import { SceneManager } from "./_engine";
 
-// export const SCENE_WIDTH: number = 1024;
-// export const SCENE_HEIGHT: number = 768;
 export const SCENE_WIDTH: number = 1920;
 export const SCENE_HEIGHT: number = 1080;
 export const BTN_WIDTH: number = 120;
@@ -9,6 +7,8 @@ export const BTN_HEIGHT: number = 60;
 
 export const MENU_LINE_HEIGHT = 60;
 export const GUI_FONT =  "Orbitron";
+
+export const SCENE_BACKCOLOR = 0x112233;
 
 export const BTN_STYLE = {
     align: "center",

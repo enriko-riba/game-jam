@@ -10,17 +10,14 @@
     "build:p": "node_modules/.bin/webpack --config webpack.prod.ts"
   },
   "author": "",
-  "license": "ISC",
+  "license": "",
   "dependencies": {
     "@tweenjs/tween.js": "^17.2.0",
-    "firebase": "^5.5.7",
-    "firebaseui": "^3.4.1",
     "pixi-filters": "^2.6.1",
     "pixi.js": "^4.8.2",
     "toaster-js": "^2.2.0"
   },
   "devDependencies": {
-    "@types/firebase": "^3.2.1",
     "@types/pixi.js": "^4.8.2",
     "@types/tween.js": "^16.9.0",
     "@types/webpack": "^4.4.17",

@@ -1,5 +1,5 @@
-import "./app.css";
-import {Bootstraper} from "./bootstraper";
+import { Global } from '.';
+import { BootScene } from './scenes/BootScene';
 
 
 /**
@@ -20,9 +20,11 @@ try {
     var cfg = {
         google: { families: PRELOAD_FONTS },
         active: () => {
-            console.log('fonts preload finished!');           
-            const boot = new Bootstraper();
-            boot.startAuthentication();
+            console.log('fonts preload finished!');          
+            const scm = Global.getScm();
+            const boot = new BootScene(scm);
+            scm.AddScene(boot);
+            scm.ActivateScene(boot);
         }
     };
     (window as any).WebFontConfig = cfg;

@@ -3,36 +3,12 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>PG</title>
+	<title>Hybrid Game Off</title>
 	<link rel="stylesheet" href="site.css" />
 </head>
 
 <body>
-	<div id="loader" class="loader title">Please wait</div>
-	<div id="auth" class="user-box" style="display: none;">
-		<div class="title">PG-SERVE</div>
-		<div class="user-info">
-			<span>user: </span><span id="user">fetching user data...</span>
-		</div>
-		
-		<div class="test-account">
-			<div>
-				<input type="checkbox" id="chkTestAccount" name="test" value="test" />
-				<label for="chkTestAccount">Use anonymous (for testing)</label>
-			</div>
-			<div>
-				<label for="callSign">Call sign:</label>
-				<input id="callSign" name="callsign" value="cpt. Šajna"/>
-			</div>
-		</div>
-
-		<div>
-				<button class="btn-start" id="start">Start</button>
-				<button class="btn-signout" id="signOut">Sign out</button>
-		</div>
-	</div>
-	<div id="firebaseui-auth-container" style="display: none;"></div>
-	<canvas id="stage" style="touch-action:none; -ms-touch-action:none;display: none;"></canvas>
+	<canvas id="stage" style="touch-action:none; -ms-touch-action:none;"></canvas>
 </body>
 
 </html>

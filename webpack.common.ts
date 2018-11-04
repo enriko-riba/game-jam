@@ -8,9 +8,9 @@ import { BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 const config: webpack.Configuration = {
       
     entry: {
-        main:   "./src/app.ts",
+        main:   "./app.ts",
         common: ["@tweenjs/tween.js", "pixi.js", "pixi-filters", "toaster-js"],
-        frb: ["firebase/app","firebase/auth", "firebaseui"],
+        //frb: ["firebase/app","firebase/auth", "firebaseui"],
         //pixi:       "pixi.js"
     },
     
@@ -46,7 +46,7 @@ const config: webpack.Configuration = {
     plugins: [
         //new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
-            template:"./src/index.html",
+            template:"./index.html",
             minify: {
                 collapseWhitespace: false,
                 collapseInlineTagWhitespace: true,
@@ -54,7 +54,7 @@ const config: webpack.Configuration = {
                 removeRedundantAttributes: true
             }}),
         new CopyWebpackPlugin([
-            { from: 'src/site.css', to: '[name].[ext]' },
+            { from: 'site.css', to: '[name].[ext]' },
             { from: 'assets/', to:'assets'},
         ]),
         new ExtractTextPlugin({filename: 'style.css'})
