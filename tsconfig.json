@@ -1,0 +1,18 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {    
+      "target": "es5",
+      "module": "commonjs",
+      //"moduleResolution": "node", <-- this is needed if modeul is esnext, but PIXI doesnt support esnext so we are stuck with commonjs
+      "noImplicitAny": false,
+      "strict": false,
+      "removeComments": false,
+      "sourceMap": true,
+      "importHelpers": true,
+      "lib": ["es2017", "dom"]
+    },
+    "exclude": [
+      "node_modules",
+      "wwwroot"
+    ]    
+  }
