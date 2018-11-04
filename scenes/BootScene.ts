@@ -94,7 +94,23 @@ export class BootScene extends Scene {
             'assets/gui/gui_button1.png',
             'assets/gui/gui_slider1.png', 
             'assets/gui/gui_minus.png',  
-            'assets/gui/gui_plus.png'
+            'assets/gui/gui_plus.png',
+
+            //  backgrounds and parallax
+            'assets/img/Canyon.png',
+            'assets/img/front01.png',
+            'assets/img/ground.png',
+            'assets/img/IceSnow.png',
+            'assets/img/Mountains.png',
+            'assets/img/trees01.png',
+            'assets/img/trees02.png',
+            'assets/img/trees03.png',
+            'assets/img/trees04.png',
+            'assets/img/trees05.png',
+            'assets/img/trees06.png',
+            'assets/img/trees07.png',
+            'assets/img/trees08.png',
+
         ];
 
         const ls = new LoaderScene(this.sceneManager, this.createScenesAndStart, assets);

@@ -17,12 +17,12 @@ export class LoaderScene extends Scene {
             strokeThickness: 1
         });
         this.loadingMessage.anchor.set(0.5, 0.5);
-        this.loadingMessage.position.set(Global.SCENE_WIDTH/2, Global.SCENE_HEIGHT/2 - 80);
+        this.loadingMessage.position.set(Global.SCENE_HALF_WIDTH, Global.SCENE_HALF_HEIGHT - 80);
         this.addChild(this.loadingMessage);
 
         var loadingTexture = PIXI.Texture.fromImage("assets/loading.png");
         this.spinner = new PIXI.Sprite(loadingTexture);
-        this.spinner.position.set(Global.SCENE_WIDTH/2, Global.SCENE_HEIGHT/2);
+        this.spinner.position.set(Global.SCENE_HALF_WIDTH, Global.SCENE_HALF_HEIGHT);
         this.spinner.anchor.set(0.5, 0.5);
         this.spinner.scale.set(0.5);
         this.addChild(this.spinner); 

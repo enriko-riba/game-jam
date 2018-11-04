@@ -24,6 +24,10 @@ export class Parallax extends PIXI.Container {
         this.textureScale = this.textureScale || 1;
     }
 
+    public get WorldPosition(){
+        return this.worldPosition;
+    }
+
     public SetViewPortX(newPositionX: number): void {
         if (this.worldPosition !== newPositionX) {
             this.recalculatePosition(newPositionX);
@@ -55,12 +59,13 @@ export class Parallax extends PIXI.Container {
 
             //  get the texture
             var t: PIXI.Texture;
-            if (typeof textures[index] === "string") {
-                t = PIXI.loader.resources[textures[index] as string].texture;
+            var textureIndex = index % len;
+            if (typeof textures[textureIndex] === "string") {
+                t = PIXI.loader.resources[textures[textureIndex] as string].texture;
             } else {
-                t = textures[index] as PIXI.Texture;
+                t = textures[textureIndex] as PIXI.Texture;
             }
-            t.rotate = 8;
+            //t.rotate = 8;
 
             // create a sprite
             var spr = new PIXI.Sprite(t);
@@ -78,10 +83,7 @@ export class Parallax extends PIXI.Container {
             totalWidth += spr.width;// t.width;
            // console.log(`${t.baseTexture.imageUrl} -> width: ${t.width} spr width: ${spr.width}, total width: ${totalWidth}`);
 
-            index++;
-            if (index > len) {
-                index = 0;
-            }
+            index++;            
         }
     }
 
@@ -95,36 +97,11 @@ export class Parallax extends PIXI.Container {
         //  update sprite positions
         for (var i = 0, len = this.children.length; i < len; i++) {
             let spr: PIXI.Sprite = this.children[i] as PIXI.Sprite;
-            spr.x -= parallaxDistance;
+            spr.x -= this.parallaxFactor == 1 ? delta : parallaxDistance;
         }
-
-
-        //-------------------------------------
-        //  remove sprites outside viewport
-        //-------------------------------------
-        //if (delta < 0) {
-        //    //  check for removals from left side
-        //    if (firstSpr.x + firstSpr.width < (this.worldPosition - this.halfSizeX)) {
-        //        firstSpr.visible = false;
-        //        this.startIDX++;
-        //        if (this.startIDX >= this.spriteBuffer.length) {
-        //            this.startIDX = 0;
-        //        }
-        //    }
-        //} else {
-        //    //  check for removals from right side
-        //    if (lastSpr.x > (this.worldPosition + this.halfSizeX)) {
-        //        lastSpr.visible = false;
-        //        this.endIDX--;
-        //        if (this.endIDX < 0) {
-        //            this.endIDX = this.spriteBuffer.length - 1;
-        //        }
-        //    }
-        //}
-
         this.worldPosition = newPositionX;
 
-        if (delta < 0) {
+        if (delta > 0) {
             //  check for removals from left side
             if (firstSpr.x + firstSpr.width < (this.worldPosition - this.halfSizeX)) {
                 firstSpr.visible = false;

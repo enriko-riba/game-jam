@@ -2,9 +2,10 @@ import { SceneManager } from "./_engine";
 
 export const SCENE_WIDTH: number = 1920;
 export const SCENE_HEIGHT: number = 1080;
+export const SCENE_HALF_WIDTH = SCENE_WIDTH / 2;
+export const SCENE_HALF_HEIGHT = SCENE_HEIGHT / 2;
 export const BTN_WIDTH: number = 120;
 export const BTN_HEIGHT: number = 60;
-
 export const MENU_LINE_HEIGHT = 60;
 export const GUI_FONT =  "Orbitron";
 
