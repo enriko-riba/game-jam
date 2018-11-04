@@ -97,7 +97,7 @@ export class BootScene extends Scene {
             'assets/gui/gui_plus.png'
         ];
 
-        const ls = new LoaderScene(this.sceneManager, this.createScenesAndStart, assets, "Connecting to server...");
+        const ls = new LoaderScene(this.sceneManager, this.createScenesAndStart, assets);
         this.sceneManager.AddScene(ls);
         this.sceneManager.ActivateScene(ls); 
     }

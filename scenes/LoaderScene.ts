@@ -4,7 +4,7 @@ export class LoaderScene extends Scene {
     private loadingMessage: PIXI.Text;
     private spinner: PIXI.Sprite;
 
-    constructor(scm:SceneManager, private onLoaded: () => void, private preloadAsdsets: string[], private message?: string) {
+    constructor(scm:SceneManager, private onLoaded: () => void, private preloadAsdsets: string[]) {
         super(scm, "Loader");
         this.BackGroundColor = 0;
         this.loadingMessage = new PIXI.Text("loading ...", { 
@@ -37,10 +37,7 @@ export class LoaderScene extends Scene {
     public onActivate = () => {       
         PIXI.loader
             .add(this.preloadAsdsets)
-            .load( () => {
-                this.loadingMessage.text = this.message;
-                this.onLoaded();
-            })
+            .load(this.onLoaded)
             .on("progress", this.onProgress);
     };    
 

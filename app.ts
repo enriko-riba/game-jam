@@ -7,9 +7,9 @@ import { BootScene } from './scenes/BootScene';
  *  after the fonts are loaded the bootstraper is taking over
  */
 
-const PRELOAD_FONTS = [//'Permanent Marker',
-                       'Orbitron',
-                       //'Quicksand'
+const PRELOAD_FONTS = [
+                        'Permanent Marker',
+                        'Orbitron',
                     ];
 
 //------------------------

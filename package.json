@@ -2,7 +2,7 @@
   "name": "pg",
   "version": "1.0.0",
   "description": "",
-  "main": "./out/bundle.js",
+  "main": "./dist/bundle.js",
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.ts --hot",
     "start:open": "webpack-dev-server --open --config webpack.dev.ts --hot",
@@ -15,7 +15,7 @@
     "@tweenjs/tween.js": "^17.2.0",
     "pixi-filters": "^2.6.1",
     "pixi.js": "^4.8.2",
-    "toaster-js": "^2.2.0"
+    "toaster-js": "2.2.0"
   },
   "devDependencies": {
     "@types/pixi.js": "^4.8.2",
