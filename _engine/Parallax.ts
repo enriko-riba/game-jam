@@ -94,8 +94,10 @@ export class Parallax extends PIXI.Container {
         var firstSpr: PIXI.Sprite = this.spriteBuffer[this.firstIDX];
         var lastSpr: PIXI.Sprite = this.spriteBuffer[this.lastIDX];
 
+        var pos = (-newPositionX - this.halfSizeX) * this.parallaxFactor;
+
         //  update sprite positions
-        var parallPos = ((-newPositionX - this.halfSizeX) * this.parallaxFactor) % this.totalWidth;
+        var parallPos = pos % this.totalWidth;
         for(var i = 0; i< this.spriteBuffer.length; i++){
             var orderIndex = (this.firstIDX + i) % this.spriteBuffer.length;
             this.spriteBuffer[orderIndex].position.x = parallPos;
@@ -109,10 +111,8 @@ export class Parallax extends PIXI.Container {
                 this.firstIDX++;
                 if (this.firstIDX >= this.spriteBuffer.length) {
                     this.firstIDX = 0;
-                }
-                let newSpr = this.spriteBuffer[this.firstIDX];
-                newSpr.x = firstSpr.x + firstSpr.width;
-                newSpr.visible = true;
+                }                
+                this.spriteBuffer[this.firstIDX].visible = true;
             }
             
             //  check for new sprites from right side
@@ -121,9 +121,7 @@ export class Parallax extends PIXI.Container {
                 if (this.lastIDX >= this.spriteBuffer.length) {
                     this.lastIDX = 0;
                 }
-                let newSpr = this.spriteBuffer[this.lastIDX];
-                newSpr.x = lastSpr.x + lastSpr.width;
-                newSpr.visible = true;
+                this.spriteBuffer[this.lastIDX].visible = true;                
             }
             
         } else {

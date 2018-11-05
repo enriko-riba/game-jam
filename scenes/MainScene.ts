@@ -10,21 +10,21 @@ const pdef = [
         "assets/img/Mountains.png"
       ]
     },
-    // {
-    //   "name": "Near",
-    //   "parallaxFactor": 0.7,
-    //   "y": 10,
-    //   "scale": 1.3,
-    //   "textures": [
-    //     "assets/img/trees06.png",
-    //     "assets/img/trees07.png",
-    //     "assets/img/trees08.png"
-    //   ]
-    // },
+    {
+      "name": "Near",
+      "parallaxFactor": 0.7,
+      "y": 10,
+      "scale": 1.3,
+      "textures": [
+        "assets/img/trees06.png",
+        "assets/img/trees07.png",
+        "assets/img/trees08.png"
+      ]
+    },
     // {
     //   "name": "NearSmall",
     //   "parallaxFactor": 0.75,
-    //   "y": 10,
+    //   "y": 5,
     //   "scale": 0.6,
     //   "textures": [
     //     "assets/img/trees06.png",
@@ -38,7 +38,7 @@ const pdef = [
     {
       "name": "Ground",
       "parallaxFactor": 1,
-      "y": -30,
+      "y": -50,
       "scale": 1,
       "textures": [
         "assets/img/ground.png"
@@ -57,7 +57,7 @@ export class MainScene extends Scene {
         this.setup();     
     }
     public onUpdate(dt: number) {
-        this.wx += dt * 0.1;
+        this.wx += dt * 0.25;
         this.parallax.forEach(p=> p.SetViewPortX(this.wx));
     }
     
