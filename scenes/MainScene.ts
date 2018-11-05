@@ -10,31 +10,31 @@ const pdef = [
         "assets/img/Mountains.png"
       ]
     },
-    {
-      "name": "Near",
-      "parallaxFactor": 0.7,
-      "y": 10,
-      "scale": 1.3,
-      "textures": [
-        "assets/img/trees06.png",
-        "assets/img/trees07.png",
-        "assets/img/trees08.png"
-      ]
-    },
-    {
-      "name": "NearSmall",
-      "parallaxFactor": 0.75,
-      "y": 10,
-      "scale": 0.6,
-      "textures": [
-        "assets/img/trees06.png",
-        "assets/img/trees07.png",
-        "assets/img/trees08.png",
-        "assets/img/trees06.png",
-        "assets/img/trees07.png",
-        "assets/img/trees08.png"
-      ]
-    },
+    // {
+    //   "name": "Near",
+    //   "parallaxFactor": 0.7,
+    //   "y": 10,
+    //   "scale": 1.3,
+    //   "textures": [
+    //     "assets/img/trees06.png",
+    //     "assets/img/trees07.png",
+    //     "assets/img/trees08.png"
+    //   ]
+    // },
+    // {
+    //   "name": "NearSmall",
+    //   "parallaxFactor": 0.75,
+    //   "y": 10,
+    //   "scale": 0.6,
+    //   "textures": [
+    //     "assets/img/trees06.png",
+    //     "assets/img/trees07.png",
+    //     "assets/img/trees08.png",
+    //     "assets/img/trees06.png",
+    //     "assets/img/trees07.png",
+    //     "assets/img/trees08.png"
+    //   ]
+    // },
     {
       "name": "Ground",
       "parallaxFactor": 1,

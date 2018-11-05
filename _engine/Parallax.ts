@@ -10,8 +10,8 @@ export class Parallax extends PIXI.Container {
     private halfSizeX!: number;
     private parallaxFactor: number;
 
-    private startIDX: number = 0;
-    private endIDX: number = 0;
+    private firstIDX: number = 0;
+    private lastIDX: number = 0;
     private spriteBuffer: Array<PIXI.Sprite> = [];
 
     /**
@@ -54,8 +54,8 @@ export class Parallax extends PIXI.Container {
     }
 
     public setTextures(textures: Array<string | PIXI.Texture>): void {
-        this.startIDX = 0;
-        this.endIDX = 0;        
+        this.firstIDX = 0;
+        this.lastIDX = 0;        
         var index = 0;
         
         while (this.totalWidth <= this.viewPortSize.x || this.spriteBuffer.length < 3 || this.spriteBuffer.length < textures.length - 1) {
@@ -80,7 +80,7 @@ export class Parallax extends PIXI.Container {
 
             //  if sprite is inside VP add & update last index
             if (spr.x < this.viewPortSize.x) {
-                this.endIDX = index;
+                this.lastIDX = index;
             }
 
             //  update 
@@ -91,33 +91,37 @@ export class Parallax extends PIXI.Container {
     }
 
     private recalculatePosition = (newPositionX: number) => {
-        var firstSpr: PIXI.Sprite = this.spriteBuffer[this.startIDX];
-        var lastSpr: PIXI.Sprite = this.spriteBuffer[this.endIDX];
+        var firstSpr: PIXI.Sprite = this.spriteBuffer[this.firstIDX];
+        var lastSpr: PIXI.Sprite = this.spriteBuffer[this.lastIDX];
 
         //  update sprite positions
         var parallPos = ((-newPositionX - this.halfSizeX) * this.parallaxFactor) % this.totalWidth;
         for(var i = 0; i< this.spriteBuffer.length; i++){
-            this.spriteBuffer[i].position.x = parallPos;
-            parallPos += this.spriteBuffer[i].width;
+            var orderIndex = (this.firstIDX + i) % this.spriteBuffer.length;
+            this.spriteBuffer[orderIndex].position.x = parallPos;
+            parallPos += this.spriteBuffer[orderIndex].width;
         }
         
         if (newPositionX > this.worldPosition) {
             //  check for removals from left side
             if (firstSpr.x + firstSpr.width < 0) {
                 firstSpr.visible = false;
-                this.startIDX++;
-                if (this.startIDX >= this.spriteBuffer.length) {
-                    this.startIDX = 0;
+                this.firstIDX++;
+                if (this.firstIDX >= this.spriteBuffer.length) {
+                    this.firstIDX = 0;
                 }
+                let newSpr = this.spriteBuffer[this.firstIDX];
+                newSpr.x = firstSpr.x + firstSpr.width;
+                newSpr.visible = true;
             }
             
             //  check for new sprites from right side
             if (lastSpr.x + lastSpr.width <= this.viewPortSize.x) {
-                this.endIDX++;
-                if (this.endIDX >= this.spriteBuffer.length) {
-                    this.endIDX = 0;
+                this.lastIDX++;
+                if (this.lastIDX >= this.spriteBuffer.length) {
+                    this.lastIDX = 0;
                 }
-                var newSpr = this.spriteBuffer[this.endIDX];
+                let newSpr = this.spriteBuffer[this.lastIDX];
                 newSpr.x = lastSpr.x + lastSpr.width;
                 newSpr.visible = true;
             }
@@ -126,19 +130,19 @@ export class Parallax extends PIXI.Container {
             //  check for removals from right side
             if (lastSpr.x > this.viewPortSize.x) {
                 lastSpr.visible = false;
-                this.endIDX--;
-                if (this.endIDX < 0) {
-                    this.endIDX = this.spriteBuffer.length - 1;
+                this.lastIDX--;
+                if (this.lastIDX < 0) {
+                    this.lastIDX = this.spriteBuffer.length - 1;
                 }
             }
             
             //  check for new sprites from left side
             if (firstSpr.x >= 0) {
-                this.startIDX--;
-                if (this.startIDX < 0) {
-                    this.startIDX = this.spriteBuffer.length - 1;
+                this.firstIDX--;
+                if (this.firstIDX < 0) {
+                    this.firstIDX = this.spriteBuffer.length - 1;
                 }
-                var newSpr = this.spriteBuffer[this.startIDX];
+                var newSpr = this.spriteBuffer[this.firstIDX];
                 newSpr.x = firstSpr.x - newSpr.width;
                 newSpr.visible = true;
             }
