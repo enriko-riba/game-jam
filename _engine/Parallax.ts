@@ -15,6 +15,11 @@ export class Parallax extends PIXI.Container {
     private spriteBuffer: Array<PIXI.Sprite> = [];
 
     /**
+     * total textuire width
+     */
+    private totalWidth: number = 0;
+
+    /**
      *   Creates a new ParalaxSprite instance.
      */
     constructor(size?: PIXI.Point, parallaxFactor?: number, private textureScale?: number) {
@@ -50,16 +55,14 @@ export class Parallax extends PIXI.Container {
 
     public setTextures(textures: Array<string | PIXI.Texture>): void {
         this.startIDX = 0;
-        this.endIDX = 0;
-
-        var totalWidth = 0;
+        this.endIDX = 0;        
         var index = 0;
-        let len = textures.length - 1;
-        while (totalWidth <= this.viewPortSize.x || this.spriteBuffer.length < 3 || this.spriteBuffer.length < textures.length) {
+        
+        while (this.totalWidth <= this.viewPortSize.x || this.spriteBuffer.length < 3 || this.spriteBuffer.length < textures.length - 1) {
 
             //  get the texture
-            var t: PIXI.Texture;
-            var textureIndex = index % len;
+            let t: PIXI.Texture;
+            var textureIndex = index % textures.length;
             if (typeof textures[textureIndex] === "string") {
                 t = PIXI.loader.resources[textures[textureIndex] as string].texture;
             } else {
@@ -69,8 +72,9 @@ export class Parallax extends PIXI.Container {
 
             // create a sprite
             var spr = new PIXI.Sprite(t);
-            spr.x = totalWidth;
+            spr.x = this.totalWidth;
             spr.scale.set(this.textureScale, this.textureScale);
+            spr.anchor.set(0, 1);
             this.spriteBuffer.push(spr);
             this.addChild(spr);
 
@@ -80,9 +84,8 @@ export class Parallax extends PIXI.Container {
             }
 
             //  update 
-            totalWidth += spr.width;// t.width;
-           // console.log(`${t.baseTexture.imageUrl} -> width: ${t.width} spr width: ${spr.width}, total width: ${totalWidth}`);
-
+            this.totalWidth += spr.width;
+            console.log(`${t.baseTexture.imageUrl} -> width: ${t.width} spr width: ${spr.width}, total width: ${this.totalWidth}`);
             index++;            
         }
     }
@@ -91,28 +94,25 @@ export class Parallax extends PIXI.Container {
         var firstSpr: PIXI.Sprite = this.spriteBuffer[this.startIDX];
         var lastSpr: PIXI.Sprite = this.spriteBuffer[this.endIDX];
 
-        var delta: number = this.worldPosition - newPositionX;
-        var parallaxDistance: number = delta * (1 - this.parallaxFactor);
-
         //  update sprite positions
-        for (var i = 0, len = this.children.length; i < len; i++) {
-            let spr: PIXI.Sprite = this.children[i] as PIXI.Sprite;
-            spr.x -= this.parallaxFactor == 1 ? delta : parallaxDistance;
+        var parallPos = ((-newPositionX - this.halfSizeX) * this.parallaxFactor) % this.totalWidth;
+        for(var i = 0; i< this.spriteBuffer.length; i++){
+            this.spriteBuffer[i].position.x = parallPos;
+            parallPos += this.spriteBuffer[i].width;
         }
-        this.worldPosition = newPositionX;
-
-        if (delta > 0) {
+        
+        if (newPositionX > this.worldPosition) {
             //  check for removals from left side
-            if (firstSpr.x + firstSpr.width < (this.worldPosition - this.halfSizeX)) {
+            if (firstSpr.x + firstSpr.width < 0) {
                 firstSpr.visible = false;
                 this.startIDX++;
                 if (this.startIDX >= this.spriteBuffer.length) {
                     this.startIDX = 0;
                 }
             }
-
+            
             //  check for new sprites from right side
-            if (lastSpr.x + lastSpr.width <= this.worldPosition + this.halfSizeX) {
+            if (lastSpr.x + lastSpr.width <= this.viewPortSize.x) {
                 this.endIDX++;
                 if (this.endIDX >= this.spriteBuffer.length) {
                     this.endIDX = 0;
@@ -121,19 +121,19 @@ export class Parallax extends PIXI.Container {
                 newSpr.x = lastSpr.x + lastSpr.width;
                 newSpr.visible = true;
             }
-
+            
         } else {
             //  check for removals from right side
-            if (lastSpr.x > (this.worldPosition + this.halfSizeX)) {
+            if (lastSpr.x > this.viewPortSize.x) {
                 lastSpr.visible = false;
                 this.endIDX--;
                 if (this.endIDX < 0) {
                     this.endIDX = this.spriteBuffer.length - 1;
                 }
             }
-
+            
             //  check for new sprites from left side
-            if (firstSpr.x >= (this.worldPosition - this.halfSizeX)) {
+            if (firstSpr.x >= 0) {
                 this.startIDX--;
                 if (this.startIDX < 0) {
                     this.startIDX = this.spriteBuffer.length - 1;
@@ -143,6 +143,7 @@ export class Parallax extends PIXI.Container {
                 newSpr.visible = true;
             }
         }
+        this.worldPosition = newPositionX;
     };
 }
 
