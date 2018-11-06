@@ -4,44 +4,52 @@ import * as TWEEN from "@tweenjs/tween.js";
 const pdef = [
     {
       "name": "Far",
-      "parallaxFactor": 0.5,
+      "parallaxFactor": 0.3,
       "y": 20,
       "textures": [
         "assets/img/Mountains.png"
       ]
     },
     {
-      "name": "Near",
-      "parallaxFactor": 0.7,
-      "y": 10,
+      "name": "Mid",
+      "parallaxFactor": 0.5,
+      "y": 92,
       "scale": 1.3,
+      "textures": [
+        "assets/img/trees01.png",
+        "assets/img/trees02.png",
+        "assets/img/trees03.png",
+        "assets/img/trees04.png",
+        "assets/img/trees05.png"
+      ]
+    },
+    {
+      "name": "NearSmall",
+      "parallaxFactor": 0.77,
+      "y": 90,
+      "scale": 0.8,
       "textures": [
         "assets/img/trees06.png",
         "assets/img/trees07.png",
-        "assets/img/trees08.png"
+        "assets/img/trees08.png"       
       ]
     },
-    // {
-    //   "name": "NearSmall",
-    //   "parallaxFactor": 0.75,
-    //   "y": 5,
-    //   "scale": 0.6,
-    //   "textures": [
-    //     "assets/img/trees06.png",
-    //     "assets/img/trees07.png",
-    //     "assets/img/trees08.png",
-    //     "assets/img/trees06.png",
-    //     "assets/img/trees07.png",
-    //     "assets/img/trees08.png"
-    //   ]
-    // },
     {
       "name": "Ground",
       "parallaxFactor": 1,
-      "y": -50,
+      "y": -15,
       "scale": 1,
       "textures": [
         "assets/img/ground.png"
+      ]
+    },
+    {
+      "name": "Front",
+      "parallaxFactor": 1,
+      "y": 95,
+      "scale": 1,
+      "textures": [
+        "assets/img/front01.png"
       ]
     }
   ];
@@ -57,8 +65,8 @@ export class MainScene extends Scene {
         this.setup();     
     }
     public onUpdate(dt: number) {
-        this.wx += dt * 0.25;
-        this.parallax.forEach(p=> p.SetViewPortX(this.wx));
+        this.wx += dt * 0.1;
+        this.parallax.forEach(p=> p.SetViewPortX(-this.wx));
     }
     
     private setup(){

@@ -16,7 +16,7 @@ export class Parallax extends PIXI.Container {
     private spriteOrderList: Array<number> = [];
 
     /**
-     * total textuire width
+     * total width of all textures 
      */
     private totalWidth: number = 0;
 
@@ -55,21 +55,21 @@ export class Parallax extends PIXI.Container {
     }
 
     public setTextures(textures: Array<string | PIXI.Texture>): void {
-        // this.firstIDX = 0;
-        // this.lastIDX = 0;        
         var index = 0;
-        
-        while (this.totalWidth <= this.viewPortSize.x || this.spriteBuffer.length < 3 || this.spriteBuffer.length < textures.length - 1) {
+        var textureIndex : number;
+        var t: PIXI.Texture;
+        while (this.spriteBuffer.length < 3  ||                 //  at least 3 textures (for shifting right/left and central)
+               this.spriteBuffer.length < textures.length ||    //  at least as many as given in input
+               this.totalWidth <= this.viewPortSize.x   
+            ) {
 
             //  get the texture
-            let t: PIXI.Texture;
-            var textureIndex = index % textures.length;
+            textureIndex = index % textures.length;
             if (typeof textures[textureIndex] === "string") {
                 t = PIXI.loader.resources[textures[textureIndex] as string].texture;
             } else {
                 t = textures[textureIndex] as PIXI.Texture;
             }
-            //t.rotate = 8;
 
             // create a sprite
             var spr = new PIXI.Sprite(t);
@@ -80,90 +80,60 @@ export class Parallax extends PIXI.Container {
             this.spriteOrderList.push(this.spriteBuffer.length-1); //   will hold sprite indices from spritebuffer [0,1,2,3,4...]
             this.addChild(spr);
 
-            //  if sprite is inside VP add & update last index
-            // if (spr.x < this.viewPortSize.x) {
-            //     this.lastIDX = index;
-            // }
-
             //  update 
             this.totalWidth += spr.width;
             console.log(`${t.baseTexture.imageUrl} -> width: ${t.width} spr width: ${spr.width}, total width: ${this.totalWidth}`);
             index++;            
         }
+
+        //  check if one additional texture must be added in case the total width is less than viewport + 1 texture
+        textureIndex = index % textures.length;
+        if (typeof textures[textureIndex] === "string") {
+            t = PIXI.loader.resources[textures[textureIndex] as string].texture;
+        } else {
+            t = textures[textureIndex] as PIXI.Texture;
+        }
+        if(this.totalWidth < this.viewPortSize.x + t.width){
+            var spr = new PIXI.Sprite(t);
+            spr.x = this.totalWidth;
+            spr.scale.set(this.textureScale, this.textureScale);
+            spr.anchor.set(0, 1);
+            this.spriteBuffer.push(spr);
+            this.spriteOrderList.push(this.spriteBuffer.length-1); //   will hold sprite indices from spritebuffer [0,1,2,3,4...]
+            this.addChild(spr);
+        }
     }
 
     private recalculatePosition = (newPositionX: number) => {
-        // var firstSpr: PIXI.Sprite = this.spriteBuffer[this.firstIDX];
-        // var lastSpr: PIXI.Sprite = this.spriteBuffer[this.lastIDX];
-        
-        var pos = (-newPositionX - this.halfSizeX) * this.parallaxFactor;
+        const firstIdx = this.spriteOrderList[0];
+        const firstSpr: PIXI.Sprite = this.spriteBuffer[firstIdx];
+        const lastIdx = this.spriteOrderList[this.spriteOrderList.length-1];
+        const lastSpr: PIXI.Sprite = this.spriteBuffer[lastIdx]; 
 
         //  update sprite positions
-        var parallPos = pos % this.totalWidth;
-        
-        // for(var i = 0; i< this.spriteBuffer.length; i++){
-        //     var orderIndex = (this.firstIDX + i) % this.spriteBuffer.length;
-        //     this.spriteBuffer[orderIndex].position.x = parallPos;
-        //     parallPos += this.spriteBuffer[orderIndex].width;
-        // }
+        var delta =  (this.worldPosition - newPositionX) * this.parallaxFactor;
+        this.updatePositions(delta);
 
-        for(var i = 0; i< this.spriteOrderList.length; i++){
-            var orderIndex = this.spriteOrderList[i];
-            this.spriteBuffer[orderIndex].position.x = parallPos;
-            parallPos += this.spriteBuffer[orderIndex].width;
-        }
-
-        if (newPositionX > this.worldPosition) {
-            const firstIdx = this.spriteOrderList[0];
-            var firstSpr: PIXI.Sprite = this.spriteBuffer[firstIdx];
-
+        if (newPositionX > this.worldPosition) {            
             //  check for removals from left side
             if (firstSpr.x + firstSpr.width < 0) {
                 this.spriteOrderList.push(this.spriteOrderList.shift());    //  move first element to end
-            }
-
-            // if (firstSpr.x + firstSpr.width < 0) {
-            //     firstSpr.visible = false;
-            //     this.firstIDX++;
-            //     if (this.firstIDX >= this.spriteBuffer.length) {
-            //         this.firstIDX = 0;
-            //     }                
-            //     this.spriteBuffer[this.firstIDX].visible = true;
-            // }
-            
-            // //  check for new sprites from right side
-            // if (lastSpr.x + lastSpr.width <= this.viewPortSize.x) {
-            //     this.lastIDX++;
-            //     if (this.lastIDX >= this.spriteBuffer.length) {
-            //         this.lastIDX = 0;
-            //     }
-            //     this.spriteBuffer[this.lastIDX].visible = true;                
-            // }
-            
+                firstSpr.x = lastSpr.x + lastSpr.width;               
+            }            
         } else {
-            const lastIdx = this.spriteOrderList[this.spriteOrderList.length-1];
-            var lastSpr: PIXI.Sprite = this.spriteBuffer[lastIdx];
-            //  check for removals from right side
-            // if (lastSpr.x > this.viewPortSize.x) {
-            //     lastSpr.visible = false;
-            //     this.lastIDX--;
-            //     if (this.lastIDX < 0) {
-            //         this.lastIDX = this.spriteBuffer.length - 1;
-            //     }
-            // }
-            
-            // //  check for new sprites from left side
-            // if (firstSpr.x >= 0) {
-            //     this.firstIDX--;
-            //     if (this.firstIDX < 0) {
-            //         this.firstIDX = this.spriteBuffer.length - 1;
-            //     }
-            //     var newSpr = this.spriteBuffer[this.firstIDX];
-            //     newSpr.x = firstSpr.x - newSpr.width;
-            //     newSpr.visible = true;
-            // }
+            //  check for removals from right side  
+            if (lastSpr.x > this.viewPortSize.x) {
+                this.spriteOrderList.unshift(this.spriteOrderList.pop());    //  move last element to start
+                lastSpr.x = firstSpr.x - lastSpr.width;               
+            }           
         }
         this.worldPosition = newPositionX;
     };
+
+    private updatePositions(delta:number){
+        for(var i = 0; i< this.spriteBuffer.length; i++){
+            this.spriteBuffer[i].position.x += delta;
+        }
+    }
 }
 
