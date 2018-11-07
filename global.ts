@@ -1,4 +1,5 @@
 import { SceneManager } from "./_engine";
+import { PlayerStats } from './objects/PlayerStats';
 
 export const SCENE_WIDTH: number = 1920;
 export const SCENE_HEIGHT: number = 1080;
@@ -56,3 +57,5 @@ export function deleteScm(){
     (sceneManager as any) = undefined;        
 }
 let sceneManager : SceneManager;
+
+export var stats = new PlayerStats();

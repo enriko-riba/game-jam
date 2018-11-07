@@ -57,19 +57,19 @@ export class Parallax extends PIXI.Container {
     public setTextures(textures: Array<string | PIXI.Texture>): void {
         var index = 0;
         var textureIndex : number;
-        var t: PIXI.Texture;
+
+        //  get the first texture to fetch the width
+        var t: PIXI.Texture = this.getTexture(textures, 0);
+        var width = t.width * this.textureScale;
+
         while (this.spriteBuffer.length < 3  ||                 //  at least 3 textures (for shifting right/left and central)
                this.spriteBuffer.length < textures.length ||    //  at least as many as given in input
-               this.totalWidth <= this.viewPortSize.x   
+               this.totalWidth <= this.viewPortSize.x + width   //  at least to cover whole viewport size extended for one width
             ) {
 
             //  get the texture
             textureIndex = index % textures.length;
-            if (typeof textures[textureIndex] === "string") {
-                t = PIXI.loader.resources[textures[textureIndex] as string].texture;
-            } else {
-                t = textures[textureIndex] as PIXI.Texture;
-            }
+            t = this.getTexture(textures, textureIndex);
 
             // create a sprite
             var spr = new PIXI.Sprite(t);
@@ -84,24 +84,17 @@ export class Parallax extends PIXI.Container {
             this.totalWidth += spr.width;
             console.log(`${t.baseTexture.imageUrl} -> width: ${t.width} spr width: ${spr.width}, total width: ${this.totalWidth}`);
             index++;            
-        }
+        }        
+    }
 
-        //  check if one additional texture must be added in case the total width is less than viewport + 1 texture
-        textureIndex = index % textures.length;
+    private getTexture(textures: Array<string | PIXI.Texture>, textureIndex: number){
+        var t: PIXI.Texture;
         if (typeof textures[textureIndex] === "string") {
             t = PIXI.loader.resources[textures[textureIndex] as string].texture;
         } else {
             t = textures[textureIndex] as PIXI.Texture;
         }
-        if(this.totalWidth < this.viewPortSize.x + t.width){
-            var spr = new PIXI.Sprite(t);
-            spr.x = this.totalWidth;
-            spr.scale.set(this.textureScale, this.textureScale);
-            spr.anchor.set(0, 1);
-            this.spriteBuffer.push(spr);
-            this.spriteOrderList.push(this.spriteBuffer.length-1); //   will hold sprite indices from spritebuffer [0,1,2,3,4...]
-            this.addChild(spr);
-        }
+        return t; 
     }
 
     private recalculatePosition = (newPositionX: number) => {

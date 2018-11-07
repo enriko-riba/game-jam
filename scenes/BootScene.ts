@@ -111,7 +111,10 @@ export class BootScene extends Scene {
             'assets/img/trees06.png',
             'assets/img/trees07.png',
             'assets/img/trees08.png',
+            'assets/img/trees09.png',
 
+            //
+            'assets/Hero.png',
         ];
 
         const ls = new LoaderScene(this.sceneManager, this.createScenesAndStart, assets);

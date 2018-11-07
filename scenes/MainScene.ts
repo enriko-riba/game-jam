@@ -1,5 +1,10 @@
 import { PIXI, SceneManager, Global, Dictionary, Scene, Parallax } from "..";
+import { HeroCharacter } from '../objects/HeroCharacter';
 import * as TWEEN from "@tweenjs/tween.js";
+import { WorldP2 } from '../objects/WorldP2';
+
+let ANIMATION_FPS_NORMAL = 9;
+let ANIMATION_FPS_SLOW = 4;
 
 const pdef = [
     {
@@ -10,19 +15,6 @@ const pdef = [
         "assets/img/Mountains.png"
       ]
     },
-    // {
-    //   "name": "Mid",
-    //   "parallaxFactor": 0.5,
-    //   "y": 92,
-    //   "scale": 1.3,
-    //   "textures": [
-    //     "assets/img/trees01.png",
-    //     "assets/img/trees02.png",
-    //     "assets/img/trees03.png",
-    //     "assets/img/trees04.png",
-    //     "assets/img/trees05.png"
-    //   ]
-    // },
     {
       "name": "Far",
       "parallaxFactor": 0.45,
@@ -39,13 +31,14 @@ const pdef = [
     {
       "name": "Near",
       "parallaxFactor": 0.65,
-      "y": 75,
-      "scale": 0.9,
+      "y": 90,
+      "scale": 1.2,
       "textures": [
        
         "assets/img/trees06.png",
         "assets/img/trees07.png",
-        "assets/img/trees08.png"  
+        "assets/img/trees08.png",
+        "assets/img/trees09.png"   
       ]
     },
     {
@@ -60,7 +53,7 @@ const pdef = [
     {
       "name": "Bushes",
       "parallaxFactor": 1,
-      "y": 1,
+      "y": 0,
       "scale": 1,
       "textures": [
         "assets/img/front01.png",
@@ -73,7 +66,9 @@ export class MainScene extends Scene {
     private worldContainer: PIXI.Container;
     private parallax: Parallax[] = [];
     private wx : number = 0;
-
+    private hero: HeroCharacter;
+    public wp2: WorldP2;
+    
     constructor(scm: SceneManager) {
         super(scm, "Main");
         this.BackGroundColor = Global.SCENE_BACKCOLOR;
@@ -81,7 +76,7 @@ export class MainScene extends Scene {
     }
     public onUpdate(dt: number) {
         this.wx += dt * 0.1;
-        this.parallax.forEach(p=> p.SetViewPortX(this.wx));
+        this.parallax.forEach(p=> p.SetViewPortX(-this.wx));
     }
     
     private setup(){
@@ -96,5 +91,18 @@ export class MainScene extends Scene {
             this.worldContainer.addChildAt(parallax, idx);
         });
         this.addChild(this.worldContainer);
+
+        //-----------------------------
+        //  setup hero
+        //-----------------------------     
+        this.hero = new HeroCharacter(this.worldContainer);
+        this.hero.name = "hero";
+
+        //--------------------------------------
+        //  setup physics subsystem
+        //--------------------------------------
+        this.wp2 = new WorldP2();
+        this.hero.SetWorldP2(this.wp2);
+        this.worldContainer.addChild(this.hero);
     }
 }
