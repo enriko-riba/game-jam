@@ -99,6 +99,7 @@ export class BootScene extends Scene {
             //  backgrounds and parallax
             'assets/img/Canyon.png',
             'assets/img/front01.png',
+            'assets/img/front02.png',
             'assets/img/ground.png',
             'assets/img/IceSnow.png',
             'assets/img/Mountains.png',

@@ -3,35 +3,49 @@ import * as TWEEN from "@tweenjs/tween.js";
 
 const pdef = [
     {
-      "name": "Far",
-      "parallaxFactor": 0.3,
-      "y": 20,
+      "name": "Background",
+      "parallaxFactor": 0.25,
+      "y": 100,
       "textures": [
         "assets/img/Mountains.png"
       ]
     },
+    // {
+    //   "name": "Mid",
+    //   "parallaxFactor": 0.5,
+    //   "y": 92,
+    //   "scale": 1.3,
+    //   "textures": [
+    //     "assets/img/trees01.png",
+    //     "assets/img/trees02.png",
+    //     "assets/img/trees03.png",
+    //     "assets/img/trees04.png",
+    //     "assets/img/trees05.png"
+    //   ]
+    // },
     {
-      "name": "Mid",
-      "parallaxFactor": 0.5,
-      "y": 92,
-      "scale": 1.3,
+      "name": "Far",
+      "parallaxFactor": 0.45,
+      "y": 100,
+      "scale": 1.4,
       "textures": [
         "assets/img/trees01.png",
         "assets/img/trees02.png",
         "assets/img/trees03.png",
         "assets/img/trees04.png",
-        "assets/img/trees05.png"
+        "assets/img/trees05.png" 
       ]
     },
     {
-      "name": "NearSmall",
-      "parallaxFactor": 0.77,
-      "y": 90,
-      "scale": 0.8,
+      "name": "Near",
+      "parallaxFactor": 0.65,
+      "y": 75,
+      "scale": 0.9,
       "textures": [
+       
         "assets/img/trees06.png",
         "assets/img/trees07.png",
-        "assets/img/trees08.png"       
+        "assets/img/trees08.png"  
       ]
     },
     {
@@ -44,12 +58,13 @@ const pdef = [
       ]
     },
     {
-      "name": "Front",
+      "name": "Bushes",
       "parallaxFactor": 1,
-      "y": 95,
+      "y": 1,
       "scale": 1,
       "textures": [
-        "assets/img/front01.png"
+        "assets/img/front01.png",
+        "assets/img/front02.png"
       ]
     }
   ];
@@ -66,7 +81,7 @@ export class MainScene extends Scene {
     }
     public onUpdate(dt: number) {
         this.wx += dt * 0.1;
-        this.parallax.forEach(p=> p.SetViewPortX(-this.wx));
+        this.parallax.forEach(p=> p.SetViewPortX(this.wx));
     }
     
     private setup(){
