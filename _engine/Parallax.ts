@@ -7,11 +7,8 @@ export class Parallax extends PIXI.Container {
 
     private viewPortSize!: PIXI.Point;
     private worldPosition: number = 0;
-    private halfSizeX!: number;
     private parallaxFactor: number;
 
-    // private firstIDX: number = 0;
-    // private lastIDX: number = 0;
     private spriteBuffer: Array<PIXI.Sprite> = [];
     private spriteOrderList: Array<number> = [];
 
@@ -45,7 +42,6 @@ export class Parallax extends PIXI.Container {
     }
     public set ViewPortSize(point: PIXI.Point) {
         this.viewPortSize = point;
-        this.halfSizeX = this.viewPortSize.x / 2;
     }
     public get ParallaxFactor(): number {
         return this.parallaxFactor;
@@ -70,12 +66,13 @@ export class Parallax extends PIXI.Container {
             //  get the texture
             textureIndex = index % textures.length;
             t = this.getTexture(textures, textureIndex);
+            t.rotate = 8;   //  to adjust for worldContainer y scale -1
 
             // create a sprite
             var spr = new PIXI.Sprite(t);
             spr.x = this.totalWidth;
             spr.scale.set(this.textureScale, this.textureScale);
-            spr.anchor.set(0, 1);
+            spr.anchor.set(0, 0);
             this.spriteBuffer.push(spr);
             this.spriteOrderList.push(this.spriteBuffer.length-1); //   will hold sprite indices from spritebuffer [0,1,2,3,4...]
             this.addChild(spr);

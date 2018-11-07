@@ -1,45 +1,47 @@
+import { SCENE_HALF_WIDTH } from './../global';
 import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
 import { WorldP2 } from './WorldP2';
-import * as PIXIParticles from "pixi-particles";
+import * as particles from "pixi-particles";
 import { StatType } from './PlayerStats';
 
 export class HeroCharacter extends AnimatedSprite {
     private readonly HERO_FRAME_SIZE: number = 64;
-    private emitterPixies: PIXIParticles.Emitter;
-    private emitterBuffs: PIXIParticles.Emitter;
+    private emitterPixies: particles.Emitter;
+    private emitterBuffs: particles.Emitter;
     private movementCtrl: MovementController;
     private wp2: WorldP2;
 
     constructor(container: PIXI.Container) {
         super();
-        //this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);
+        this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);
 
-        // var cfg: PIXI.particles.EmitterConfig = {
-        //     color: { start: "#ff0000", end: "#ff5050" },
-        //     alpha: { start: 1, end: 0.5 },
-        //     speed: {
-        //         start: 1,
-        //         end: 0,
-        //         minimumSpeedMultiplier: 1
-        //     },
-        //     scale: {
-        //         start: 0.3,
-        //         end: 0.05
-        //     },
-        //     maxParticles: 70,
-        //     lifetime: {
-        //         min: 0.3,
-        //         max: 0.6
-        //     },
-        //     spawnType: "circle",
-        //     spawnCircle: {
-        //         x: 0,
-        //         y: 40,
-        //         r: 30
-        //     }
-        // };
-        // this.emitterBuffs = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/flame.png")], cfg);
+        var cfg = {
+            color: { start: "#ff0000", end: "#ff5050" },
+            alpha: { start: 1, end: 0.5 },
+            speed: {
+                start: 1,
+                end: 0,
+                minimumSpeedMultiplier: 1
+            },
+            scale: {
+                start: 0.3,
+                end: 0.05
+            },
+            maxParticles: 70,
+            lifetime: {
+                min: 0.3,
+                max: 0.6
+            },
+            spawnType: "circle",
+            spawnCircle: {
+                x: 0,
+                y: 40,
+                r: 30
+            }
+        };
+        this.emitterBuffs = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/flame.png")], cfg);
+        this.emitterBuffs.emit = false;
         const asset = "assets/Hero.png";
         this.addAnimations(new AnimationSequence("right", asset,    [18,19,20,21,22,23], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("left", asset,     [12,13,14,15,16,17], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
@@ -53,6 +55,7 @@ export class HeroCharacter extends AnimatedSprite {
         this.addAnimations(new AnimationSequence("jumpdown", asset, [42, 43, 44], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
         this.anchor.set(0.5, 0.58);
     }
+
      /**
      *  Returns the current movement state.
      */
@@ -166,4 +169,66 @@ export class HeroCharacter extends AnimatedSprite {
     public get isJumping() {
         return this.movementCtrl.IsJumping;
     }
+}
+
+export function createParticleEmitter(container: PIXI.Container, textures: PIXI.Texture[], config?: any): particles.Emitter {
+    "use strict";
+    var cfg : any = {
+        "alpha": {
+            "start": 0.8,
+            "end": 0.03
+        },
+        "color": {
+            start: "#dcff09",
+            end: "#9f1f1f"
+        },
+        "scale": {
+            "start": 0.1,
+            "end": 0.4,
+            "minimumScaleMultiplier": 1
+        },
+        "speed": {
+            "start": 40,
+            "end": 3,
+            "minimumSpeedMultiplier": 1
+        },
+        "acceleration": new PIXI.Point(),
+        "startRotation": {
+            "min": 0,
+            "max": 360
+        },
+        "rotationSpeed": {
+            "min": 5,
+            "max": 20
+        },
+        "lifetime": {
+            "min": 0.4,
+            "max": 1.0
+        },
+        "blendMode": "add",
+        "frequency": 0.01,
+        "emitterLifetime": -1,
+        "maxParticles": 200,
+        "pos": new PIXI.Point(0, -24),
+        "addAtBack": false,
+        "spawnType": "circle",
+        "spawnCircle": {
+            "x": 0,
+            "y": 0,
+            "r": 10
+        }
+    };
+    if (config) {
+        cfg = {...cfg, config};
+    }
+
+    var emitter = new particles.Emitter(
+        // the PIXI.Container to put the emitter in
+        // if using blend modes, it's important to put this
+        // on top of a bitmap, and not use the root stage Container
+        container,
+        textures,
+        cfg
+    );
+    return emitter;
 }
