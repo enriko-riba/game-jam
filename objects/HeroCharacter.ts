@@ -1,4 +1,4 @@
-import { SCENE_HALF_WIDTH } from './../global';
+import { SCENE_HALF_WIDTH, eventEmitter } from './../global';
 import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
 import { WorldP2 } from './WorldP2';
@@ -15,7 +15,7 @@ export class HeroCharacter extends AnimatedSprite {
     constructor(container: PIXI.Container) {
         super();
         this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);
-
+        this.emitterPixies.emit = true;
         var cfg = {
             color: { start: "#ff0000", end: "#ff5050" },
             alpha: { start: 1, end: 0.5 },
@@ -148,7 +148,9 @@ export class HeroCharacter extends AnimatedSprite {
         this.alpha = (this._isBurning) ? 0.7 : 1;
 
         if (wasBurning !== this._isBurning) {
+            const BURN_TOPIC = "BURN";
             //ko.postbox.publish<IBurnEvent>(BURN_TOPIC, {wasBurning: wasBurning, isBurning: this._isBurning});
+            eventEmitter.emit(BURN_TOPIC, {wasBurning: wasBurning, isBurning: this._isBurning});
         }
 
         Global.stats.onUpdate(dt);
@@ -174,48 +176,48 @@ export class HeroCharacter extends AnimatedSprite {
 export function createParticleEmitter(container: PIXI.Container, textures: PIXI.Texture[], config?: any): particles.Emitter {
     "use strict";
     var cfg : any = {
-        "alpha": {
-            "start": 0.8,
-            "end": 0.03
+        alpha: {
+            start: 0.8,
+            end: 0.03
         },
-        "color": {
+        color: {
             start: "#dcff09",
             end: "#9f1f1f"
         },
-        "scale": {
-            "start": 0.1,
-            "end": 0.4,
-            "minimumScaleMultiplier": 1
+        scale: {
+            start: 0.1,
+            end: 0.4,
+            minimumScaleMultiplier: 1
         },
-        "speed": {
-            "start": 40,
-            "end": 3,
-            "minimumSpeedMultiplier": 1
+        speed: {
+            start: 40,
+            end: 3,
+            minimumSpeedMultiplier: 1
         },
-        "acceleration": new PIXI.Point(),
-        "startRotation": {
-            "min": 0,
-            "max": 360
+        acceleration: new PIXI.Point(),
+        startRotation: {
+            min: 0,
+            max: 360
         },
-        "rotationSpeed": {
-            "min": 5,
-            "max": 20
+        rotationSpeed: {
+            min: 5,
+            max: 20
         },
-        "lifetime": {
-            "min": 0.4,
-            "max": 1.0
+        lifetime: {
+            min: 0.4,
+            max: 1.0
         },
-        "blendMode": "add",
-        "frequency": 0.01,
-        "emitterLifetime": -1,
-        "maxParticles": 200,
-        "pos": new PIXI.Point(0, -24),
-        "addAtBack": false,
-        "spawnType": "circle",
-        "spawnCircle": {
-            "x": 0,
-            "y": 0,
-            "r": 10
+        blendMode: "add",
+        frequency: 0.01,
+        emitterLifetime: -1,
+        maxParticles: 200,
+        pos: new PIXI.Point(0, -24),
+        addAtBack: false,
+        spawnType: "circle",
+        spawnCircle: {
+            x: 0,
+            y: 0,
+            r: 10
         }
     };
     if (config) {

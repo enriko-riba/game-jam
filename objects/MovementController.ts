@@ -1,6 +1,9 @@
 import { KeyboardMapper, Global } from '..';
 import { WorldP2 } from './WorldP2';
 import { StatType } from './PlayerStats';
+import { eventEmitter } from '../global';
+
+export var MOVE_TOPIC = "move_changed";
 
 export class MovementController {
     private readonly VELOCITY = 150;
@@ -104,12 +107,12 @@ export class MovementController {
         this.isInteractive = false;
         setTimeout(() => this.isInteractive = true, this.JUMP_ATTACK_FREEZE);
 
-        // ko.postbox.publish<IMoveEvent>(MOVE_TOPIC, {
-        //     newState: this.newState,
-        //     oldState: this.movementState,
-        //     isJumping: true,
-        //     isRunning: false // makes no difference during jumps
-        // });
+        eventEmitter.emit(MOVE_TOPIC, {
+                newState: this.newState,
+                oldState: this.movementState,
+                isJumping: true,
+                isRunning: false // makes no difference during jumps
+            });
     }
 
     public update(dt: number): void {
@@ -191,12 +194,12 @@ export class MovementController {
                     this.StartJump(MovementState.JumpUp);
                     break;
             }
-            // ko.postbox.publish<IMoveEvent>(MOVE_TOPIC, {
-            //     newState: this.newState,
-            //     oldState: this.movementState,
-            //     isJumping: newIsJumping,
-            //     isRunning: newIsRunning
-            // });
+            eventEmitter.emit(MOVE_TOPIC, {
+                newState: this.newState,
+                oldState: this.movementState,
+                isJumping: true,
+                isRunning: false // makes no difference during jumps
+            });
         }
 
         //  update new states

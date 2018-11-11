@@ -73,6 +73,7 @@ export class MainScene extends Scene {
         this.BackGroundColor = Global.SCENE_BACKCOLOR;
         this.setup();     
     }
+    
     public onUpdate(dt: number) {
       this.wp2.update(dt);
       this.hero.update(dt);

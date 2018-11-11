@@ -1,4 +1,6 @@
-﻿export enum BaseStatType {
+﻿import {eventEmitter} from "../global";
+
+export enum BaseStatType {
     MaxHP,
     MaxDust,
     RegenHP,
@@ -84,7 +86,7 @@ export class PlayerStats {
         this.id = 0;
         this.position = new PIXI.Point();
 
-        //  atr  stats
+        //  attr  stats
         this.attributeStats[BaseStatType.RegenHP] = 0;
         this.attributeStats[BaseStatType.RegenDust] = 0;
         this.attributeStats[BaseStatType.MaxHP] = 0;
@@ -105,12 +107,17 @@ export class PlayerStats {
         this.stats[StatType.TotalExp] = 0;
         this.stats[StatType.AttributePoints] = 0;
 
+        this.stats[StatType.MaxDust] = 1000;
+        this.stats[StatType.MaxHP] = 150;
+        this.stats[StatType.HP] = 120;
 
         let diff = 1000;
         PlayerStats.expForLevel[0] = 0;
         for (var i = 1; i < 10000; i++) {
             PlayerStats.expForLevel[i] = PlayerStats.expForLevel[i - 1] + (i * diff);
         }
+
+        this.rebuildStats();
     }
 
     /**
@@ -164,8 +171,8 @@ export class PlayerStats {
                 let event = {
                     OldValue: this.stats[StatType.HP],
                     Amount: -amount
-                };
-                //ko.postbox.publish<IDpsChangeEvent>(DPS_TOPIC, event);
+                };                
+                eventEmitter.emit(DPS_TOPIC, event);
                 this.increaseStat(StatType.HP, -amount);
                 this.dpsDecreaseAmount -= amount;
             }
@@ -249,7 +256,9 @@ export class PlayerStats {
         }
         this.updateEvent(type, value);
         //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
+        eventEmitter.emit(STATCHANGE_TOPIC, this.scevent);
     }
+
     public getStat(type: StatType): number {
         return this.stats[type];
     }
@@ -287,7 +296,7 @@ export class PlayerStats {
                 this.scevent.Stats = this.stats;
                 //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
 
-                //  atr change event
+                //  attr change event
                 newValue = this.stats[StatType.AttributePoints] + 5;
                 this.scevent.Type = StatType.AttributePoints;
                 this.scevent.OldValue = this.getStat(StatType.AttributePoints);
@@ -295,7 +304,7 @@ export class PlayerStats {
                 this.setStat(StatType.AttributePoints, newValue);
                 this.scevent.Stats = this.stats;
                 //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
-
+                
                 // refill HP & dust
                 this.setStat(StatType.Dust, this.stats[StatType.MaxDust]);
                 this.setStat(StatType.HP, this.stats[StatType.MaxHP]);
@@ -311,6 +320,7 @@ export class PlayerStats {
         }
 
         //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
+        eventEmitter.emit(STATCHANGE_TOPIC, this.scevent);
     }
 
     /**

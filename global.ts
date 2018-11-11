@@ -1,5 +1,6 @@
 import { SceneManager } from "./_engine";
 import { PlayerStats } from './objects/PlayerStats';
+import * as PIXI from "pixi.js";
 
 export const SCENE_WIDTH: number = 1920;
 export const SCENE_HEIGHT: number = 1080;
@@ -59,3 +60,5 @@ export function deleteScm(){
 let sceneManager : SceneManager;
 
 export var stats = new PlayerStats();
+
+export var eventEmitter = new PIXI.utils.EventEmitter();
