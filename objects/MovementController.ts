@@ -3,7 +3,7 @@ import { WorldP2 } from './WorldP2';
 import { StatType } from './PlayerStats';
 import { eventEmitter } from '../global';
 
-export var MOVE_TOPIC = "move_changed";
+
 
 export class MovementController {
     private readonly VELOCITY = 150;
@@ -107,7 +107,7 @@ export class MovementController {
         this.isInteractive = false;
         setTimeout(() => this.isInteractive = true, this.JUMP_ATTACK_FREEZE);
 
-        eventEmitter.emit(MOVE_TOPIC, {
+        eventEmitter.emit(Global.MOVE_TOPIC, {
                 newState: this.newState,
                 oldState: this.movementState,
                 isJumping: true,
@@ -139,19 +139,19 @@ export class MovementController {
             this.isJumping = false;
         }
 
+        //  calculate the horizontal velocity
+        var v: number = this.calcMovementVelocity();
+
         //  no movement (except jump down) while jumping
         if (this.isJumping && this._isInteractive) {
             if ((this.kbd.isKeyDown(KEY_S) || this.kbd.isKeyDown(KEY_DOWN)) && Global.stats.HasJumpAtack && this.nextJumpDownAllowed < performance.now()) {
                 this.StartJumpDown();
             }
-            //  calculate the horizontal velocity
-            var v: number = this.calcMovementVelocity();
             this.world.playerBody.velocity[0] += v;
             return;
 
         } else {
             //  calculate the horizontal velocity
-            var v: number = this.calcMovementVelocity();
             this.world.playerBody.velocity[0] = v;
         }
 
@@ -179,34 +179,32 @@ export class MovementController {
 
         //  has state changed
         if (this.newState !== this.movementState || newIsRunning !== this.IsRunning) {
-            let newIsJumping: boolean = false;
+            var isCurrentJumping = false;
             switch (this.newState) {
                 case MovementState.JumpLeft:
-                    newIsJumping = true;
                     this.StartJump(MovementState.JumpLeft);
+                    isCurrentJumping = true;
                     break;
                 case MovementState.JumpRight:
-                    newIsJumping = true;
                     this.StartJump(MovementState.JumpRight);
+                    isCurrentJumping = true;
                     break;
                 case MovementState.JumpUp:
-                    newIsJumping = true;
                     this.StartJump(MovementState.JumpUp);
+                    isCurrentJumping = true;
                     break;
             }
-            eventEmitter.emit(MOVE_TOPIC, {
+            eventEmitter.emit(Global.MOVE_TOPIC, {
                 newState: this.newState,
                 oldState: this.movementState,
-                isJumping: true,
-                isRunning: false // makes no difference during jumps
+                isJumping: isCurrentJumping,
+                isRunning: newIsRunning 
             });
         }
 
         //  update new states
         this.movementState = this.newState;
         this.isRunning = newIsRunning;
-        //
-        //this.isTouchJump = false;
     }
 
     private calcMovementVelocity(): number {

@@ -43,22 +43,53 @@ export class HeroCharacter extends AnimatedSprite {
         this.emitterBuffs = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/flame.png")], cfg);
         this.emitterBuffs.emit = false;
         const asset = "assets/Hero.png";
-        this.addAnimations(new AnimationSequence("right", asset,    [18,19,20,21,22,23], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("left", asset,     [12,13,14,15,16,17], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("jumpleft", asset, [24,25,26,27,28,29], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("jumpright", asset,[30,31,32,33,34,35], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("jumpup", asset,   [1,3,4,6], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("idle", asset,     [1,1,34,5,13,12,6,7,11,18,19,0,1,1], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("right", asset, [18, 19, 20, 21, 22, 23], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("left", asset, [12, 13, 14, 15, 16, 17], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("jumpleft", asset, [24, 25, 26, 27, 28, 29], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("jumpright", asset, [30, 31, 32, 33, 34, 35], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("jumpup", asset, [1, 3, 4, 6], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("idle", asset, [1, 1, 34, 5, 13, 12, 6, 7, 11, 18, 19, 0, 1, 1], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
 
         this.addAnimations(new AnimationSequence("jumpdownleft", asset, [36, 37, 38], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpdownright", asset, [39, 40, 41], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpdown", asset, [42, 43, 44], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
         this.anchor.set(0.5, 0.58);
+
+        eventEmitter.on(Global.MOVE_TOPIC, (event: any) => {
+            console.log('move topic, event: ', event);
+            var state: MovementState = event.newState as MovementState;
+            switch (state) {
+                case MovementState.Idle:
+                    this.play("idle", Global.ANIMATION_FPS_SLOW);
+                    break;
+                case MovementState.Left:
+                    this.play("left", Global.ANIMATION_FPS_NORMAL);
+                    break;
+                case MovementState.Right:
+                    this.play("right", Global.ANIMATION_FPS_NORMAL);
+                    break;
+                case MovementState.JumpLeft:
+                    this.play("jumpleft", Global.ANIMATION_FPS_NORMAL);
+                    break;
+                case MovementState.JumpRight:
+                    this.play("jumpright", Global.ANIMATION_FPS_NORMAL);
+                    break;
+                case MovementState.JumpUp:
+                    this.play("jumpup", Global.ANIMATION_FPS_NORMAL);
+                    break;
+                case MovementState.JumpDownLeft:
+                    this.play("jumpdownleft", Global.ANIMATION_FPS_NORMAL);
+                    break;
+                case MovementState.JumpDownRight:
+                    this.play("jumpdownright", Global.ANIMATION_FPS_NORMAL);
+                    break;
+            }
+        })
     }
 
-     /**
-     *  Returns the current movement state.
-     */
+    /**
+    *  Returns the current movement state.
+    */
     public get MovementState() {
         return this.movementCtrl.MovementState;
     }
@@ -124,7 +155,7 @@ export class HeroCharacter extends AnimatedSprite {
         this.emitterPixies.update(dt * 0.001);
         (this.emitterPixies.ownerPos as any) = this.position;
         this.emitterBuffs.update(dt * 0.001);
-        (this.emitterBuffs.ownerPos as any)= this.position;
+        (this.emitterBuffs.ownerPos as any) = this.position;
 
         //--------------------------
         //  check if running
@@ -144,13 +175,11 @@ export class HeroCharacter extends AnimatedSprite {
         let wasBurning = this._isBurning;
         let now = performance.now() / 1000;
         this._isBurning = Global.stats.buffs[1000] > now || Global.stats.buffs[1001] > now;
-        //this.emitterBuffs.emit = this._isBurning;
         this.alpha = (this._isBurning) ? 0.7 : 1;
 
         if (wasBurning !== this._isBurning) {
             const BURN_TOPIC = "BURN";
-            //ko.postbox.publish<IBurnEvent>(BURN_TOPIC, {wasBurning: wasBurning, isBurning: this._isBurning});
-            eventEmitter.emit(BURN_TOPIC, {wasBurning: wasBurning, isBurning: this._isBurning});
+            eventEmitter.emit(BURN_TOPIC, { wasBurning: wasBurning, isBurning: this._isBurning });
         }
 
         Global.stats.onUpdate(dt);
@@ -175,7 +204,7 @@ export class HeroCharacter extends AnimatedSprite {
 
 export function createParticleEmitter(container: PIXI.Container, textures: PIXI.Texture[], config?: any): particles.Emitter {
     "use strict";
-    var cfg : any = {
+    var cfg: any = {
         alpha: {
             start: 0.8,
             end: 0.03
@@ -221,7 +250,7 @@ export function createParticleEmitter(container: PIXI.Container, textures: PIXI.
         }
     };
     if (config) {
-        cfg = {...cfg, config};
+        cfg = { ...cfg, config };
     }
 
     var emitter = new particles.Emitter(

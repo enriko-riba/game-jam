@@ -3,8 +3,7 @@ import { HeroCharacter } from '../objects/HeroCharacter';
 import * as TWEEN from "@tweenjs/tween.js";
 import { WorldP2 } from '../objects/WorldP2';
 
-let ANIMATION_FPS_NORMAL = 9;
-let ANIMATION_FPS_SLOW = 4;
+
 
 const pdef = [
     {
@@ -139,6 +138,6 @@ export class MainScene extends Scene {
         Global.stats.position.y = 10;
         //this.IsHeroInteractive = true;
 
-        this.hero.play("idle", ANIMATION_FPS_SLOW);
+        this.hero.play("idle", Global.ANIMATION_FPS_SLOW);
     }
 }
