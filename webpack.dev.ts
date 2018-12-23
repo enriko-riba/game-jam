@@ -7,6 +7,7 @@ const config = merge(common, {
         historyApiFallback: true,
         port: 8000,
         hot: true,
+        disableHostCheck: true,
         compress: false,
         stats: { colors: true },
     },

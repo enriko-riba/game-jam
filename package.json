@@ -9,7 +9,7 @@
     "build:d": "node_modules/.bin/webpack --config webpack.dev.ts",
     "build:p": "node_modules/.bin/webpack --config webpack.prod.ts"
   },
-  "author": "",
+  "author": "Enriko Riba",
   "license": "",
   "dependencies": {
     "@tweenjs/tween.js": "^17.2.0",
@@ -17,30 +17,30 @@
     "p2": "^0.7.1",
     "pixi-filters": "^2.6.1",
     "pixi-particles": "^3.1.0",
-    "pixi.js": "^4.8.2",
+    "pixi.js": "^4.8.4",
     "toaster-js": "2.2.0"
   },
   "devDependencies": {
-    "@types/pixi.js": "^4.8.2",
+    "@types/pixi.js": "^4.8.6",
     "@types/tween.js": "^16.9.0",
-    "@types/webpack": "^4.4.17",
+    "@types/webpack": "^4.4.22",
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.6.0",
-    "css-loader": "^1.0.1",
+    "css-loader": "^2.0.2",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "html-webpack-plugin": "^3.2.0",
-    "node-sass": "^4.9.4",
+    "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "source-map-loader": "^0.2.4",
-    "style-loader": "^0.22.1",
+    "style-loader": "^0.23.1",
     "transform-loader": "^0.2.4",
-    "ts-loader": "^4.5.0",
+    "ts-loader": "^5.3.2",
     "ts-node": "^7.0.1",
-    "typescript": "^3.1.6",
-    "webpack": "^4.24.0",
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.2",
     "webpack-bundle-analyzer": "^2.13.1",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10",
-    "webpack-merge": "^4.1.4"
+    "webpack-cli": "3.1.2",
+    "webpack-dev-server": "^3.1.13",
+    "webpack-merge": "^4.1.5"
   }
 }

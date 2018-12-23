@@ -67,5 +67,5 @@ export var MOVE_TOPIC = "move_changed";
 export var BURN_TOPIC = "BURN";
 export var STATCHANGE_TOPIC = "stat_changed";
 export var DPS_TOPIC = "dps_changed";
-export var ANIMATION_FPS_NORMAL = 10;
+export var ANIMATION_FPS_NORMAL = 12;
 export var ANIMATION_FPS_SLOW = 4;

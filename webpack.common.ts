@@ -44,7 +44,6 @@ const config: webpack.Configuration = {
     },
 
     plugins: [
-        //new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
             template:"./index.html",
             minify: {
@@ -57,8 +56,8 @@ const config: webpack.Configuration = {
             { from: 'site.css', to: '[name].[ext]' },
             { from: 'assets/', to:'assets'},
         ]),
-        new ExtractTextPlugin({filename: 'style.css'})
-        //new BundleAnalyzerPlugin()
+        new ExtractTextPlugin({filename: 'style.css'}),
+        new webpack.HotModuleReplacementPlugin()
     ],    
 };
 

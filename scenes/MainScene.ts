@@ -111,7 +111,6 @@ export class MainScene extends Scene {
         pdef.forEach((p, idx) => {
             var parallax = new Parallax(vps, p.parallaxFactor, p.scale);
             parallax.setTextures(p.textures);
-            //parallax.y = Global.SCENE_HEIGHT - p.y;
             parallax.y = p.y;
             this.parallax.push(parallax);
             this.worldContainer.addChildAt(parallax, idx);
@@ -136,7 +135,6 @@ export class MainScene extends Scene {
         this.wp2.playerBody.position[1] = 10;
         Global.stats.position.x = Global.SCENE_HALF_WIDTH;
         Global.stats.position.y = 10;
-        //this.IsHeroInteractive = true;
 
         this.hero.play("idle", Global.ANIMATION_FPS_SLOW);
     }

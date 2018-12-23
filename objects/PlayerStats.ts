@@ -254,7 +254,6 @@ export class PlayerStats {
             this.expForNextLevel = PlayerStats.expForLevel[this.characterLevel + 1];
         }
         this.updateEvent(type, value);
-        //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
         eventEmitter.emit(STATCHANGE_TOPIC, this.scevent);
     }
 
@@ -275,7 +274,6 @@ export class PlayerStats {
         this.updateEvent(type, newValue);
         this.stats[type] = newValue;
 
-
         //  special logic for experience
         if (type === StatType.TotalExp) {
             this.stats[StatType.LevelExp] = newValue - PlayerStats.expForLevel[this.characterLevel];
@@ -293,7 +291,6 @@ export class PlayerStats {
                 this.scevent.OldValue = this.characterLevel - 1;
                 this.scevent.NewValue = this.characterLevel;
                 this.scevent.Stats = this.stats;
-                //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
 
                 //  attr change event
                 newValue = this.stats[StatType.AttributePoints] + 5;
@@ -302,7 +299,6 @@ export class PlayerStats {
                 this.scevent.NewValue = newValue;
                 this.setStat(StatType.AttributePoints, newValue);
                 this.scevent.Stats = this.stats;
-                //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
                 
                 // refill HP & dust
                 this.setStat(StatType.Dust, this.stats[StatType.MaxDust]);
@@ -318,7 +314,6 @@ export class PlayerStats {
             }
         }
 
-        //ko.postbox.publish<IStatChangeEvent>(STATCHANGE_TOPIC, this.scevent);
         eventEmitter.emit(STATCHANGE_TOPIC, this.scevent);
     }
 
@@ -361,7 +356,6 @@ export class PlayerStats {
         //  each regen attribute increases base stat by 10%
         this.stats[StatType.RegenHP] = this.baseStats[BaseStatType.RegenHP] * (1 + this.attributeStats[BaseStatType.RegenHP] / 10);
         this.stats[StatType.RegenDust] = this.baseStats[BaseStatType.RegenDust] * (1 + this.attributeStats[BaseStatType.RegenDust] / 10);
-
     }
 
     private scevent: IStatChangeEvent = {
@@ -377,6 +371,4 @@ export class PlayerStats {
         this.scevent.NewValue = newValue;
         this.scevent.Stats = this.stats;
     }
-
-
 }

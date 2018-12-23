@@ -3,6 +3,7 @@ import { Global, SceneManager, Button } from "..";
 const BTN_X = Global.SCENE_WIDTH - 48;
 const BTN_Y = 4;
 const BTN_SCALE = 1.0;
+
 export class MasterHud extends PIXI.Container {
     constructor(private sceneManager:SceneManager){
         super();
