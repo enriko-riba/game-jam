@@ -1,4 +1,4 @@
-import { SCENE_HALF_WIDTH, eventEmitter } from './../global';
+import { eventEmitter, MOVE_TOPIC, ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL } from './../global';
 import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
 import { WorldP2 } from './WorldP2';
@@ -55,33 +55,33 @@ export class HeroCharacter extends AnimatedSprite {
         this.addAnimations(new AnimationSequence("jumpdown", asset, [42, 43, 44], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
         this.anchor.set(0.5, 0.58);
 
-        eventEmitter.on(Global.MOVE_TOPIC, (event: any) => {
+        eventEmitter.on(MOVE_TOPIC, (event: any) => {
             console.log('move topic, event: ', event);
             var state: MovementState = event.newState as MovementState;
             switch (state) {
                 case MovementState.Idle:
-                    this.play("idle", Global.ANIMATION_FPS_SLOW);
+                    this.play("idle", ANIMATION_FPS_SLOW);
                     break;
                 case MovementState.Left:
-                    this.play("left", Global.ANIMATION_FPS_NORMAL);
+                    this.play("left", ANIMATION_FPS_NORMAL);
                     break;
                 case MovementState.Right:
-                    this.play("right", Global.ANIMATION_FPS_NORMAL);
+                    this.play("right", ANIMATION_FPS_NORMAL);
                     break;
                 case MovementState.JumpLeft:
-                    this.play("jumpleft", Global.ANIMATION_FPS_NORMAL);
+                    this.play("jumpleft", ANIMATION_FPS_NORMAL);
                     break;
                 case MovementState.JumpRight:
-                    this.play("jumpright", Global.ANIMATION_FPS_NORMAL);
+                    this.play("jumpright", ANIMATION_FPS_NORMAL);
                     break;
                 case MovementState.JumpUp:
-                    this.play("jumpup", Global.ANIMATION_FPS_NORMAL);
+                    this.play("jumpup", ANIMATION_FPS_NORMAL);
                     break;
                 case MovementState.JumpDownLeft:
-                    this.play("jumpdownleft", Global.ANIMATION_FPS_NORMAL);
+                    this.play("jumpdownleft", ANIMATION_FPS_NORMAL);
                     break;
                 case MovementState.JumpDownRight:
-                    this.play("jumpdownright", Global.ANIMATION_FPS_NORMAL);
+                    this.play("jumpdownright", ANIMATION_FPS_NORMAL);
                     break;
             }
         })
@@ -177,9 +177,8 @@ export class HeroCharacter extends AnimatedSprite {
         this._isBurning = Global.stats.buffs[1000] > now || Global.stats.buffs[1001] > now;
         this.alpha = (this._isBurning) ? 0.7 : 1;
 
-        if (wasBurning !== this._isBurning) {
-            const BURN_TOPIC = "BURN";
-            eventEmitter.emit(BURN_TOPIC, { wasBurning: wasBurning, isBurning: this._isBurning });
+        if (wasBurning !== this._isBurning) {            
+            eventEmitter.emit(Global.BURN_TOPIC, { wasBurning: wasBurning, isBurning: this._isBurning });
         }
 
         Global.stats.onUpdate(dt);

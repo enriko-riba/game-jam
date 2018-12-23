@@ -1,4 +1,4 @@
-﻿import {eventEmitter} from "../global";
+﻿import {eventEmitter, DPS_TOPIC, STATCHANGE_TOPIC} from "../global";
 
 export enum BaseStatType {
     MaxHP,
@@ -45,8 +45,7 @@ export interface IDpsChangeEvent {
     Amount: number;
 }
 
-export var STATCHANGE_TOPIC = "stat_changed";
-export var DPS_TOPIC = "dps_changed";
+
 
 export class PlayerStats {
     private baseStats: Array<number> = [];
