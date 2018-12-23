@@ -38,11 +38,11 @@ export class AnimatedSprite extends PIXI.Sprite {
             this.resetAnimation();
             this.currentSequence = this.animations.get(name);
             this.texture = this.currentSequence.textureAtlas;
-            this.texture.frame = this.currentSequence.frames[0];
-            this.fps = fps || this.fps;
-            this.isLooping = loop;
+            this.texture.frame = this.currentSequence.frames[0];            
             this.isPlaying = true;
         }
+        this.fps = fps || this.fps;
+        this.isLooping = loop;
     }
 
     private accumulator: number = 0;

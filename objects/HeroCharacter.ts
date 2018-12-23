@@ -56,32 +56,32 @@ export class HeroCharacter extends AnimatedSprite {
         this.anchor.set(0.5, 0.58);
 
         eventEmitter.on(MOVE_TOPIC, (event: any) => {
-            console.log('move topic, event: ', event);
             var state: MovementState = event.newState as MovementState;
+            var fps = event.isRunning ? ANIMATION_FPS_NORMAL * 1.6 : ANIMATION_FPS_NORMAL;
             switch (state) {
                 case MovementState.Idle:
                     this.play("idle", ANIMATION_FPS_SLOW);
                     break;
                 case MovementState.Left:
-                    this.play("left", ANIMATION_FPS_NORMAL);
+                    this.play("left", fps);
                     break;
                 case MovementState.Right:
-                    this.play("right", ANIMATION_FPS_NORMAL);
+                    this.play("right", fps);
                     break;
                 case MovementState.JumpLeft:
-                    this.play("jumpleft", ANIMATION_FPS_NORMAL);
+                    this.play("jumpleft", fps);
                     break;
                 case MovementState.JumpRight:
-                    this.play("jumpright", ANIMATION_FPS_NORMAL);
+                    this.play("jumpright", fps);
                     break;
                 case MovementState.JumpUp:
-                    this.play("jumpup", ANIMATION_FPS_NORMAL);
+                    this.play("jumpup", fps);
                     break;
                 case MovementState.JumpDownLeft:
-                    this.play("jumpdownleft", ANIMATION_FPS_NORMAL);
+                    this.play("jumpdownleft", fps);
                     break;
                 case MovementState.JumpDownRight:
-                    this.play("jumpdownright", ANIMATION_FPS_NORMAL);
+                    this.play("jumpdownright", fps);
                     break;
             }
         })
@@ -163,7 +163,7 @@ export class HeroCharacter extends AnimatedSprite {
         if (this.movementCtrl.IsRunning && this.movementCtrl.MovementState !== MovementState.Idle) {
             Global.stats.increaseStat(StatType.Dust, -dt * 0.005);   //  5/sec
             let angle = 8;
-            let degree = Math.PI * 2 * angle / 360;
+            let degree = Math.PI * angle / 180;
             this.rotation = (this.movementCtrl.MovementState === MovementState.Left) ? degree : -degree;
         } else {
             this.rotation = 0;
