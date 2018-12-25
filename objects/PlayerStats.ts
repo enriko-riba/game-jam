@@ -1,4 +1,4 @@
-﻿import {eventEmitter, DPS_TOPIC, STATCHANGE_TOPIC} from "../global";
+﻿import {eventEmitter, DPS_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC} from "../global";
 
 export enum BaseStatType {
     MaxHP,
@@ -19,7 +19,7 @@ export enum StatType {
     Coins,
     Gold,           //  not used
 
-    LevelExp,       // calculate value: current level exp, starts from 0 each level
+    LevelExp,       // calculated value: current level exp, starts from 0 each level
     LevelMaxExp,    // calculated value: current level exp needed to reach next level 
     TotalExp,       // total exp  
 
@@ -29,8 +29,9 @@ export enum StatType {
 }
 
 export enum DpsType {
-    LavaBorder,
-    Lava,
+    LavaBorder = 1000,
+    Lava = 1001,
+    Poison = 1002
 }
 
 export interface IStatChangeEvent {
@@ -48,15 +49,20 @@ export interface IDpsChangeEvent {
 
 
 export class PlayerStats {
+    /**
+     * Base stats are fixed values increased with level.
+     */
     private baseStats: Array<number> = [];
+
+    /**
+     * Attribute stats are player assigned values (point distribution).
+     */
     private attributeStats: Array<number> = [];
+    
     private stats: Array<number> = [];
 
     private accumulator: number = 0.0;
     private dpsDecreaseAmount: number = 0;
-
-    private attributes: Array<number> = [];
-
     private static expForLevel: Array<number> = [];
 
     //  acquired skills
@@ -73,7 +79,7 @@ export class PlayerStats {
     public name: string;
     public position: PIXI.Point;
 
-
+    private isBurningBuff: boolean = false;
 
     /**
      *   Stores timestamps (Unix timestamps in seconds with fractions) when the buff elapses.
@@ -135,11 +141,14 @@ export class PlayerStats {
             if (this.buffs[i] && this.buffs[i] > now) {
                 let dps = 0;
                 switch (i) {
-                    case 1000:  // lava border
+                    case DpsType.LavaBorder:  
                         dps = 5;
                         break;
-                    case 1001:  // lava
+                    case DpsType.Lava:  
                         dps = 15;
+                        break;
+                    case DpsType.Poison:  
+                        dps = 10;
                         break;
                 }
                 let dmg = dt * 0.001 * dps;
@@ -176,7 +185,23 @@ export class PlayerStats {
                 this.dpsDecreaseAmount -= amount;
             }
         }
+
+        //--------------------------
+        //  check if is burning
+        //--------------------------
+        let wasBurning = this.isBurningBuff;
+        this.isBurningBuff = this.buffs[1000] > now || this.buffs[1001] > now;
+        if (wasBurning !== this.isBurning) {            
+            eventEmitter.emit(BURN_TOPIC, { wasBurning: wasBurning, isBurning: this.isBurningBuff });
+        }
     };
+
+    /**
+     * Returns true if the player is taking burn damage.
+     */
+    public get isBurning() {
+        return this.isBurningBuff;
+    }
 
     /**
      * Saves user data.

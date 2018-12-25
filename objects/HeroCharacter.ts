@@ -169,29 +169,10 @@ export class HeroCharacter extends AnimatedSprite {
             this.rotation = 0;
         }
 
-        //--------------------------
-        //  check if is burning
-        //--------------------------
-        let wasBurning = this._isBurning;
-        let now = performance.now() / 1000;
-        this._isBurning = Global.stats.buffs[1000] > now || Global.stats.buffs[1001] > now;
-        this.alpha = (this._isBurning) ? 0.7 : 1;
-
-        if (wasBurning !== this._isBurning) {            
-            eventEmitter.emit(Global.BURN_TOPIC, { wasBurning: wasBurning, isBurning: this._isBurning });
-        }
+        this.alpha = (Global.stats.isBurning) ? 0.7 : 1;
 
         Global.stats.onUpdate(dt);
     };
-
-    private _isBurning: boolean = false;
-
-    /**
-     * Returns true if the player is taking burn damage.
-     */
-    public get isBurning() {
-        return this._isBurning;
-    }
 
     /**
      * Returns true if the player is jumping.
