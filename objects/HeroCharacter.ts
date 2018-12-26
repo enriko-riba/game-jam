@@ -14,10 +14,9 @@ export class HeroCharacter extends AnimatedSprite {
 
     constructor(container: PIXI.Container) {
         super();
-        this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);
-        this.emitterPixies.emit = true;
+        
         var cfg = {
-            color: { start: "#ff0000", end: "#ff5050" },
+            color: { start: "#ff0000", end: "#ff3050" },
             alpha: { start: 1, end: 0.5 },
             speed: {
                 start: 1,
@@ -42,6 +41,8 @@ export class HeroCharacter extends AnimatedSprite {
         };
         this.emitterBuffs = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/flame.png")], cfg);
         this.emitterBuffs.emit = false;
+        this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);
+        this.emitterPixies.emit = false;
         const asset = "assets/Hero.png";
         this.addAnimations(new AnimationSequence("right", asset, [18, 19, 20, 21, 22, 23], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("left", asset, [12, 13, 14, 15, 16, 17], this.HERO_FRAME_SIZE, this.HERO_FRAME_SIZE));
@@ -84,7 +85,7 @@ export class HeroCharacter extends AnimatedSprite {
                     this.play("jumpdownright", fps);
                     break;
             }
-        })
+        });
     }
 
     /**
@@ -120,7 +121,7 @@ export class HeroCharacter extends AnimatedSprite {
      * Checks movementCtrl.MovementState and updates pixi dust emitter and consumption.
      * @param dt elapsed time in milliseconds
      */
-    public update = (dt: number) => {
+    public onUpdate = (dt: number) => {
         this.position.x = Global.stats.position.x;
         this.position.y = Global.stats.position.y;
 
@@ -151,11 +152,10 @@ export class HeroCharacter extends AnimatedSprite {
                 this.emitterPixies.maxStartRotation = 295;
                 break;
         }
-
         this.emitterPixies.update(dt * 0.001);
-        (this.emitterPixies.ownerPos as any) = this.position;
+        this.emitterPixies.updateOwnerPos(this.position.x, this.position.y);
         this.emitterBuffs.update(dt * 0.001);
-        (this.emitterBuffs.ownerPos as any) = this.position;
+        this.emitterBuffs.updateOwnerPos(this.position.x, this.position.y);
 
         //--------------------------
         //  check if running
@@ -170,8 +170,7 @@ export class HeroCharacter extends AnimatedSprite {
         }
 
         this.alpha = (Global.stats.isBurning) ? 0.7 : 1;
-
-        Global.stats.onUpdate(dt);
+        super.onUpdate(dt);        
     };
 
     /**
@@ -199,7 +198,7 @@ export function createParticleEmitter(container: PIXI.Container, textures: PIXI.
             minimumScaleMultiplier: 1
         },
         speed: {
-            start: 40,
+            start: 50,
             end: 3,
             minimumSpeedMultiplier: 1
         },

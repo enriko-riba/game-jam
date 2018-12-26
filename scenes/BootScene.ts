@@ -86,7 +86,7 @@ export class BootScene extends Scene {
 
         //  TODO: add assets depending on initial state
         var assets : string[] = [
-           //  gui stuff
+            //  gui stuff
             'assets/gui/gui_fs_enter.png',
             'assets/gui/gui_fs_exit.png',
             'assets/gui/gui_options.png',
@@ -94,7 +94,13 @@ export class BootScene extends Scene {
             'assets/gui/gui_button1.png',
             'assets/gui/gui_slider1.png', 
             'assets/gui/gui_minus.png',  
-            'assets/gui/gui_plus.png',
+
+            'assets/gui/heart.png',
+            'assets/gui/coin.png',
+            'assets/gui/stat_panel.png',
+            'assets/gui/exp_panel.png',
+            'assets/gui/exp_prefill.png',
+            'assets/gui/exp_fill.png',
 
             //  backgrounds and parallax
             'assets/img/Canyon.png',

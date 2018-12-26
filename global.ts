@@ -33,6 +33,17 @@ export const TEXT_STYLE: PIXI.TextStyleOptions = {
     stroke: 0x0f0f2f,
 };
 
+export var EXP_BAR_STYLE: PIXI.TextStyleOptions =
+    {
+        align: "center",
+        padding: 0,
+        fontSize: "13px",
+        fontFamily: GUI_FONT,
+        fill: 0x111111,
+        strokeThickness: 4,
+        stroke: 0xffffff
+    };
+    
 /**
  * The global scene manager.
  */
@@ -60,6 +71,9 @@ export function deleteScm(){
 let sceneManager : SceneManager;
 
 export var stats = new PlayerStats();
+
+
+
 
 
 export var eventEmitter = new PIXI.utils.EventEmitter();
