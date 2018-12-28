@@ -62,7 +62,7 @@
     {
       "name": "bumper",
       "displayObject": {
-        "typeName": "Sprite",
+        "typeName": "Bumper",
         "texture": "assets/img/objects/bumper_01.png",
         "rotation": 0.785398163397
       },
@@ -274,6 +274,7 @@
           ]
         }
       ],
+      "assets": ["assets/img/objects/bumper_01.png", "assets/img/objects/bumper_rotor_01.png"],
       "map": {
         "start": [-350,24],
         "templates": [          

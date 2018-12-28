@@ -1,5 +1,7 @@
 ﻿import { Global, PIXI, Scene, SceneManager } from "..";
-import { LevelLoader } from '../objects/LevelLoader';
+import { GetLevelAssets } from '../world/LevelHelper';
+import { stats } from '../objects/PlayerStats';
+import { SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT } from '../constants';
 
 export class LoaderScene extends Scene {
     private loadingMessage: PIXI.Text;
@@ -18,12 +20,12 @@ export class LoaderScene extends Scene {
             strokeThickness: 1
         });
         this.loadingMessage.anchor.set(0.5, 0.5);
-        this.loadingMessage.position.set(Global.SCENE_HALF_WIDTH, Global.SCENE_HALF_HEIGHT - 80);
+        this.loadingMessage.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT - 80);
         this.addChild(this.loadingMessage);
 
         var loadingTexture = PIXI.Texture.fromImage("assets/loading.png");
         this.spinner = new PIXI.Sprite(loadingTexture);
-        this.spinner.position.set(Global.SCENE_HALF_WIDTH, Global.SCENE_HALF_HEIGHT);
+        this.spinner.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT);
         this.spinner.anchor.set(0.5, 0.5);
         this.spinner.scale.set(0.5);
         this.addChild(this.spinner); 
@@ -37,7 +39,7 @@ export class LoaderScene extends Scene {
 
     public onActivate = () => {   
         Global.GameLevels = PIXI.loader.resources["assets/levels.json"].data;
-        let assets: string[] = LevelLoader.GetLevelAssets(Global.GameLevels, Global.stats.currentGameLevel);
+        let assets: string[] = GetLevelAssets(Global.GameLevels, stats.currentGameLevel);
         this.preloadAsdsets = assets.concat(this.preloadAsdsets);
 
         PIXI.loader

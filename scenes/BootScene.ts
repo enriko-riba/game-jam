@@ -1,10 +1,11 @@
-﻿import { Global, PIXI, Scene} from "..";
+﻿import { PIXI, Scene} from "..";
 import { SceneManager } from "..";
 import { MasterHud } from "../objects/MasterHud"
 import { LoaderScene } from "./LoaderScene";
 import { Toast, configureToasts } from "toaster-js";
 import { MainScene } from './MainScene';
 import { OptionsScene } from './OptionsScene';
+import { SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT } from '..';
 
 const PRELOAD_BOOT_ASSETS = [
     //  cursors
@@ -43,7 +44,7 @@ export class BootScene extends Scene {
              strokeThickness: 1 
         });
         this.loadingMessage.anchor.set(0.5, 0.5);
-        this.loadingMessage.position.set(Global.SCENE_WIDTH / 2, Global.SCENE_HEIGHT / 2 - 80);
+        this.loadingMessage.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT - 80);
         this.addChild(this.loadingMessage);
 
         //------------------------------------------------------
@@ -62,7 +63,7 @@ export class BootScene extends Scene {
         //   first add a loading spinner
         var loadingTexture = PIXI.Texture.fromImage("assets/loading.png");
         this.spinner = new PIXI.Sprite(loadingTexture);
-        this.spinner.position.set(Global.SCENE_WIDTH / 2, Global.SCENE_HEIGHT / 2);
+        this.spinner.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT);
         this.spinner.anchor.set(0.5, 0.5);
         this.spinner.scale.set(0.5);
         this.addChild(this.spinner);

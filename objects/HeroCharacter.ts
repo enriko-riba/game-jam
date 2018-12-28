@@ -1,49 +1,70 @@
-import { eventEmitter, MOVE_TOPIC, ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL, createParticleEmitter } from './../global';
+import * as particles from "pixi-particles";
+import { createParticleEmitter } from '../global';
+import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL } from '..';
+import { eventEmitter, MOVE_TOPIC } from './../events';
 import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
-import { WorldP2 } from './WorldP2';
-import * as particles from "pixi-particles";
-import { StatType } from './PlayerStats';
+import { wp2 } from '../world/WorldP2';
+import { StatType, stats } from './PlayerStats';
 import { Mob, AtrType } from '../mobs/Mob';
-import { IInteractionType, LevelLoader } from './LevelLoader';
+import { LevelLoader } from '../world/LevelLoader';
+import { IInteractionType } from '../world/LevelInterfaces';
 
 const HERO_FRAME_SIZE: number = 64;
 
 export class HeroCharacter extends AnimatedSprite {
     private emitterPixies: particles.Emitter;
-    private emitterBuffs: particles.Emitter;
+    private emitterBurn: particles.Emitter;
     private movementCtrl: MovementController;
-    private wp2: WorldP2;
 
+    private idleAnimationTimeoutHandle: any;
     constructor(private container: PIXI.Container) {
         super();
         
-        var cfg = {
-            color: { start: "#ff0000", end: "#ff3050" },
-            alpha: { start: 1, end: 0.5 },
+        this.movementCtrl = new MovementController(wp2);
+        wp2.on("playerContact", this.onPlayerContact, this);
+
+        var cfg = {     
+            alpha: {
+                start: 0.7,
+                end: 0
+            },
+            blendMode: "normal",
+            frequency: 0.01,
+            startRotation: {
+                min: 265,
+                max: 275
+            },
+            color: {
+                start: "#ffffff",
+                end: "#ff5050"
+            },
             speed: {
                 start: 1,
-                end: 0,
+                end: 0.5,
                 minimumSpeedMultiplier: 1
             },
             scale: {
-                start: 0.6,
-                end: 0.15
+                start: 0.2,
+                end: 0.6
             },
-            maxParticles: 70,
+            maxParticles: 20,
             lifetime: {
-                min: 0.1,
-                max: 0.3
+                min: 0.25,
+                max: 0.75
             },
             spawnType: "circle",
             spawnCircle: {
                 x: 0,
-                y: 40,
-                r: 30
+                y: HERO_FRAME_SIZE-25,
+                r: 25
             }
         };
-        this.emitterBuffs = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/img/effects/flame.png")], cfg);
-        this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);
+        //    attached to hero sprite
+        this.emitterBurn = createParticleEmitter(this, [PIXI.Texture.fromImage("assets/img/effects/flame.png")], cfg);  
+        //   attached to container since it must emit outside hero sprite
+        this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);  
+
         const asset = "assets/Hero.png";
         this.addAnimations(new AnimationSequence("right", asset, [18, 19, 20, 21, 22, 23], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("left", asset, [12, 13, 14, 15, 16, 17], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
@@ -62,43 +83,44 @@ export class HeroCharacter extends AnimatedSprite {
             var fps = event.isRunning ? ANIMATION_FPS_NORMAL * 1.6 : ANIMATION_FPS_NORMAL;
             switch (state) {
                 case MovementState.Idle:
-                    this.play("idle", ANIMATION_FPS_SLOW);
+                    if(this.idleAnimationTimeoutHandle) clearTimeout(this.idleAnimationTimeoutHandle);
+                    this.idleAnimationTimeoutHandle = setTimeout(() => {
+                        this.play("idle", ANIMATION_FPS_SLOW);
+                    }, 250);
+                    //this.play("idle", ANIMATION_FPS_SLOW);
                     break;
                 case MovementState.Left:
+                    clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("left", fps);
                     break;
                 case MovementState.Right:
+                    clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("right", fps);
                     break;
                 case MovementState.JumpLeft:
+                    clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpleft", fps);
                     break;
                 case MovementState.JumpRight:
+                    clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpright", fps);
                     break;
                 case MovementState.JumpUp:
+                    clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpup", fps);
                     break;
                 case MovementState.JumpDownLeft:
+                    clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpdownleft", fps);
                     break;
                 case MovementState.JumpDownRight:
+                    clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpdownright", fps);
                     break;
             }
         });
     }
 
-    /**
-     * Sets the physics world instance.
-     */
-    public SetWorldP2(wp2: WorldP2) {
-        this.wp2 = wp2;
-        this.movementCtrl = new MovementController(this.wp2);
-
-        this.wp2.on("playerContact", this.onPlayerContact, this);
-        //this.wp2.on("bulletContact", this.onBulletContact, this);
-    }
 
     /**
     *  Returns the current movement state.
@@ -134,8 +156,8 @@ export class HeroCharacter extends AnimatedSprite {
      * @param dt elapsed time in milliseconds
      */
     public onUpdate = (dt: number) => {
-        this.position.x = Global.stats.position.x;
-        this.position.y = Global.stats.position.y;
+        this.position.x = Global.position.x;
+        this.position.y = Global.position.y;
 
         if (this.IsInteractive) {
             this.movementCtrl.update(dt);
@@ -166,22 +188,20 @@ export class HeroCharacter extends AnimatedSprite {
         }
         this.emitterPixies.update(dt * 0.001);
         this.emitterPixies.updateOwnerPos(this.position.x, this.position.y);
-        this.emitterBuffs.update(dt * 0.001);
-        this.emitterBuffs.updateOwnerPos(this.position.x, this.position.y);
+        this.emitterBurn.update(dt * 0.001);
 
         //--------------------------
         //  check if running
         //--------------------------
         if (this.movementCtrl.IsRunning && this.movementCtrl.MovementState !== MovementState.Idle) {
-            Global.stats.increaseStat(StatType.Dust, -dt * 0.005);   //  5/sec
+            stats.increaseStat(StatType.Dust, -dt * 0.005);   //  5/sec
             let angle = 8;
             let degree = Math.PI * angle / 180;
             this.rotation = (this.movementCtrl.MovementState === MovementState.Left) ? degree : -degree;
         } else {
             this.rotation = 0;
         }
-        this.emitterBuffs.emit = Global.stats.isBurning;
-        this.alpha = (Global.stats.isBurning) ? 0.7 : 1;
+        this.emitterBurn.emit = stats.isBurning;
         super.onUpdate(dt);        
     };
 
@@ -245,7 +265,7 @@ export class HeroCharacter extends AnimatedSprite {
         if (it.drop) {
             let isDropping = Math.random() <= it.drop.chance;
             if (isDropping) {
-                var dropItemBody = LevelLoader.createEntity(Global.stats.currentLevel.templates, it.drop.entity);
+                var dropItemBody = LevelLoader.createEntity(stats.currentLevel.templates, it.drop.entity);
                 this.addDropItem(mob, dropItemBody);
             }
             
@@ -257,8 +277,7 @@ export class HeroCharacter extends AnimatedSprite {
 
         //  add exp       
         var exp = mob.attributes[AtrType.HP] / 2;
-        Global.stats.increaseStat(StatType.TotalExp, exp);
-        //this.hud.addInfoMessage(mob.position, `+${exp} exp`, null, -50);
+        stats.increaseStat(StatType.TotalExp, exp);
     }
 
     /**
@@ -278,7 +297,7 @@ export class HeroCharacter extends AnimatedSprite {
             .to({ x: upX, y: upY }, 400)
             .onComplete(() => {
                 itemBody.position = [dispObj.position.x, dispObj.position.y];
-                this.wp2.addBody(itemBody);
+                wp2.addBody(itemBody);
             });
 
 
@@ -309,7 +328,7 @@ export class HeroCharacter extends AnimatedSprite {
      * @param removeDisplayObject
      */
     public removeEntity(body: p2.Body, removeDisplayObject: boolean = false): void {
-        this.wp2.removeBody(body);
+        wp2.removeBody(body);
         if (removeDisplayObject) {
             this.container.removeChild((body as any).DisplayObject);
         }

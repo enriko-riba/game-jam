@@ -1,157 +1,34 @@
 ﻿import * as Global from "../global";
 import * as p2 from "p2";
-import { Parallax, AnimatedSprite, AnimationSequence  } from "../_engine";
-import { WorldP2 } from "./WorldP2";
-import { Lava } from "./Lava";
-import { Platform } from "./Platform";
+import { Parallax, AnimatedSprite, AnimationSequence  } from "..";
+import { COL_GRP_PLAYER, COL_GRP_GROUND, COL_GRP_NPC, COL_GRP_SCENE, COL_GRP_BULLET } from "./CollisionGroups";
+import { Lava } from "../objects/Lava";
+import { Platform } from "../objects/Platform";
 import { SpawnPoint } from '../mobs/SpawnPoint';
 import { Mob } from '../mobs/Mob';
+import { IRootObject, ILevel, ILevelDefinition, IMapEntity, IMobEntity, ISpawnPoint, IDisplayObjectDefinition, IInteractionType, IBodyDefinition } from './LevelInterfaces';
+import { getEntityDefinition } from './LevelHelper';
+import { SCENE_HEIGHT, SCENE_WIDTH } from '../constants';
+import { Dictionary } from '../_engine';
 
-// import { Bumper } from "../Bumper";
-// import { Quest } from "./QuestSystem/Quest";
-
-/**
- * Used with PIXI.DisplayObject
- */
-export interface IInteractionType {
-    interactionType?: number;
-    drop?: IDrop;
-}
+declare type Fn = (definition: IDisplayObjectDefinition) => PIXI.DisplayObject;
 
 export class LevelLoader {
-
+    
     private gameLevels: IRootObject;
+    private static factoryList = new Dictionary<Fn>();
 
     constructor(gameLevels: IRootObject) {
         this.gameLevels = gameLevels;
     }
 
     /**
-     * Returns all assets referenced in the level.
-     * @param root
-     * @param levelId
+     * Registers custom factory function for creating display objects.
+     * @param name the entity name used in level definition
+     * @param factory factory function returning a display object based on the given definition
      */
-    public static GetLevelAssets(root: IRootObject, levelId: number): string[] {
-        var assets: string[] = [];
-
-        var level: ILevelDefinition = undefined;
-        for (var i = 0; i < root.levels.length; i++) {
-            if (root.levels[i].id === levelId) {
-                level = root.levels[i];
-                break;
-            }
-        }
-
-        if (level) {
-            level.parallax.forEach((iplx) => {
-                assets = assets.concat(iplx.textures);
-            });
-
-            if (level.assets && level.assets.length > 0) {
-                assets = assets.concat(level.assets);
-            }
-
-            //  merge global templates with level templates
-            var templates = root.templates.concat(level.map.templates);
-
-            // add all textures from templates (we don't need to have entities referencing the template if they are in a spawn)
-            level.map.templates.forEach((tos) => {
-                if (!tos.type || tos.type !== "spawn_point") {
-                    let templ = tos as ITemplate;
-                    let dispObj = templ.displayObject;
-                    if (dispObj.texture) {
-                        if (typeof dispObj.texture === "string") {
-                            assets.push(dispObj.texture);
-                        } else {
-                            assets = assets.concat(dispObj.texture);
-                        }
-                    }
-                    if (dispObj.sequences) {
-                        dispObj.sequences.forEach((item) => {
-                            assets.push(item.texture);
-                        });
-                    }     
-                }
-            });
-
-            level.map.entities.forEach((entity: IMapEntity) => {
-                let defs = LevelLoader.getTemplates(templates, entity);
-                if (defs.doDef.texture) {
-                    if (typeof defs.doDef.texture === "string") {
-                        assets.push(defs.doDef.texture);
-                    } else {
-                        assets = assets.concat(defs.doDef.texture);
-                    }
-                }
-                if (defs.doDef.sequences) {
-                    defs.doDef.sequences.forEach((item) => {
-                        assets.push(item.texture);
-                    });
-                }                
-            });
-
-            level.map.NPC = level.map.NPC || [];
-            level.map.NPC.forEach((tos:IMobEntity) => {
-                //  check if its a template or spawn_point
-                if (tos.type && tos.type==="spawn_point"){
-
-                } else {
-                    //  this is an entity definition
-                    let entity: IMobEntity = tos as IMobEntity;
-
-                    //  concat attack (string | string[])
-                    if (entity.attack) {
-                        assets = assets.concat(entity.attack);
-                    }
-
-                    var entityTemplate = templates.filter((item) => item.name === entity.template);
-                    if (entityTemplate && entityTemplate.length > 0) {
-                        var template = entityTemplate[0];
-                        // var temp = $.extend(true, {}, template.displayObject);
-                        // var displayObjectDefinition = $.extend(temp, entity);
-                        var displayObjectDefinition = {...template.displayObject, ...entity};
-                        if (displayObjectDefinition.texture) {
-                            if (typeof displayObjectDefinition.texture === "string") {
-                                assets.push(displayObjectDefinition.texture);
-                            } else {
-                                assets = assets.concat(displayObjectDefinition.texture);
-                            }
-                        }
-
-                        if (displayObjectDefinition.attack) {
-                            assets = assets.concat(displayObjectDefinition.attack);
-                        }
-                         
-                        if (displayObjectDefinition.sequences) {
-                            displayObjectDefinition.sequences.forEach((item) => {
-                                //  add only if texture exists
-                                if (item.texture) {
-                                    assets.push(item.texture);
-                                }
-                            });
-                        }
-                    }
-                }               
-            });
-        }
-
-        assets = LevelLoader.getUniqueItems(assets);
-        return assets;
-    }
-
-    /**
-     * Returns a filtered array with unique only items from the input array
-     * @param arr 
-     */
-    private static getUniqueItems(arr) {
-        var n = {}, r = [];
-        for (var i = 0; i < arr.length; i++) {
-            if (!n[arr[i]]) {
-                n[arr[i]] = true;
-                r.push(arr[i]);
-            }
-        }
-        return r;
+    public static registerFactory(name:string, factory:Fn){
+        this.factoryList.set(name, factory);
     }
 
     /**
@@ -191,7 +68,7 @@ export class LevelLoader {
         //--------------------------------------
         //  create parallax objects
         //--------------------------------------            
-        var vps = new PIXI.Point(Global.SCENE_WIDTH, Global.SCENE_HEIGHT);
+        var vps = new PIXI.Point(SCENE_WIDTH, SCENE_HEIGHT);
         level.parallax.forEach((iplx) => {
             var parallax = new Parallax(vps, iplx.parallaxFactor, iplx.scale);
             parallax.y = iplx.y;
@@ -232,7 +109,7 @@ export class LevelLoader {
     }
 
     public static createEntity(templates: Array<any>, entity: IMapEntity): p2.Body {
-        let defs = LevelLoader.getTemplates(templates, entity);
+        let defs = getEntityDefinition(templates, entity);
 
         //  display object
         let dispObj: PIXI.DisplayObject = LevelLoader.buildDisplayObject(defs.doDef);
@@ -245,11 +122,11 @@ export class LevelLoader {
             p2body = LevelLoader.buildPhysicsObject(defs.bdDef, dispObj);
             p2body.shapes.every((s: p2.Shape) => {
                 if (defs.bdDef.collisionType === "ground") {
-                    s.collisionGroup = WorldP2.COL_GRP_GROUND;
-                    s.collisionMask = WorldP2.COL_GRP_PLAYER | WorldP2.COL_GRP_NPC | WorldP2.COL_GRP_SCENE | WorldP2.COL_GRP_BULLET;
+                    s.collisionGroup = COL_GRP_GROUND;
+                    s.collisionMask = COL_GRP_PLAYER | COL_GRP_NPC | COL_GRP_SCENE | COL_GRP_BULLET;
                 } else {
-                    s.collisionGroup = WorldP2.COL_GRP_SCENE;
-                    s.collisionMask = WorldP2.COL_GRP_PLAYER | WorldP2.COL_GRP_NPC | WorldP2.COL_GRP_SCENE | WorldP2.COL_GRP_GROUND;
+                    s.collisionGroup = COL_GRP_SCENE;
+                    s.collisionMask = COL_GRP_PLAYER | COL_GRP_NPC | COL_GRP_SCENE | COL_GRP_GROUND;
                 }
                 return true;
             });
@@ -267,7 +144,7 @@ export class LevelLoader {
     }
 
     public static createMob(templates: Array<any>, entity: IMobEntity): p2.Body {
-        let defs = LevelLoader.getTemplates(templates, entity);
+        let defs = getEntityDefinition(templates, entity);
 
         //  display object
         let mobDispObj: Mob = LevelLoader.buildDisplayObject(defs.doDef) as Mob;
@@ -283,8 +160,8 @@ export class LevelLoader {
         defs.bdDef.material = defs.bdDef.material || "mob_default";
         var p2body: p2.Body = LevelLoader.buildPhysicsObject(defs.bdDef, mobDispObj);
         p2body.shapes.every((s: p2.Shape) => {
-            s.collisionGroup = WorldP2.COL_GRP_NPC;
-            s.collisionMask = WorldP2.COL_GRP_PLAYER | WorldP2.COL_GRP_GROUND | WorldP2.COL_GRP_SCENE;
+            s.collisionGroup = COL_GRP_NPC;
+            s.collisionMask = COL_GRP_PLAYER | COL_GRP_GROUND | COL_GRP_SCENE;
             return true;
         });
         (p2body as any).DisplayObject = mobDispObj;
@@ -295,53 +172,6 @@ export class LevelLoader {
         }
 
         return p2body;
-    }
-
-   /**
-    * Returns an object containing extracted display object and body definitions.
-    * @param templates
-    * @param entity
-    */
-    private static getTemplates(templates: Array<any>, entity: IMapEntity | IMobEntity) {
-        let displayObjectDefinition = null;
-        let bodyDefinition = null;
-        let template = {
-            name: null,
-            displayObject: { typeName: "Sprite"}, //    sprite is the default if no template exists
-            body: null,
-            trigger: null,
-            drop: null
-        };
-        var entityTemplate = templates.filter((item, idx, arr) => item.name === entity.template);
-        if (entityTemplate && entityTemplate.length > 0) {
-            template = entityTemplate[0];
-        }
-        // var temp = $.extend(true, {}, template.displayObject);        
-        // displayObjectDefinition = $.extend(temp, entity);
-        displayObjectDefinition = {...template.displayObject, ...entity};
-        
-        if (template.drop) {
-            // temp = $.extend(true, {}, template.drop); 
-            // displayObjectDefinition.drop = $.extend(true, temp, displayObjectDefinition.drop);
-            displayObjectDefinition = {...displayObjectDefinition, drop: template.drop}
-        }
-        if (template.body) {
-            //bodyDefinition = {...template.body, body: entity.body};
-            bodyDefinition = template.body;
-        }
-
-        let triggerTemplate = undefined;
-        if (template.trigger || displayObjectDefinition.trigger) {
-            // triggerTemplate = $.extend(true, {}, template.trigger);
-            // triggerTemplate = $.extend(true, triggerTemplate, displayObjectDefinition.trigger)
-            triggerTemplate = {...template.trigger, ...displayObjectDefinition.trigger};
-        }
-        return {
-            templateName: template.name,
-            doDef: displayObjectDefinition,
-            bdDef: bodyDefinition,
-            trigger: triggerTemplate
-        };        
     }
 
     /**
@@ -417,20 +247,13 @@ export class LevelLoader {
             //     bmp.anchor.set(0.5);
             //     dispObj = bmp;
             //     break;
-
-            case "Lava":
-                var lv = new Lava(definition.texture as string);
-                dispObj = lv;
-                break;
-
-            case "Platform":
-                let pl: Platform = null;
-                if (typeof definition.texture === "string") {
-                    pl = new Platform(definition.tilesX || 1, 1, [definition.texture]);
-                } else {
-                    pl = new Platform(definition.tilesX || 1, definition.tilesY || 1, definition.texture);
-                }
-                dispObj = pl;
+            default:
+                var factory = this.factoryList.get(definition.typeName);
+                if(factory)
+                    dispObj = factory(definition);
+                else
+                    throw "Factory not found for object name: " + definition.typeName;
+                break;            
         }
 
         if (definition.visible !== undefined) {
@@ -556,150 +379,4 @@ export class LevelLoader {
         }
         return body;
     }
-}
-
-export interface ILevel {
-    parallax: Parallax[];
-    entities: p2.Body[];
-    start: number[];
-    audioTrack?: number;
-    spawnPoints?: SpawnPoint[];
-
-    /**
-     * Calculated array that is a union of global templates
-     * and current level templates. It is set inside the createLevel()
-     */
-    templates: ITemplate[];
-}
-
-export interface IParallaxDefinition {
-    name: string;
-    parallaxFactor: number;
-    y: number;
-    textures: string[];
-    scale?: number;
-}
-
-export interface IBodyDefinition {
-    shape: string;
-    type: number; /* DYNAMIC = 1, DYNAMIC = 1, STATIC = 2 */
-    xy: number[];
-    size?: number[] | number;
-    mass: number;
-    angle: number;
-    material?: string;
-    damping?: number;
-    angularDamping?: number;
-    fixedRotation?: boolean;
-}
-
-export interface IAnimationSequence {
-    name: string;
-    texture: string;
-    frames: number[];
-    framesize: number[];
-}
-
-export interface IDisplayObjectDefinition {
-    typeName: string;
-    texture: string | string[];
-    tilesX?: number;
-    tilesY?: number;
-    xy?: number[];
-    scale?: number[];
-    rotation?: number;
-    pivot?: number;
-    anchor?: number;
-    interactionType?: number;
-    tint?: string;
-    visible?: boolean;
-    fps?: number;
-    sequences?: IAnimationSequence[];
-    drop?: IDrop;
-}
-
-export interface ITriggerDefinition {
-    type: string;
-    distance?: number;
-    questId?: number;
-    state?: number;
-    dependsOn?: Array<number>;
-    desc?: string;
-
-    /*
-     * Created during run time to prevent trigger actions each frame
-     */
-    lastActive?: number;
-}
-
-export interface IDrop {
-    chance: number;
-    entity: IMapEntity;
-}
-
-export interface ITemplate {
-    name: string;
-    displayObject: IDisplayObjectDefinition;
-    body?: IBodyDefinition;
-    trigger?: ITriggerDefinition;
-    drop?: IDrop;
-    type?: string;  //    used only for typing system as instead of a template a spawn point can appear
-}
-
-export interface IMapEntity {
-    template: string;
-    xy?: number[];
-    scale?: number[];
-    rotation?: number;
-    texture?: string;
-    interactionType?: number;
-    name?: string;
-    collisionType?: string;
-}
-
-export interface ISpawnPoint {
-    name: string;
-    xy: number[];
-    area: number;
-    maxMobCount: number;
-    respawnSeconds: number;
-    isActive?: boolean;
-    entity: IMobEntity;
-
-}
-
-export interface IMobEntity {
-    template: string;
-    xy?: number[];
-    scale?: number[];    
-    texture?: string;
-    interactionType?: number;
-    name?: string;
-    attributes: number[];
-    ai: string;
-    attack: string | string[];
-    drop?: IDrop;
-    type?: string;
-}
-
-export interface ILevelMap {
-    start: number[];
-    templates: ITemplate[];
-    entities: IMapEntity[];
-    NPC: IMobEntity[];
-}
-
-export interface ILevelDefinition {
-    id: number;
-    assets?: string[];
-    name: string;
-    parallax: IParallaxDefinition[];
-    audioTrack?: number;
-    map: ILevelMap;
-}
-
-export interface IRootObject {
-    templates: ITemplate[];
-    levels: ILevelDefinition[];
-   // quests: Quest[];
 }

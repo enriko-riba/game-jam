@@ -1,11 +1,11 @@
 import { KeyboardMapper, Global } from '..';
-import { WorldP2 } from './WorldP2';
-import { StatType } from './PlayerStats';
-import { eventEmitter } from '../global';
+import { WorldP2 } from '../world/WorldP2';
+import { StatType, stats } from './PlayerStats';
+import { eventEmitter, MOVE_TOPIC } from '../events';
 
 export class MovementController {
     private readonly VELOCITY = 150;
-    private readonly JUMP_FORCE = 17500;
+    private readonly JUMP_FORCE = 17700;
     private readonly JUMP_ATTACK_FORCE = -14000;
 
     private readonly JUMP_COOLDOWN = 500;
@@ -106,7 +106,7 @@ export class MovementController {
         this.isInteractive = false;
         setTimeout(() => this.isInteractive = true, this.JUMP_ATTACK_FREEZE);
 
-        eventEmitter.emit(Global.MOVE_TOPIC, {
+        eventEmitter.emit(MOVE_TOPIC, {
                 newState: this.newState,
                 oldState: this.movementState,
                 isJumping: true,
@@ -143,7 +143,7 @@ export class MovementController {
 
         //  no movement (except jump down) while jumping
         if (this.isJumping && this._isInteractive) {
-            if ((this.kbd.isKeyDown(KEY_S) || this.kbd.isKeyDown(KEY_DOWN)) && Global.stats.HasJumpAtack && this.nextJumpDownAllowed < performance.now()) {
+            if ((this.kbd.isKeyDown(KEY_S) || this.kbd.isKeyDown(KEY_DOWN)) && stats.HasJumpAtack && this.nextJumpDownAllowed < performance.now()) {
                 this.StartJumpDown();
             }
             this.world.playerBody.velocity[0] += v;
@@ -155,7 +155,7 @@ export class MovementController {
         }
 
 
-        var canRun = Global.stats.getStat(StatType.Dust) > 1;
+        var canRun = stats.getStat(StatType.Dust) > 1;
         var newIsRunning: boolean = this.kbd.isKeyDown(KEY_SHIFT) && canRun && this._isInteractive;
 
         if (this.kbd.isKeyDown(KEY_A) || this.kbd.isKeyDown(KEY_LEFT) ) {
@@ -193,7 +193,7 @@ export class MovementController {
                     isCurrentJumping = true;
                     break;
             }
-            eventEmitter.emit(Global.MOVE_TOPIC, {
+            eventEmitter.emit(MOVE_TOPIC, {
                 newState: this.newState,
                 oldState: this.movementState,
                 isJumping: isCurrentJumping,

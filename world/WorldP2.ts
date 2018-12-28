@@ -1,5 +1,7 @@
 ﻿import * as p2 from "p2";
-import { Dictionary, Global } from '..';
+import { Global } from '..';
+import {Dictionary} from '../_engine/Dictionary';
+import { COL_GRP_GROUND, COL_GRP_SCENE, COL_GRP_NPC, COL_GRP_PLAYER, COL_GRP_BULLET } from './CollisionGroups';
 
 /**
  * Tuple of two physics bodies touching or penetrating each other.
@@ -13,19 +15,11 @@ export class ContactPair {
  * Takes care of the physics simulations.
  */
 export class WorldP2 {
-    static COL_GRP_PLAYER = 1;
-    static COL_GRP_NPC = 2;
-    static COL_GRP_SCENE = 4;
-    static COL_GRP_BULLET = 8;
-    static COL_GRP_GROUND = 16;
-    
 
     public playerBody: p2.Body;
     private world: p2.World;
     private ground: p2.Body;
-
     private materials: Dictionary<p2.Material>;
-
     private contactPairs: Array<ContactPair> = [];
     private contactWatch: Array<number> = [];
 
@@ -41,8 +35,8 @@ export class WorldP2 {
         this.world = new p2.World({
             gravity: [0, -1550],
         });
+
         this.setupMaterials();
-        
 
         //------------------------------------------
         // create an infinite ground plane body
@@ -52,8 +46,8 @@ export class WorldP2 {
         });
         var shape = new p2.Plane();
         shape.material = this.materials.get("ground_default");
-        shape.collisionGroup = WorldP2.COL_GRP_GROUND;
-        shape.collisionMask = WorldP2.COL_GRP_SCENE | WorldP2.COL_GRP_NPC | WorldP2.COL_GRP_PLAYER | WorldP2.COL_GRP_BULLET;
+        shape.collisionGroup = COL_GRP_GROUND;
+        shape.collisionMask = COL_GRP_SCENE | COL_GRP_NPC | COL_GRP_PLAYER | COL_GRP_BULLET;
         this.ground.addShape(shape);
         this.world.addBody(this.ground);
 
@@ -62,15 +56,14 @@ export class WorldP2 {
         //------------------------------------------
         this.playerBody = new p2.Body({
             mass: 42,
-            position: [Global.stats.position.x, Global.stats.position.y],
-            fixedRotation: true,
+            fixedRotation: true,            
         });
         this.playerBody.damping = 0.001;
         shape = new p2.Circle({
             radius: 24,
         });
-        shape.collisionGroup = WorldP2.COL_GRP_PLAYER;
-        shape.collisionMask = WorldP2.COL_GRP_GROUND | WorldP2.COL_GRP_SCENE | WorldP2.COL_GRP_NPC | WorldP2.COL_GRP_BULLET;
+        shape.collisionGroup = COL_GRP_PLAYER;
+        shape.collisionMask = COL_GRP_GROUND | COL_GRP_SCENE | COL_GRP_NPC | COL_GRP_BULLET;
         shape.material = this.materials.get("player");
         this.playerBody.addShape(shape);
         this.world.addBody(this.playerBody);
@@ -79,7 +72,6 @@ export class WorldP2 {
         //  settings
         //------------------------------------------
         this.world.sleepMode = p2.World.BODY_SLEEPING;
-        //this.world.solver.iterations = 30;
         this.world.on("beginContact", this.beginContact, this);
         this.world.on("endContact", this.endContact, this);
     }
@@ -119,9 +111,9 @@ export class WorldP2 {
      * @param dt the time in seconds since the last simulation step
      */
     public update(dt: number): void {
-        this.world.step(this.fixedTimeStep, dt/1000, 20);
-        Global.stats.position.x = this.playerBody.interpolatedPosition[0];
-        Global.stats.position.y = this.playerBody.interpolatedPosition[1];
+        this.world.step(this.fixedTimeStep, dt/1000);
+        Global.position.x = this.playerBody.interpolatedPosition[0];
+        Global.position.y = this.playerBody.interpolatedPosition[1];
     }
 
     /**
@@ -212,10 +204,10 @@ export class WorldP2 {
         
         let bullet: p2.Body = null;
         let other: p2.Body = null;
-        if (evt.bodyA.shapes[0].collisionGroup === WorldP2.COL_GRP_BULLET) {
+        if (evt.bodyA.shapes[0].collisionGroup === COL_GRP_BULLET) {
             bullet = evt.bodyA;
             other = evt.bodyB;
-        } else if (evt.bodyB.shapes[0].collisionGroup === WorldP2.COL_GRP_BULLET){
+        } else if (evt.bodyB.shapes[0].collisionGroup === COL_GRP_BULLET){
             bullet = evt.bodyB;
             other = evt.bodyA;
         }
@@ -249,7 +241,7 @@ export class WorldP2 {
 
     private endContact = (evt: any) => {
         //  no need to update player contacts or contact pairs for bullets
-        let isBulletConntact = evt.bodyA.shapes[0].collisionGroup === WorldP2.COL_GRP_BULLET || evt.bodyB.shapes[0].collisionGroup === WorldP2.COL_GRP_BULLET;
+        let isBulletConntact = evt.bodyA.shapes[0].collisionGroup === COL_GRP_BULLET || evt.bodyB.shapes[0].collisionGroup === COL_GRP_BULLET;
         if (isBulletConntact) return;
 
         //  if it is a player contact remove the foreign body from the playerBodyContacts list
@@ -381,3 +373,5 @@ export class WorldP2 {
         this.world.addContactMaterial(boxGroundContactMaterial);
     }
 }
+
+export var wp2 = new WorldP2();

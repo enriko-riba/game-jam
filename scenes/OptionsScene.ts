@@ -1,4 +1,5 @@
 import { Global, PIXI, Scene, Button, SceneManager } from "..";
+import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_BACKCOLOR, BTN_WIDTH, SCENE_HEIGHT, BTN_HEIGHT, BTN_STYLE } from '../constants';
 
 /**
  *   Main options GUI.
@@ -13,7 +14,7 @@ export class OptionsScene extends Scene {
      */
     constructor(scm:SceneManager) {
         super(scm, "Options");
-        this.BackGroundColor = Global.SCENE_BACKCOLOR;
+        this.BackGroundColor = SCENE_BACKCOLOR;
         this.setup();
     }
 
@@ -26,20 +27,20 @@ export class OptionsScene extends Scene {
         btnOptions!.visible = true;
     }
     private setup = () => {
-        var title = new PIXI.Text("Options", Global.TEXT_STYLE);
+        var title = new PIXI.Text("Options", TEXT_STYLE);
         this.addChild(title);
         title.anchor.set(0.5);
-        title.x = Global.SCENE_WIDTH/2;
+        title.x = SCENE_HALF_WIDTH;
         title.y = 20;
 
-        let OFFSET = Global.BTN_WIDTH / 3;
-        let y = Global.SCENE_HEIGHT - Global.BTN_HEIGHT - OFFSET;
+        let OFFSET = BTN_WIDTH / 3;
+        let y = SCENE_HEIGHT - BTN_HEIGHT - OFFSET;
 
         //--------------------
         //  back to game
         //--------------------
-        var btnBack = new Button("assets/gui/gui_button1.png", OFFSET, y, Global.BTN_WIDTH, Global.BTN_HEIGHT);
-        btnBack.text = new PIXI.Text("Back to game", Global.BTN_STYLE);
+        var btnBack = new Button("assets/gui/gui_button1.png", OFFSET, y, BTN_WIDTH, BTN_HEIGHT);
+        btnBack.text = new PIXI.Text("Back to game", BTN_STYLE);
         btnBack.onClick = () => {
             //this.resetSounds();
             this.sceneManager.ActivatePreviousScene();

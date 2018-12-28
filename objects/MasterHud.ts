@@ -1,6 +1,6 @@
-import { Global, SceneManager, Button } from "..";
+import { SceneManager, Button, SCENE_WIDTH } from "..";
 
-const BTN_X = Global.SCENE_WIDTH - 48;
+const BTN_X = SCENE_WIDTH - 48;
 const BTN_Y = 4;
 const BTN_SCALE = 1.0;
 

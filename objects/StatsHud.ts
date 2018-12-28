@@ -1,9 +1,10 @@
-import { Global } from '..';
-import { eventEmitter, createParticleEmitter } from '../global';
-import { StatType, IStatChangeEvent } from './PlayerStats';
 import * as particles from "pixi-particles";
-
 import * as TWEEN from "@tweenjs/tween.js";
+import { Global } from '..';
+import { createParticleEmitter } from '../global';
+import { StatType, IStatChangeEvent, stats } from './PlayerStats';
+import { eventEmitter, STATCHANGE_TOPIC } from '../events';
+import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_HEIGHT, SCENE_HALF_HEIGHT, EXP_BAR_STYLE } from '../constants';
 
 export class StatsHud extends PIXI.Container {
     private txtHP: PIXI.Text;
@@ -33,16 +34,16 @@ export class StatsHud extends PIXI.Container {
      * @param style optional PIXI.ITextStyle
      */
     public addInfoMessage(position: PIXI.PointLike | {x: number, y: number}, message: string, style?: PIXI.TextStyleOptions, offsetX?: number): void {
-        var stl = style || Global.TEXT_STYLE;
+        var stl = style || TEXT_STYLE;
         var txtInfo = new PIXI.Text(message, stl);
         offsetX = offsetX || 0;
-        txtInfo.position.set((Global.SCENE_WIDTH / 2) + offsetX, Global.SCENE_HEIGHT - position.y - 70);
+        txtInfo.position.set(SCENE_HALF_WIDTH + offsetX, SCENE_HEIGHT - position.y - 70);
         txtInfo.scale.set(1, 1);
 
         this.addChild(txtInfo);
 
-        var dy = (position.y > Global.SCENE_HEIGHT / 2) ? 250 : -250;
-        var upY = Global.SCENE_HEIGHT - position.y + dy;
+        var dy = (position.y > SCENE_HALF_HEIGHT) ? 250 : -250;
+        var upY = SCENE_HEIGHT - position.y + dy;
         var moveUp = new TWEEN.Tween(txtInfo.position)
             .to({ y: upY }, 2000);
         moveUp.start();
@@ -68,7 +69,7 @@ export class StatsHud extends PIXI.Container {
             pnl.scale.set(0.5);
             this.addChild(pnl);
 
-            this.txtHP = new PIXI.Text("0", Global.TEXT_STYLE);
+            this.txtHP = new PIXI.Text("0", TEXT_STYLE);
             this.txtHP.resolution = window.devicePixelRatio;
             this.txtHP.position = new PIXI.Point(80, y + 15);
             this.addChild(this.txtHP);
@@ -88,7 +89,7 @@ export class StatsHud extends PIXI.Container {
             pnl.scale.set(0.5);
             this.addChild(pnl);
 
-            this.txtDust = new PIXI.Text("0", Global.TEXT_STYLE);
+            this.txtDust = new PIXI.Text("0", TEXT_STYLE);
             this.txtDust.resolution = window.devicePixelRatio;
             this.txtDust.position = new PIXI.Point(80, y + 15);
             this.addChild(this.txtDust);  
@@ -110,7 +111,7 @@ export class StatsHud extends PIXI.Container {
             pnl.scale.set(0.5);
             this.addChild(pnl);
 
-            this.txtCoins = new PIXI.Text("0", Global.TEXT_STYLE);
+            this.txtCoins = new PIXI.Text("0", TEXT_STYLE);
             this.txtCoins.resolution = window.devicePixelRatio;
             this.txtCoins.position = new PIXI.Point(80, y + 15);
             this.addChild(this.txtCoins);
@@ -125,7 +126,7 @@ export class StatsHud extends PIXI.Container {
         {
             let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/exp_panel.png"].texture);
             pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
-            pnl.position.set(0, Global.SCENE_HEIGHT - pnl.height);
+            pnl.position.set(0, SCENE_HEIGHT - pnl.height);
             this.addChild(pnl);
 
             //  pre filler rect
@@ -140,7 +141,7 @@ export class StatsHud extends PIXI.Container {
             this.fillLen = pnl.width - 6; // 3 pixels for left/right border;
 
 
-            this.txtExp = new PIXI.Text("0 / 1000", Global.EXP_BAR_STYLE);
+            this.txtExp = new PIXI.Text("0 / 1000", EXP_BAR_STYLE);
             this.txtExp.pivot.set(0.5);
             this.txtExp.anchor.set(0.5);
             this.txtExp.resolution = window.devicePixelRatio;
@@ -148,13 +149,13 @@ export class StatsHud extends PIXI.Container {
             pnl.addChild(this.txtExp);
 
             //  character level
-            this.txtLevel = new PIXI.Text(`Level ${Global.stats.characterLevel}`, Global.TEXT_STYLE);
+            this.txtLevel = new PIXI.Text(`Level ${stats.characterLevel}`, TEXT_STYLE);
             this.txtLevel.resolution = window.devicePixelRatio;
             this.txtLevel.anchor.set(0, 0.2);
             this.txtLevel.position.set(pnl.x + pnl.width + 4, pnl.y);
             this.addChild(this.txtLevel);
         }
-        eventEmitter.on(Global.STATCHANGE_TOPIC, this.handleStatChange);
+        eventEmitter.on(STATCHANGE_TOPIC, this.handleStatChange);
     }
     
     private handleStatChange = (event:IStatChangeEvent) => {
@@ -193,7 +194,7 @@ export class StatsHud extends PIXI.Container {
     
     private renderExp(event: IStatChangeEvent) {
         this.txtExp.text = `${Math.round(event.Stats[StatType.LevelExp])} / ${event.Stats[StatType.LevelMaxExp]}`;
-        this.txtLevel.text = `Level ${Global.stats.characterLevel}`;
+        this.txtLevel.text = `Level ${stats.characterLevel}`;
 
         var pct = Math.min(event.Stats[StatType.LevelExp] / event.Stats[StatType.LevelMaxExp], 1.0);
 

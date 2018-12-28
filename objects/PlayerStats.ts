@@ -1,5 +1,7 @@
-﻿import {eventEmitter, DAMAGE_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC, GameLevels} from "../global";
-import { ILevel, LevelLoader } from './LevelLoader';
+﻿import { GameLevels } from '../global';
+import { eventEmitter, DAMAGE_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC} from "../events";
+import { LevelLoader } from '../world/LevelLoader';
+import { ILevel } from '../world/LevelInterfaces';
 
 export enum BaseStatType {
     MaxHP,
@@ -52,7 +54,7 @@ export interface IBurnChangeEvent {
 }
 
 
-export class PlayerStats {
+class PlayerStats {
     /**
      * Base stats are fixed values increased with level.
      */
@@ -81,7 +83,6 @@ export class PlayerStats {
     //  user related
     public id: number;
     public name: string;
-    public position: PIXI.Point;
 
     private isBurningBuff: boolean = false;
 
@@ -90,10 +91,10 @@ export class PlayerStats {
      */
     public buffs: Array<number> = [];
 
+    private levelLoader : LevelLoader;
 
     constructor() {
         this.id = 0;
-        this.position = new PIXI.Point();
 
         //  attr  stats
         this.attributeStats[BaseStatType.RegenHP] = 0;
@@ -112,7 +113,7 @@ export class PlayerStats {
         this.stats[StatType.MaxHP] = 0;
         this.stats[StatType.HP] = 0;
         this.stats[StatType.MaxDust] = 0;
-        this.stats[StatType.Dust] = 0;
+        this.stats[StatType.Dust] = 100;
         this.stats[StatType.TotalExp] = 0;
         this.stats[StatType.AttributePoints] = 0;
 
@@ -127,6 +128,16 @@ export class PlayerStats {
         }
 
         this.rebuildStats();
+    }
+
+    /**
+     * Rteurns the level loader.
+     */
+    public get LevelLoader(){
+        if(!this.levelLoader){
+            this.levelLoader = new LevelLoader(GameLevels);
+        }
+        return this.levelLoader;
     }
 
     /**
@@ -208,12 +219,12 @@ export class PlayerStats {
     }
 
     /**
-     * Returns true if the player is taking burn damage.
+     * The parsed current level.
      */
     public currentLevel : ILevel;
 
     public loadLevel(){
-        this.currentLevel = new LevelLoader(GameLevels).buildLevel(this.currentGameLevel);
+        this.currentLevel =  this.LevelLoader.buildLevel(this.currentGameLevel);
     }
 
     /**
@@ -410,3 +421,5 @@ export class PlayerStats {
         this.scevent.Stats = this.stats;
     }
 }
+
+export var stats = new PlayerStats();

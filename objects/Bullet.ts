@@ -73,7 +73,7 @@ export class Bullet extends PIXI.Sprite {
     }
 
 
-    public onUpdate = (dt: number) => {
+    public onUpdate = () => {
         // TTL expiry
         if (!this.isDead) {
             let now = performance.now() / 1000;

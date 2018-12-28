@@ -1,28 +1,31 @@
 import * as p2 from 'p2';
 import * as TWEEN from "@tweenjs/tween.js";
 
-import { PIXI, SceneManager, Global, Scene, Parallax } from "..";
+import { PIXI, SceneManager, Scene, Parallax } from "..";
+import { wp2 } from '../world/WorldP2';
 import { HeroCharacter } from '../objects/HeroCharacter';
-import { WorldP2 } from '../objects/WorldP2';
 import { StatsHud } from '../objects/StatsHud';
-import { LevelLoader, IInteractionType } from '../objects/LevelLoader';
-import { DamageType, StatType, IDpsChangeEvent, IBurnChangeEvent } from '../objects/PlayerStats';
+import { DamageType, StatType, IDpsChangeEvent, IBurnChangeEvent, stats } from '../objects/PlayerStats';
 import { Bullet } from '../Objects/Bullet';
-import { Mob, AtrType } from '../mobs/Mob';
-import { eventEmitter, BURN_TOPIC, DAMAGE_TOPIC } from '../global';
+import { eventEmitter, BURN_TOPIC, DAMAGE_TOPIC } from '../events';
+import { IInteractionType } from '../world/LevelInterfaces';
+import { SCENE_HEIGHT, SCENE_HALF_WIDTH, SCENE_BACKCOLOR, MSG_HP_STYLE, MSG_COIN_STYLE, MSG_WARN_STYLE, ANIMATION_FPS_SLOW } from '../constants';
+import { Lava } from '../objects/Lava';
+import { LevelLoader } from '../world/LevelLoader';
+import { Platform } from '../objects/Platform';
+import { Bumper } from '../objects/Bumper';
 
 
 export class MainScene extends Scene {
     private worldContainer: PIXI.Container;
     private parallax: Parallax[] = [];
     private hero: HeroCharacter;
-    public wp2: WorldP2;
 
     private hud : StatsHud;
 
     constructor(scm: SceneManager) {
         super(scm, "Main");
-        this.BackGroundColor = Global.SCENE_BACKCOLOR;
+        this.BackGroundColor = SCENE_BACKCOLOR;
         this.setup();
     }
 
@@ -31,22 +34,22 @@ export class MainScene extends Scene {
         //-------------------------------------------
         //  update world & world container position
         //-------------------------------------------        
-        this.wp2.update(dt);
-        this.worldContainer.x = (Global.SCENE_HALF_WIDTH - this.hero.x);
-        this.worldContainer.y = (Global.SCENE_HEIGHT - 70);
+        wp2.update(dt);
+        this.worldContainer.x = (SCENE_HALF_WIDTH - this.hero.x);
+        this.worldContainer.y = (SCENE_HEIGHT - 70);
 
         //-------------------------------------------
         //  update parallax
         //-------------------------------------------
         this.parallax.forEach(p => {
             p.SetViewPortX(this.hero.x);
-            p.position.x = this.hero.x - Global.SCENE_HALF_WIDTH;
+            p.position.x = this.hero.x - SCENE_HALF_WIDTH;
         });
 
         //-------------------------------------------
         //  update entities position
         //-------------------------------------------
-        var bodies = this.wp2.bodies;
+        var bodies = wp2.bodies;
         for (var i = 0, len = bodies.length; i < len; i++) {
             let body = bodies[i] as any;
             let displayObject: PIXI.DisplayObject = (body as any).DisplayObject as PIXI.DisplayObject;
@@ -72,8 +75,8 @@ export class MainScene extends Scene {
         //-------------------------------------------
         //  collisions with collectible items
         //-------------------------------------------
-        for (var i = 0, len = this.wp2.playerContacts.length; i < len; i++) {
-            let body: any = this.wp2.playerContacts[i];
+        for (var i = 0, len = wp2.playerContacts.length; i < len; i++) {
+            let body: any = wp2.playerContacts[i];
             if (body.DisplayObject && body.DisplayObject.interactionType) {
                 this.handleInteractiveCollision(body);
             }
@@ -97,7 +100,7 @@ export class MainScene extends Scene {
         };
 
         this.hud.onUpdate(dt);
-        Global.stats.onUpdate(dt);
+        stats.onUpdate(dt);
     }
 
     private setup() {
@@ -110,29 +113,34 @@ export class MainScene extends Scene {
         //-----------------------------     
         this.hero = new HeroCharacter(this.worldContainer);
         this.hero.name = "hero";
-        this.hero.x = Global.SCENE_HALF_WIDTH;
-
-        //--------------------------------------
-        //  setup physics subsystem
-        //--------------------------------------
-        this.wp2 = new WorldP2();
-        this.hero.SetWorldP2(this.wp2);
+        this.hero.x = SCENE_HALF_WIDTH;
         this.worldContainer.addChild(this.hero);
+        this.hero.play("idle", ANIMATION_FPS_SLOW);
 
-        this.wp2.playerBody.position[0] = Global.SCENE_HALF_WIDTH;
-        this.wp2.playerBody.position[1] = 10;
-
-        this.hero.play("idle", Global.ANIMATION_FPS_SLOW);
+        //--------------------------------------
+        //  setup hud's
+        //--------------------------------------
         this.hud = new StatsHud();
         this.HudOverlay = this.hud;
 
+        //--------------------------------------
+        //  register custom entity factories
+        //--------------------------------------
+        LevelLoader.registerFactory("Lava", (def)=> new Lava(def.texture as string));
+        LevelLoader.registerFactory("Platform", (def)=> {            
+            if (typeof def.texture === "string") {
+                return new Platform(def.tilesX || 1, 1, [def.texture]);
+            } else {
+                return new Platform(def.tilesX || 1, def.tilesY || 1, def.texture);
+            }
+        });
+        LevelLoader.registerFactory("Bumper", (def)=> new Bumper());
         this.clearLevel();
 
         //--------------------------------------
         //  test level loading
         //  TODO: this should be via user save file
         //--------------------------------------
-        var stats = Global.stats;
         stats.loadLevel();
         stats.currentLevel.parallax.forEach((plx, idx) => {
             this.parallax.push(plx);
@@ -147,13 +155,13 @@ export class MainScene extends Scene {
             //  if entity is a simple sprite it has a "fake" body  
             //  without any shapes, so no need to add it to world
             if (body.shapes && body.shapes.length > 0) {
-                this.wp2.addBody(body);
+                wp2.addBody(body);
             }
         });
 
         //  set start for player
-        this.wp2.playerBody.position[0] = stats.currentLevel.start[0];
-        this.wp2.playerBody.position[1] = stats.currentLevel.start[1];
+        wp2.playerBody.position[0] = stats.currentLevel.start[0];
+        wp2.playerBody.position[1] = stats.currentLevel.start[1];
 
         eventEmitter.on(BURN_TOPIC, this.handleBurnChange);
         eventEmitter.on(DAMAGE_TOPIC, this.handleDpsChange);
@@ -169,8 +177,8 @@ export class MainScene extends Scene {
         var upX = dispObj.position.x + 45;
         var upY = dispObj.position.y + 160;
 
-        var endX = dispObj.position.x - Global.SCENE_WIDTH / 2;
-        var endY = Global.SCENE_HEIGHT;
+        var endX = dispObj.position.x - SCENE_HALF_WIDTH;
+        var endY = SCENE_HEIGHT;
 
         var moveUp = new TWEEN.Tween(dispObj.position)
             .to({ x: upX, y: upY }, 150);
@@ -188,7 +196,7 @@ export class MainScene extends Scene {
     }
 
     private handleDpsChange = (event: IDpsChangeEvent) => {
-        this.hud.addInfoMessage(this.hero.position, `${event.Amount} HP`, Global.MSG_HP_STYLE, 50);
+        this.hud.addInfoMessage(this.hero.position, `${event.Amount} HP`, MSG_HP_STYLE, 50);
     };
 
     private handleBurnChange = (event: IBurnChangeEvent) => {
@@ -209,25 +217,25 @@ export class MainScene extends Scene {
 
         switch ((dispObj as IInteractionType).interactionType) {
             case 1: //  small coin
-                Global.stats.increaseStat(StatType.Coins, 1);
+                stats.increaseStat(StatType.Coins, 1);
                 this.addCollectibleTween(dispObj);
-                this.hud.addInfoMessage(dispObj.position, "+1 coin", Global.MSG_COIN_STYLE, -100);
+                this.hud.addInfoMessage(dispObj.position, "+1 coin", MSG_COIN_STYLE, -100);
                 this.removeEntity(body);
                // Global.snd.coin();
                 break;
 
             case 2: //  coin
-                Global.stats.increaseStat(StatType.Coins, 10);
+                stats.increaseStat(StatType.Coins, 10);
                 this.addCollectibleTween(dispObj);
-                this.hud.addInfoMessage(dispObj.position, "+10 coins", Global.MSG_COIN_STYLE, -100);
+                this.hud.addInfoMessage(dispObj.position, "+10 coins", MSG_COIN_STYLE, -100);
                 this.removeEntity(body);
                // Global.snd.coin();
                 break;
 
             case 3: //  blue gem
-                Global.stats.increaseStat(StatType.Coins, 100);
+                stats.increaseStat(StatType.Coins, 100);
                 this.addCollectibleTween(dispObj);
-                this.hud.addInfoMessage(dispObj.position, "+100 coins", Global.MSG_COIN_STYLE, -100);
+                this.hud.addInfoMessage(dispObj.position, "+100 coins", MSG_COIN_STYLE, -100);
                 this.removeEntity(body);
                 //Global.snd.gem();
                 break;
@@ -237,7 +245,7 @@ export class MainScene extends Scene {
             //------------------------------------
 
             case 201:  //  kendo knowledge
-                this.hud.addInfoMessage(dispObj.position, "Kendo knowledge acquired!", Global.MSG_COIN_STYLE);
+                this.hud.addInfoMessage(dispObj.position, "Kendo knowledge acquired!", MSG_COIN_STYLE);
                 this.addCollectibleTween(dispObj);
                 this.removeEntity(body);
                 //Global.snd.questItem();
@@ -245,7 +253,7 @@ export class MainScene extends Scene {
                 break;
 
             case 202:  //  KI
-                this.hud.addInfoMessage(dispObj.position, "1 Ki acquired!", Global.MSG_COIN_STYLE);
+                this.hud.addInfoMessage(dispObj.position, "1 Ki acquired!", MSG_COIN_STYLE);
                 this.addCollectibleTween(dispObj);
                 this.removeEntity(body);
                 //Global.snd.questItem();
@@ -260,19 +268,19 @@ export class MainScene extends Scene {
             case DamageType.LavaBorder:  //  border lava   
                 {
                     let now = performance.now() / 1000;
-                    if (!Global.stats.buffs[DamageType.LavaBorder] || Global.stats.buffs[DamageType.LavaBorder] < now) {
-                        this.hud.addInfoMessage(dispObj.position, "Burning", Global.MSG_WARN_STYLE, 100);
+                    if (!stats.buffs[DamageType.LavaBorder] || stats.buffs[DamageType.LavaBorder] < now) {
+                        this.hud.addInfoMessage(dispObj.position, "Burning", MSG_WARN_STYLE, 100);
                     }
-                    Global.stats.buffs[DamageType.LavaBorder] = this.secondsFromNow(1);
+                    stats.buffs[DamageType.LavaBorder] = this.secondsFromNow(1);
                 }
                 break;
             case DamageType.Lava:  //  lava
                 {
                     let now = performance.now() / 1000;
-                    if (!Global.stats.buffs[DamageType.Lava] || Global.stats.buffs[DamageType.Lava] < now) {
-                        this.hud.addInfoMessage(dispObj.position, "Burning", Global.MSG_WARN_STYLE, 100);
+                    if (!stats.buffs[DamageType.Lava] || stats.buffs[DamageType.Lava] < now) {
+                        this.hud.addInfoMessage(dispObj.position, "Burning", MSG_WARN_STYLE, 100);
                     }
-                    Global.stats.buffs[DamageType.Lava] = this.secondsFromNow(3);
+                    stats.buffs[DamageType.Lava] = this.secondsFromNow(3);
                 }
                 break;
 
@@ -315,7 +323,7 @@ export class MainScene extends Scene {
      * @param removeDisplayObject
      */
     public removeEntity(body: p2.Body, removeDisplayObject: boolean = false): void {
-        this.wp2.removeBody(body);
+        wp2.removeBody(body);
         if (removeDisplayObject) {
             this.worldContainer.removeChild((body as any).DisplayObject);
         }
@@ -325,15 +333,14 @@ export class MainScene extends Scene {
     private bullets: Bullet[] = [];
 
     private clearLevel() {
-        var stats = Global.stats;
         if (stats.currentLevel) {
             stats.currentLevel.parallax.forEach((plx: Parallax, idx: number) => {
                 this.worldContainer.removeChild(plx);
             });
             stats.currentLevel.entities.forEach((body: any) => {
-                if (body !== this.wp2.playerBody) {
+                if (body !== wp2.playerBody) {
                     this.worldContainer.removeChild(body.DisplayObject);
-                    this.wp2.removeBody(body);
+                    wp2.removeBody(body);
                     body.DisplayObject = null;
                 }
             });
@@ -343,7 +350,7 @@ export class MainScene extends Scene {
             all.forEach((child: any) => {
                 this.worldContainer.removeChild(child);
             });
-            this.wp2.clearLevel();
+            wp2.clearLevel();
             this.bullets = [];
         }
     }

@@ -1,15 +1,13 @@
-﻿import * as Global from "../global";
-import { LevelLoader } from "../objects/LevelLoader";
-import { WorldP2 } from "../objects/WorldP2";
+﻿import { LevelLoader } from "../world/LevelLoader";
+import { wp2 } from "../world/WorldP2";
 import { Mob } from "../mobs/Mob";
 import { AnimatedSprite, AnimationSequence } from "../_engine/AnimatedSprite";
+import { stats } from '../objects/PlayerStats';
 
 export class SpawnPoint {
     private mobCount: number = 0;
     private nextSpawn: number = 0;
-    private templates;
     private worldContainer: PIXI.Container;;
-    private wp2: WorldP2;;
 
     constructor(public name: string,
         private x: number,
@@ -19,9 +17,7 @@ export class SpawnPoint {
         private respawnSeconds: number,
         private entity: any,
         private active: boolean = true){
-
-        this.nextSpawn = performance.now() / 1000;
-       
+            this.nextSpawn = performance.now() / 1000;       
     }
 
     public get IsActive() { return this.active; };
@@ -34,22 +30,15 @@ export class SpawnPoint {
             var now = performance.now() / 1000;
             if (this.nextSpawn <= now) {
 
-                //  grab the level templates if not present
-                if (!this.templates) {
-                    var igs: any = Global.getScm().GetScene("InGame");
-                    this.templates = igs.currentLevel.templates;
-                    this.worldContainer = igs.worldContainer as PIXI.Container;
-                    this.wp2 = igs.wp2 as WorldP2;
-                }
 
-                var mobBody = LevelLoader.createMob(this.templates, this.entity);
+                var mobBody = LevelLoader.createMob(stats.currentLevel.templates, this.entity);
                 let dispObj = (mobBody as any).DisplayObject as Mob;
 
                 let x = this.x + (Math.random() * this.area) - (this.area / 2);
                 let y = this.y;
 
                 mobBody.position = [x, y];
-                this.wp2.addBody(mobBody);
+                wp2.addBody(mobBody);
 
                 dispObj.position.set(x, y);
                 dispObj.visible = false;
