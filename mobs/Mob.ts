@@ -1,6 +1,6 @@
 ﻿import { AnimatedSprite, AnimationSequence } from "../_engine/AnimatedSprite";
 import { Bullet } from "../objects/Bullet";
-//import { SoundMan } from "../SoundMan";
+import { snd } from "../world/SoundMan";
 import * as Global from "../global";
 import { AI } from "./AI";
 import { BasicStaticAI } from "./BasicStaticAI";
@@ -110,8 +110,7 @@ export class Mob extends AnimatedSprite {
     public attack = ()=> {
         var currentSeq = this.currentSequence;
         var currentFps = this.fps;
-        //  TODO: soundmanager implementation
-        //  Global.snd.atkMagic1();
+        snd.atkMagic1();
         if (this._direction == DirectionH.Left) {
             this.play("latk", currentFps, false);
         } else {

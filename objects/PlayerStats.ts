@@ -2,6 +2,7 @@
 import { eventEmitter, DAMAGE_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC} from "../events";
 import { LevelLoader } from '../world/LevelLoader';
 import { ILevel } from '../world/LevelInterfaces';
+import { snd } from '../world/SoundMan';
 
 export enum BaseStatType {
     MaxHP,
@@ -225,6 +226,7 @@ class PlayerStats {
 
     public loadLevel(){
         this.currentLevel =  this.LevelLoader.buildLevel(this.currentGameLevel);
+        snd.playTrack(this.currentLevel.audioTrack || 0);
     }
 
     /**

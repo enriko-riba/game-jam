@@ -4,6 +4,9 @@ const BTN_X = SCENE_WIDTH - 48;
 const BTN_Y = 4;
 const BTN_SCALE = 1.0;
 
+/**
+ * Implements options and full screen togle buttons.
+ */
 export class MasterHud extends PIXI.Container {
     constructor(private sceneManager:SceneManager){
         super();

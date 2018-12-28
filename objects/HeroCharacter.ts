@@ -9,6 +9,7 @@ import { StatType, stats } from './PlayerStats';
 import { Mob, AtrType } from '../mobs/Mob';
 import { LevelLoader } from '../world/LevelLoader';
 import { IInteractionType } from '../world/LevelInterfaces';
+import { snd } from '../world/SoundMan';
 
 const HERO_FRAME_SIZE: number = 64;
 
@@ -71,7 +72,7 @@ export class HeroCharacter extends AnimatedSprite {
         this.addAnimations(new AnimationSequence("jumpleft", asset, [24, 25, 26, 27, 28, 29], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpright", asset, [30, 31, 32, 33, 34, 35], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpup", asset, [1, 3, 4, 6], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("idle", asset, [1, 1, 34, 5, 13, 12, 6, 7, 11, 18, 19, 0, 1, 1], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("idle", asset, [1, 1, 0, 1, 2, 3, , 4, 5, 13, 12, 6, 7, 11, 18, 19, 0], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
 
         this.addAnimations(new AnimationSequence("jumpdownleft", asset, [36, 37, 38], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpdownright", asset, [39, 40, 41], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
@@ -86,36 +87,44 @@ export class HeroCharacter extends AnimatedSprite {
                     if(this.idleAnimationTimeoutHandle) clearTimeout(this.idleAnimationTimeoutHandle);
                     this.idleAnimationTimeoutHandle = setTimeout(() => {
                         this.play("idle", ANIMATION_FPS_SLOW);
+                        snd.idle();
                     }, 250);
                     //this.play("idle", ANIMATION_FPS_SLOW);
                     break;
                 case MovementState.Left:
                     clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("left", fps);
+                    snd.walk(event.isRunning);
                     break;
                 case MovementState.Right:
                     clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("right", fps);
+                    snd.walk(event.isRunning);
                     break;
                 case MovementState.JumpLeft:
                     clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpleft", fps);
+                    snd.jump();
                     break;
                 case MovementState.JumpRight:
                     clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpright", fps);
+                    snd.jump();
                     break;
                 case MovementState.JumpUp:
                     clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpup", fps);
+                    snd.jump();
                     break;
                 case MovementState.JumpDownLeft:
                     clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpdownleft", fps);
+                    snd.jumpAttack();
                     break;
                 case MovementState.JumpDownRight:
                     clearTimeout(this.idleAnimationTimeoutHandle);
                     this.play("jumpdownright", fps);
+                    snd.jumpAttack();
                     break;
             }
         });
@@ -212,17 +221,18 @@ export class HeroCharacter extends AnimatedSprite {
      * @param event
      */
     private onPlayerContact(event: any): void {
-        const SMOKE_VELOCITY: number = 430;
-        const ATTACK_VELOCITY: number = 545;
+        const SND_TRESHOLD_VELOCITY: number = 400;
+        const SMOKE_VELOCITY: number = 450;
+        const ATTACK_VELOCITY: number = 550;
 
         let body: p2.Body = event.body as p2.Body;
+        var mob: Mob = event.body.DisplayObject as Mob;
+
         let verticalVelocity = Math.abs(event.velocity[1]);
        
         if (verticalVelocity > ATTACK_VELOCITY) {
             //console.log("Vert velocity: " + verticalVelocity);
-
             //  check collision vs mobs
-            var mob: Mob = (body as any).DisplayObject as Mob;
             if (mob instanceof Mob) {
                 if (!mob.isLoading) {
                     this.handleMobInteraction(mob, body);
@@ -232,11 +242,15 @@ export class HeroCharacter extends AnimatedSprite {
                 this.MovementState === MovementState.JumpDownLeft ||
                 this.MovementState === MovementState.JumpDownRight
             ) {
+                snd.jumpContact();
                 //TODO: implement
                 //this.startGroundShake(400, 6);
+                return;
             }
-        } else if (verticalVelocity > SMOKE_VELOCITY) {
-            //console.log("Vert velocity: " + verticalVelocity);
+        } 
+        
+        if (verticalVelocity > SMOKE_VELOCITY) {
+            console.log("Vert velocity: " + verticalVelocity);
             var smoke: AnimatedSprite = new AnimatedSprite();
             smoke.addAnimations(new AnimationSequence("smoke", "assets/img/effects/jump_smoke.png",
                 [0, 1, 2, 3, 4, 5], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
@@ -249,6 +263,11 @@ export class HeroCharacter extends AnimatedSprite {
             this.container.addChild(smoke);
             smoke.onComplete = () => this.container.removeChild(smoke);
             smoke.play("smoke", 6, false);
+        }
+        
+        if(verticalVelocity > SND_TRESHOLD_VELOCITY){
+            snd.jumpContact();
+            console.log("velocity: " + event.velocity);
         }
     }
 
@@ -273,7 +292,7 @@ export class HeroCharacter extends AnimatedSprite {
 
         this.removeEntity(body);
         mob.squish(() => this.container.removeChild(dispObj));
-        //Global.snd.mobSquish();
+        snd.mobSquish();
 
         //  add exp       
         var exp = mob.attributes[AtrType.HP] / 2;

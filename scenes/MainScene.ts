@@ -14,6 +14,7 @@ import { Lava } from '../objects/Lava';
 import { LevelLoader } from '../world/LevelLoader';
 import { Platform } from '../objects/Platform';
 import { Bumper } from '../objects/Bumper';
+import { snd } from '../world/SoundMan';
 
 
 export class MainScene extends Scene {
@@ -201,9 +202,9 @@ export class MainScene extends Scene {
 
     private handleBurnChange = (event: IBurnChangeEvent) => {
         if (event.isBurning) {
-            //Global.snd.burn();
+            snd.burn();
         } else {
-            //Global.snd.burnStop();
+            snd.burnStop();
         }
     }
 
@@ -221,7 +222,7 @@ export class MainScene extends Scene {
                 this.addCollectibleTween(dispObj);
                 this.hud.addInfoMessage(dispObj.position, "+1 coin", MSG_COIN_STYLE, -100);
                 this.removeEntity(body);
-               // Global.snd.coin();
+                snd.coin();
                 break;
 
             case 2: //  coin
@@ -229,7 +230,7 @@ export class MainScene extends Scene {
                 this.addCollectibleTween(dispObj);
                 this.hud.addInfoMessage(dispObj.position, "+10 coins", MSG_COIN_STYLE, -100);
                 this.removeEntity(body);
-               // Global.snd.coin();
+                snd.coin();
                 break;
 
             case 3: //  blue gem
@@ -237,7 +238,7 @@ export class MainScene extends Scene {
                 this.addCollectibleTween(dispObj);
                 this.hud.addInfoMessage(dispObj.position, "+100 coins", MSG_COIN_STYLE, -100);
                 this.removeEntity(body);
-                //Global.snd.gem();
+                snd.gem();
                 break;
 
             //------------------------------------
@@ -248,7 +249,7 @@ export class MainScene extends Scene {
                 this.hud.addInfoMessage(dispObj.position, "Kendo knowledge acquired!", MSG_COIN_STYLE);
                 this.addCollectibleTween(dispObj);
                 this.removeEntity(body);
-                //Global.snd.questItem();
+                snd.questItem();
                 //this.questMngr.acquireItem(201);
                 break;
 
@@ -256,7 +257,7 @@ export class MainScene extends Scene {
                 this.hud.addInfoMessage(dispObj.position, "1 Ki acquired!", MSG_COIN_STYLE);
                 this.addCollectibleTween(dispObj);
                 this.removeEntity(body);
-                //Global.snd.questItem();
+                snd.questItem();
                 //this.questMngr.acquireItem(202);
                 //  TODO: quest manager
                 break;
@@ -280,7 +281,7 @@ export class MainScene extends Scene {
                     if (!stats.buffs[DamageType.Lava] || stats.buffs[DamageType.Lava] < now) {
                         this.hud.addInfoMessage(dispObj.position, "Burning", MSG_WARN_STYLE, 100);
                     }
-                    stats.buffs[DamageType.Lava] = this.secondsFromNow(3);
+                    stats.buffs[DamageType.Lava] = this.secondsFromNow(4);
                 }
                 break;
 

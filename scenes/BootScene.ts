@@ -2,7 +2,7 @@
 import { SceneManager } from "..";
 import { MasterHud } from "../objects/MasterHud"
 import { LoaderScene } from "./LoaderScene";
-import { Toast, configureToasts } from "toaster-js";
+//import { Toast, configureToasts } from "toaster-js";
 import { MainScene } from './MainScene';
 import { OptionsScene } from './OptionsScene';
 import { SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT } from '..';
@@ -135,9 +135,9 @@ export class BootScene extends Scene {
     }
 
     private createScenesAndStart = async ()=>{        
-        configureToasts({
-            topOrigin: -20
-        });
+        // configureToasts({
+        //     topOrigin: -20
+        // });
 
         this.sceneManager.Renderer.roundPixels = true;
         this.sceneManager.AddScene(new MainScene(this.sceneManager));

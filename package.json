@@ -12,18 +12,18 @@
   "author": "Enriko Riba",
   "license": "",
   "dependencies": {
-    "@tweenjs/tween.js": "^17.2.0",
-    "@types/p2": "^0.7.31",
+    "@tweenjs/tween.js": "^17.2.0",    
+    "howler": "^2.1.1",
     "p2": "^0.7.1",
     "pixi-filters": "^2.6.1",
     "pixi-particles": "^3.1.0",
-    "pixi.js": "^4.8.4",
-    "toaster-js": "2.2.0"
+    "pixi.js": "^4.8.4"
   },
   "devDependencies": {
     "@types/pixi.js": "^4.8.6",
     "@types/tween.js": "^16.9.0",
     "@types/webpack": "^4.4.22",
+    "@types/p2": "^0.7.31",
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^2.0.2",

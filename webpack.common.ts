@@ -9,7 +9,7 @@ const config: webpack.Configuration = {
       
     entry: {
         main:   "./app.ts",
-        common: ["@tweenjs/tween.js", "pixi.js", "pixi-filters", "toaster-js"],
+        common: ["@tweenjs/tween.js", "pixi.js", "pixi-filters"], //, "toaster-js"],
         //frb: ["firebase/app","firebase/auth", "firebaseui"],
         //pixi:       "pixi.js"
     },
