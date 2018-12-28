@@ -67,11 +67,11 @@ export class KeyboardMapper {
         }
     }
 
-    private keydown(e/*: JQueryEventObject*/) {
+    private keydown(e) {
         this.keyboard[e.which] = true;
     }
 
-    private keyup(e/*: JQueryEventObject*/) {
+    private keyup(e) {
         this.keyboard[e.which] = false;
     }
 

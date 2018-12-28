@@ -1,4 +1,5 @@
-﻿import {eventEmitter, DPS_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC} from "../global";
+﻿import {eventEmitter, DAMAGE_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC, GameLevels} from "../global";
+import { ILevel, LevelLoader } from './LevelLoader';
 
 export enum BaseStatType {
     MaxHP,
@@ -28,7 +29,7 @@ export enum StatType {
     CharacterLevel, // calculated value: current char level based on total experience
 }
 
-export enum DpsType {
+export enum DamageType {
     LavaBorder = 1000,
     Lava = 1001,
     Poison = 1002
@@ -46,6 +47,9 @@ export interface IDpsChangeEvent {
     Amount: number;
 }
 
+export interface IBurnChangeEvent {
+    isBurning: boolean;
+}
 
 
 export class PlayerStats {
@@ -71,7 +75,7 @@ export class PlayerStats {
 
     //  achievement levels
     public characterLevel: number = 0;
-    public gameLevel: number = 0;
+    public currentGameLevel: number = 1;
     private expForNextLevel: number = 0;
 
     //  user related
@@ -141,13 +145,13 @@ export class PlayerStats {
             if (this.buffs[i] && this.buffs[i] > now) {
                 let dps = 0;
                 switch (i) {
-                    case DpsType.LavaBorder:  
+                    case DamageType.LavaBorder:  
                         dps = 5;
                         break;
-                    case DpsType.Lava:  
+                    case DamageType.Lava:  
                         dps = 15;
                         break;
-                    case DpsType.Poison:  
+                    case DamageType.Poison:  
                         dps = 10;
                         break;
                 }
@@ -180,7 +184,7 @@ export class PlayerStats {
                     OldValue: this.stats[StatType.HP],
                     Amount: -amount
                 };                
-                eventEmitter.emit(DPS_TOPIC, event);
+                eventEmitter.emit(DAMAGE_TOPIC, event);
                 this.increaseStat(StatType.HP, -amount);
                 this.dpsDecreaseAmount -= amount;
             }
@@ -190,7 +194,7 @@ export class PlayerStats {
         //  check if is burning
         //--------------------------
         let wasBurning = this.isBurningBuff;
-        this.isBurningBuff = this.buffs[1000] > now || this.buffs[1001] > now;
+        this.isBurningBuff = this.buffs[DamageType.LavaBorder] > now || this.buffs[DamageType.Lava] > now;
         if (wasBurning !== this.isBurning) {            
             eventEmitter.emit(BURN_TOPIC, { wasBurning: wasBurning, isBurning: this.isBurningBuff });
         }
@@ -204,11 +208,20 @@ export class PlayerStats {
     }
 
     /**
+     * Returns true if the player is taking burn damage.
+     */
+    public currentLevel : ILevel;
+
+    public loadLevel(){
+        this.currentLevel = new LevelLoader(GameLevels).buildLevel(this.currentGameLevel);
+    }
+
+    /**
      * Saves user data.
      */
     public saveUserState(isLevelCompleted: boolean) {
         if (isLevelCompleted) {
-            this.gameLevel += 1;
+            this.currentGameLevel += 1;
         }
         let model = {
             ExternalId: this.id,
@@ -218,7 +231,7 @@ export class PlayerStats {
             Exp: this.stats[StatType.TotalExp],
             AtrPts: this.stats[StatType.AttributePoints],
             HP: this.stats[StatType.HP],
-            LastLevel: this.gameLevel,
+            LastLevel: this.currentGameLevel,
             // TODO: add sending skills etc.
         };
         // AjaxHelper.Post(baseUrl + "/api/user/save", model, (data, status) => {

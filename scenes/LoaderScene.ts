@@ -1,4 +1,5 @@
 ﻿import { Global, PIXI, Scene, SceneManager } from "..";
+import { LevelLoader } from '../objects/LevelLoader';
 
 export class LoaderScene extends Scene {
     private loadingMessage: PIXI.Text;
@@ -34,7 +35,11 @@ export class LoaderScene extends Scene {
         }
     }
 
-    public onActivate = () => {       
+    public onActivate = () => {   
+        Global.GameLevels = PIXI.loader.resources["assets/levels.json"].data;
+        let assets: string[] = LevelLoader.GetLevelAssets(Global.GameLevels, Global.stats.currentGameLevel);
+        this.preloadAsdsets = assets.concat(this.preloadAsdsets);
+
         PIXI.loader
             .add(this.preloadAsdsets)
             .load(this.onLoaded)

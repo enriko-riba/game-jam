@@ -3,11 +3,9 @@ import { WorldP2 } from './WorldP2';
 import { StatType } from './PlayerStats';
 import { eventEmitter } from '../global';
 
-
-
 export class MovementController {
     private readonly VELOCITY = 150;
-    private readonly JUMP_FORCE = 17000;
+    private readonly JUMP_FORCE = 17500;
     private readonly JUMP_ATTACK_FORCE = -14000;
 
     private readonly JUMP_COOLDOWN = 500;
@@ -38,6 +36,7 @@ export class MovementController {
     public get isInteractive(): boolean {
         return this._isInteractive;
     }
+
     /**
      * Sets if the player can interact via controls.
      */
@@ -159,14 +158,14 @@ export class MovementController {
         var canRun = Global.stats.getStat(StatType.Dust) > 1;
         var newIsRunning: boolean = this.kbd.isKeyDown(KEY_SHIFT) && canRun && this._isInteractive;
 
-        if (this.kbd.isKeyDown(KEY_A) || this.kbd.isKeyDown(KEY_LEFT) /*|| this.isTouchLeft*/) {
+        if (this.kbd.isKeyDown(KEY_A) || this.kbd.isKeyDown(KEY_LEFT) ) {
             this.newState = MovementState.Left;
-        } else if (this.kbd.isKeyDown(KEY_D) || this.kbd.isKeyDown(KEY_RIGHT) /*|| this.isTouchRight*/) {
+        } else if (this.kbd.isKeyDown(KEY_D) || this.kbd.isKeyDown(KEY_RIGHT)) {
             this.newState = MovementState.Right;
         }
 
         //  check if jump is pressed
-        if ((this.kbd.isKeyDown(KEY_W) || this.kbd.isKeyDown(KEY_UP) || this.kbd.isKeyDown(SPACE) /*|| this.isTouchJump*/) && this.CanJump) {
+        if ((this.kbd.isKeyDown(KEY_W) || this.kbd.isKeyDown(KEY_UP) || this.kbd.isKeyDown(SPACE)) && this.CanJump) {
             if (this.movementState === MovementState.Left) {
                 this.newState = MovementState.JumpLeft;
             } else if (this.movementState === MovementState.Right) {
@@ -217,7 +216,7 @@ export class MovementController {
 
         if (this.IsJumping) {
             //  allow for some minimal horizontal movement (this is to prevent getting stuck in air if between two bodies with friction and no contacts)
-            return direction;
+            return direction * 0.2;
         } else {
             var velocity: number = direction * this.VELOCITY * (this.IsRunning ? 2 : 1.0);
             return velocity;

@@ -1,8 +1,9 @@
 import { Global } from '..';
-import { createParticleEmitter } from './HeroCharacter';
-import { eventEmitter } from '../global';
-import { StatType } from './PlayerStats';
+import { eventEmitter, createParticleEmitter } from '../global';
+import { StatType, IStatChangeEvent } from './PlayerStats';
 import * as particles from "pixi-particles";
+
+import * as TWEEN from "@tweenjs/tween.js";
 
 export class StatsHud extends PIXI.Container {
     private txtHP: PIXI.Text;
@@ -18,14 +19,45 @@ export class StatsHud extends PIXI.Container {
 
     constructor() {
         super();
-        this.setupStats();
+        this.setup();
     }
 
     public onUpdate(dt: number) {
         this.emitter.update(dt*0.001);
     }
 
-    private setupStats() {
+    /**
+     * Starts an animation tween with informational text moving upwards from the given position.
+     * @param position the start position of the message
+     * @param message the message to be added
+     * @param style optional PIXI.ITextStyle
+     */
+    public addInfoMessage(position: PIXI.PointLike | {x: number, y: number}, message: string, style?: PIXI.TextStyleOptions, offsetX?: number): void {
+        var stl = style || Global.TEXT_STYLE;
+        var txtInfo = new PIXI.Text(message, stl);
+        offsetX = offsetX || 0;
+        txtInfo.position.set((Global.SCENE_WIDTH / 2) + offsetX, Global.SCENE_HEIGHT - position.y - 70);
+        txtInfo.scale.set(1, 1);
+
+        this.addChild(txtInfo);
+
+        var dy = (position.y > Global.SCENE_HEIGHT / 2) ? 250 : -250;
+        var upY = Global.SCENE_HEIGHT - position.y + dy;
+        var moveUp = new TWEEN.Tween(txtInfo.position)
+            .to({ y: upY }, 2000);
+        moveUp.start();
+
+        var scale = new TWEEN.Tween(txtInfo.scale)
+            .to({ x: 1.6, y: 1.6 }, 2200)
+            .easing(TWEEN.Easing.Linear.None);
+
+        var fade = new TWEEN.Tween(txtInfo)
+            .to({ alpha: 0 }, 3000)
+            .onComplete(() => this.removeChild(txtInfo));
+        scale.chain(fade).start();
+    }
+
+    private setup() {
         //  HP
         {
             let y: number = 5;
@@ -49,7 +81,7 @@ export class StatsHud extends PIXI.Container {
 
         //  pixi dust
         {
-            let y = 90;
+            let y = 75;
             let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
             pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(5, y);
@@ -59,17 +91,18 @@ export class StatsHud extends PIXI.Container {
             this.txtDust = new PIXI.Text("0", Global.TEXT_STYLE);
             this.txtDust.resolution = window.devicePixelRatio;
             this.txtDust.position = new PIXI.Point(80, y + 15);
-            this.addChild(this.txtDust);           
+            this.addChild(this.txtDust);  
+
             this.emitter = createParticleEmitter(pnl, [PIXI.Texture.fromImage("assets/star.png")]);
             this.emitter.updateOwnerPos(65, 90);
-            //this.emitter.startSpeed = 15;
             this.emitter.maxLifetime = 0.6;
             this.emitter.maxParticles = 50;
+            this.emitter.emit = true;
         }
 
         //  coins
         {
-            let y = 170;
+            let y = 145;
 
             let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
             pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
@@ -123,7 +156,42 @@ export class StatsHud extends PIXI.Container {
         }
         eventEmitter.on(Global.STATCHANGE_TOPIC, this.handleStatChange);
     }
-    private renderExp(event) {
+    
+    private handleStatChange = (event:IStatChangeEvent) => {
+        switch (event.Type) {
+            case StatType.Coins:
+                this.txtCoins.text = event.NewValue.toString();
+                break;
+            case StatType.Dust:
+                this.txtDust.text = `${event.NewValue.toFixed(0)} / ${event.Stats[StatType.MaxDust].toFixed(0)}`;
+                break;
+            case StatType.MaxDust:
+                this.txtDust.text = `${Math.floor(event.Stats[StatType.Dust])} / ${event.NewValue.toFixed(0)}`;
+                break;
+            case StatType.HP:
+                this.txtHP.text = `${Math.round(event.NewValue)} / ${event.Stats[StatType.MaxHP]}`;
+                break;
+            case StatType.MaxHP:
+                this.txtHP.text = `${Math.round(event.Stats[StatType.HP])} / ${event.NewValue}`;
+                break;
+            case StatType.TotalExp:
+            let exp = event.NewValue - event.OldValue;
+                this.addInfoMessage({x: 0, y: 90}, `+${exp} exp`, null, -50);
+                this.renderExp(event);
+                break;
+            // case StatType.CharacterLevel:
+            //     this.handleLevelUp(event);
+            //     break;
+
+            // case StatType.AttributePoints:
+            //     this.characterMngr.visible = event.NewValue > 0;
+            //     this.txtAtrPts.visible = event.NewValue > 0;
+            //     //this.txtAtrPts.text = "points available";
+            //     break;
+        }
+    }
+    
+    private renderExp(event: IStatChangeEvent) {
         this.txtExp.text = `${Math.round(event.Stats[StatType.LevelExp])} / ${event.Stats[StatType.LevelMaxExp]}`;
         this.txtLevel.text = `Level ${Global.stats.characterLevel}`;
 
@@ -152,36 +220,4 @@ export class StatsHud extends PIXI.Container {
             .easing(TWEEN.Easing.Bounce.Out);
         preFillTween.chain(fillTween).start();
     }
-    
-    private handleStatChange = (event) => {
-        switch (event.Type) {
-            case StatType.Coins:
-                this.txtCoins.text = event.NewValue.toString();
-                break;
-            case StatType.Dust:
-                this.txtDust.text = `${event.NewValue.toFixed(0)} / ${event.Stats[StatType.MaxDust].toFixed(0)}`;
-                break;
-            case StatType.MaxDust:
-                this.txtDust.text = `${Math.floor(event.Stats[StatType.Dust])} / ${event.NewValue.toFixed(0)}`;
-                break;
-            case StatType.HP:
-                this.txtHP.text = `${Math.round(event.NewValue)} / ${event.Stats[StatType.MaxHP]}`;
-                break;
-            case StatType.MaxHP:
-                this.txtHP.text = `${Math.round(event.Stats[StatType.HP])} / ${event.NewValue}`;
-                break;
-            case StatType.TotalExp:
-                this.renderExp(event);
-                break;
-            // case StatType.CharacterLevel:
-            //     this.handleLevelUp(event);
-            //     break;
-
-            // case StatType.AttributePoints:
-            //     this.characterMngr.visible = event.NewValue > 0;
-            //     this.txtAtrPts.visible = event.NewValue > 0;
-            //     //this.txtAtrPts.text = "points available";
-            //     break;
-        }
-    };
 }

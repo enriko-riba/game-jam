@@ -11,6 +11,7 @@ const PRELOAD_BOOT_ASSETS = [
     'assets/gui/cur_default.png',
     'assets/gui/cur_hover.png',
     'assets/gui/cur_target.png',
+    'assets/levels.json',
 ];
 
 /**
@@ -85,7 +86,8 @@ export class BootScene extends Scene {
         document.body.style.cursor = defaultIcon;
 
         //  TODO: add assets depending on initial state
-        var assets : string[] = [
+        var assets : string[] = [   
+            
             //  gui stuff
             'assets/gui/gui_fs_enter.png',
             'assets/gui/gui_fs_exit.png',
@@ -103,26 +105,27 @@ export class BootScene extends Scene {
             'assets/gui/exp_fill.png',
 
             //  backgrounds and parallax
-            'assets/img/Canyon.png',
-            'assets/img/front01.png',
-            'assets/img/front02.png',
-            'assets/img/ground.png',
-            'assets/img/IceSnow.png',
-            'assets/img/Mountains.png',
-            'assets/img/trees01.png',
-            'assets/img/trees02.png',
-            'assets/img/trees03.png',
-            'assets/img/trees04.png',
-            'assets/img/trees05.png',
-            'assets/img/trees06.png',
-            'assets/img/trees07.png',
-            'assets/img/trees08.png',
-            'assets/img/trees09.png',
+            // 'assets/img/background/Canyon.png',
+            // 'assets/img/background/front01.png',
+            // 'assets/img/background/front02.png',
+            // 'assets/img/background/ground.png',
+            // 'assets/img/background/IceSnow.png',
+            // 'assets/img/background/Mountains.png',
+            // 'assets/img/background/trees01.png',
+            // 'assets/img/background/trees02.png',
+            // 'assets/img/background/trees03.png',
+            // 'assets/img/background/trees04.png',
+            // 'assets/img/background/trees05.png',
+            // 'assets/img/background/trees06.png',
+            // 'assets/img/background/trees07.png',
+            // 'assets/img/background/trees08.png',
+            // 'assets/img/background/trees09.png',
 
             //
             'assets/Hero.png',
-            'assets/flame.png',
             'assets/star.png',
+            'assets/img/effects/flame.png',
+            'assets/img/effects/jump_smoke.png'
         ];
 
         const ls = new LoaderScene(this.sceneManager, this.createScenesAndStart, assets);
