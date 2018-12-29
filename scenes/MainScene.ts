@@ -1,27 +1,27 @@
 import * as p2 from 'p2';
 import * as TWEEN from "@tweenjs/tween.js";
-
-import { PIXI, SceneManager, Scene, Parallax } from "..";
+import { PIXI, SceneManager, Scene, Parallax, Global } from "..";
 import { wp2 } from '../world/WorldP2';
 import { HeroCharacter } from '../objects/HeroCharacter';
 import { StatsHud } from '../objects/StatsHud';
-import { DamageType, StatType, IDpsChangeEvent, IBurnChangeEvent, stats } from '../objects/PlayerStats';
-import { Bullet } from '../Objects/Bullet';
-import { eventEmitter, BURN_TOPIC, DAMAGE_TOPIC } from '../events';
-import { IInteractionType } from '../world/LevelInterfaces';
-import { SCENE_HEIGHT, SCENE_HALF_WIDTH, SCENE_BACKCOLOR, MSG_HP_STYLE, MSG_COIN_STYLE, MSG_WARN_STYLE, ANIMATION_FPS_SLOW } from '../constants';
+import { DamageType, StatType, IBurnChangeEvent, stats } from '../objects/PlayerStats';
+import { Bullet } from '../objects/Bullet';
+import { eventEmitter, BURN_TOPIC } from '../events';
+import { SCENE_HEIGHT, SCENE_HALF_WIDTH, SCENE_BACKCOLOR, MSG_COIN_STYLE, MSG_WARN_STYLE, ANIMATION_FPS_SLOW } from '../constants';
 import { Lava } from '../objects/Lava';
 import { LevelLoader } from '../world/LevelLoader';
 import { Platform } from '../objects/Platform';
 import { Bumper } from '../objects/Bumper';
 import { snd } from '../world/SoundMan';
+import { CutScene } from './CutScene';
+import { QuestManager } from '../questSystem/QuestManager';
 
 
 export class MainScene extends Scene {
     private worldContainer: PIXI.Container;
     private parallax: Parallax[] = [];
     private hero: HeroCharacter;
-
+    private questMngr : QuestManager;
     private hud : StatsHud;
 
     constructor(scm: SceneManager) {
@@ -38,7 +38,7 @@ export class MainScene extends Scene {
         wp2.update(dt);
         this.worldContainer.x = (SCENE_HALF_WIDTH - this.hero.x);
         this.worldContainer.y = (SCENE_HEIGHT - 70);
-
+        
         //-------------------------------------------
         //  update parallax
         //-------------------------------------------
@@ -57,9 +57,8 @@ export class MainScene extends Scene {
             if (displayObject && displayObject.visible && body.type !== p2.Body.STATIC) {
                 displayObject.position.set(Math.floor(body.interpolatedPosition[0]), Math.floor(body.interpolatedPosition[1]));
                 displayObject.rotation = body.interpolatedAngle;
-            }
+            }            
             
-            /*
             if (body.Trigger && body.Trigger.type === "distance") {
                 if (this.questMngr.canActivateTrigger(body.Trigger)) {
                     let x = this.hero.position.x - body.position[0];
@@ -70,7 +69,7 @@ export class MainScene extends Scene {
                     }
                 }
             }
-            */
+            
         }
 
         //-------------------------------------------
@@ -81,12 +80,10 @@ export class MainScene extends Scene {
             if (body.DisplayObject && body.DisplayObject.interactionType) {
                 this.handleInteractiveCollision(body);
             }
-
-            /*
+            
             if (body.Trigger && body.Trigger.type === "collision") {
                 this.questMngr.handleTriggerEvent(body);
-            }
-            */
+            }            
         }
 
 
@@ -102,12 +99,26 @@ export class MainScene extends Scene {
 
         this.hud.onUpdate(dt);
         stats.onUpdate(dt);
+
+        //-------------------------------------------
+        //  check if player is dead
+        //-------------------------------------------
+        if (stats.getStat(StatType.HP) <= 0) {
+            this.IsHeroInteractive = false;
+            this.hero.visible = false;
+            var cutScene = this.sceneManager.GetScene("CutScene") as CutScene;
+            var backGroundTexture = this.sceneManager.CaptureScene();
+            cutScene.SetBackGround(backGroundTexture, this.scale);
+            cutScene.DeathScene = true;
+            this.sceneManager.ActivateScene(cutScene);
+        } 
     }
 
     private setup() {
         this.worldContainer = new PIXI.Container();
         this.worldContainer.scale.y = -1;
         this.addChild(this.worldContainer);
+        Global.worldContainer = this.worldContainer;
 
         //-----------------------------
         //  setup hero 
@@ -136,6 +147,12 @@ export class MainScene extends Scene {
             }
         });
         LevelLoader.registerFactory("Bumper", (def)=> new Bumper());
+
+        this.questMngr = new QuestManager(this);
+        eventEmitter.on(BURN_TOPIC, (event: IBurnChangeEvent) => event.isBurning ? snd.burn():snd.burnStop() );       
+    }
+
+    public startLevel(){
         this.clearLevel();
 
         //--------------------------------------
@@ -143,9 +160,11 @@ export class MainScene extends Scene {
         //  TODO: this should be via user save file
         //--------------------------------------
         stats.loadLevel();
+        snd.playTrack(stats.currentLevel.audioTrack || 0);
         stats.currentLevel.parallax.forEach((plx, idx) => {
             this.parallax.push(plx);
             this.worldContainer.addChildAt(plx, idx);
+            plx.SetViewPortX(stats.currentLevel.start[0]);
         });
         //--------------------------------------
         //  add all objects from level to scene
@@ -163,18 +182,34 @@ export class MainScene extends Scene {
         //  set start for player
         wp2.playerBody.position[0] = stats.currentLevel.start[0];
         wp2.playerBody.position[1] = stats.currentLevel.start[1];
-
-        eventEmitter.on(BURN_TOPIC, this.handleBurnChange);
-        eventEmitter.on(DAMAGE_TOPIC, this.handleDpsChange);
+        
+        this.questMngr.reset();
+        this.hero.visible = true;
+        this.IsHeroInteractive = true;
+        this.sceneManager.ActivateScene(this);
     }
 
     /**
-     * Starts an animation tween and removes the display object from scene.
+     * Sets player interactivity.
+     */
+    public set IsHeroInteractive(value: boolean) {
+        if (this.hero.IsInteractive !== value) {
+            this.hero.IsInteractive = value;
+            if (!this.hero.IsInteractive) {
+                this.hero.play("idle", ANIMATION_FPS_SLOW);
+                snd.idle();
+            }
+        }
+    }
+
+    /**
+     * Starts an animation tween and removes the display object & body from scene.
      * @param dispObj
      */
-    private addCollectibleTween(dispObj: PIXI.DisplayObject): void {
+    private collectObject(body): void {
+        var dispObj: PIXI.DisplayObject = body.DisplayObject as PIXI.DisplayObject;
+
         var orgScaleX = dispObj.scale.x;
-        //var orgScaleY = dispObj.scale.y;
         var upX = dispObj.position.x + 45;
         var upY = dispObj.position.y + 160;
 
@@ -194,18 +229,7 @@ export class MainScene extends Scene {
             .onComplete(() => this.worldContainer.removeChild(dispObj));
 
         moveUp.chain(scale, moveAway).start();
-    }
-
-    private handleDpsChange = (event: IDpsChangeEvent) => {
-        this.hud.addInfoMessage(this.hero.position, `${event.Amount} HP`, MSG_HP_STYLE, 50);
-    };
-
-    private handleBurnChange = (event: IBurnChangeEvent) => {
-        if (event.isBurning) {
-            snd.burn();
-        } else {
-            snd.burnStop();
-        }
+        this.removeEntity(body);
     }
 
     /**
@@ -214,30 +238,26 @@ export class MainScene extends Scene {
      */
     private handleInteractiveCollision(body: any): void {
         var dispObj: PIXI.DisplayObject = body.DisplayObject as PIXI.DisplayObject;
-
-
-        switch ((dispObj as IInteractionType).interactionType) {
+        let interactionType: number = body.DisplayObject.interactionType;
+        switch (interactionType) {
             case 1: //  small coin
                 stats.increaseStat(StatType.Coins, 1);
-                this.addCollectibleTween(dispObj);
+                this.collectObject(body);
                 this.hud.addInfoMessage(dispObj.position, "+1 coin", MSG_COIN_STYLE, -100);
-                this.removeEntity(body);
                 snd.coin();
                 break;
 
             case 2: //  coin
                 stats.increaseStat(StatType.Coins, 10);
-                this.addCollectibleTween(dispObj);
+                this.collectObject(body);
                 this.hud.addInfoMessage(dispObj.position, "+10 coins", MSG_COIN_STYLE, -100);
-                this.removeEntity(body);
                 snd.coin();
                 break;
 
             case 3: //  blue gem
                 stats.increaseStat(StatType.Coins, 100);
-                this.addCollectibleTween(dispObj);
+                this.collectObject(body);
                 this.hud.addInfoMessage(dispObj.position, "+100 coins", MSG_COIN_STYLE, -100);
-                this.removeEntity(body);
                 snd.gem();
                 break;
 
@@ -247,16 +267,14 @@ export class MainScene extends Scene {
 
             case 201:  //  kendo knowledge
                 this.hud.addInfoMessage(dispObj.position, "Kendo knowledge acquired!", MSG_COIN_STYLE);
-                this.addCollectibleTween(dispObj);
-                this.removeEntity(body);
+                this.collectObject(body);
                 snd.questItem();
                 //this.questMngr.acquireItem(201);
                 break;
 
             case 202:  //  KI
                 this.hud.addInfoMessage(dispObj.position, "1 Ki acquired!", MSG_COIN_STYLE);
-                this.addCollectibleTween(dispObj);
-                this.removeEntity(body);
+                this.collectObject(body);
                 snd.questItem();
                 //this.questMngr.acquireItem(202);
                 //  TODO: quest manager
@@ -265,7 +283,6 @@ export class MainScene extends Scene {
             //------------------------------------
             //  OBJECTS DOING DAMAGE 1000-1999
             //------------------------------------
-
             case DamageType.LavaBorder:  //  border lava   
                 {
                     let now = performance.now() / 1000;
@@ -286,20 +303,7 @@ export class MainScene extends Scene {
                 break;
 
             default:
-            //----------------------------------------------------------
-            //  MOBS 2000 - 2999
-            //  Note: mobs don't interact on collision because only 
-            //  some contacts are important (jump etc). Therefore
-            //  handleInteractiveCollision() is called manually and
-            //  the callee must set the mob.ShouldInteract to exclude
-            //  standard collision logic.
-            //----------------------------------------------------------
-            //if (dispObj.interactionType >= 2000 && dispObj.interactionType < 3000) {
-            //    var mob: Mob = body.DisplayObject as Mob;
-            //    if (mob.ShouldInteract) {
-            //        this.handleMobInteraction(mob, dispObj.interactionType, body);
-            //    }                    
-            //}
+                throw "Unsupported interactionType: " + interactionType.toString();
         }
     }
 
@@ -311,14 +315,11 @@ export class MainScene extends Scene {
         var now = performance.now() / 1000;
         now += seconds;
         return now;
-    };
-
-
-    
+    }    
 
     /**
      * Removes an entity from the p2 world and sets its DisplayObject to null.
-     * If the removeDisplayObject is true the display object will be also removed from the worldContainer
+     * If the removeDisplayObject is true the display object will be also removed from the worldContainer.
      *
      * @param body
      * @param removeDisplayObject
@@ -330,8 +331,6 @@ export class MainScene extends Scene {
         }
         (body as any).DisplayObject = null;
     }
-
-    private bullets: Bullet[] = [];
 
     private clearLevel() {
         if (stats.currentLevel) {
@@ -352,7 +351,7 @@ export class MainScene extends Scene {
                 this.worldContainer.removeChild(child);
             });
             wp2.clearLevel();
-            this.bullets = [];
+            Bullet.reset();
         }
     }
 }

@@ -46,7 +46,7 @@ export class SpawnPoint {
                 this.worldContainer.addChild(dispObj);
 
                 let loadSpr = new AnimatedSprite();
-                loadSpr.addAnimations(new AnimationSequence("load", "assets/_distribute/load.png", [0, 1, 2, 3], 64, 64));
+                loadSpr.addAnimations(new AnimationSequence("load", "assets/img/effects/load.png", [0, 1, 2, 3], 64, 64));
                 loadSpr.anchor.set(0.5);
                 loadSpr.position.set(x, y+10);
                 loadSpr.play("load", 4, true);

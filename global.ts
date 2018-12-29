@@ -37,6 +37,8 @@ let sceneManager: SceneManager;
  */
 export var position = new PIXI.Point();
 
+export var worldContainer : PIXI.Container;
+
 export function createParticleEmitter(container: PIXI.Container, textures: PIXI.Texture[], config?: any): particles.Emitter {
     "use strict";
     var cfg: any = {
@@ -100,8 +102,8 @@ export function createParticleEmitter(container: PIXI.Container, textures: PIXI.
     return emitter;
 }
 
-export var GameLevels: IRootObject = {
+export var LevelDefinitions: IRootObject = {
         templates: undefined,
         levels: undefined,
-        //quests: undefined
-    };
+        quests: undefined
+};

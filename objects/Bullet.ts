@@ -1,4 +1,9 @@
-﻿/**
+﻿import * as p2 from "p2";
+import { COL_GRP_PLAYER, COL_GRP_BULLET, COL_GRP_SCENE, COL_GRP_GROUND } from '../world/CollisionGroups';
+import { wp2 } from '../world/WorldP2';
+import { Global } from '..';
+
+/**
  * Base for bullets, decals etc.
  */
 export class Bullet extends PIXI.Sprite {
@@ -7,6 +12,9 @@ export class Bullet extends PIXI.Sprite {
     private startTime: number;
     private isDead: boolean;
     private onDeath: () => void;
+
+    public readonly interactionType: number = 666;
+    public body: p2.Body;
 
     /**
      * Creates a new bullet particle.
@@ -18,13 +26,9 @@ export class Bullet extends PIXI.Sprite {
      */
     constructor(texture: PIXI.Texture, public velocity: number, ttl: number, public damage: number) {
         super(texture);
-
         this.ttl = ttl;
         this.IsDead = false;
-        //this.interactionType = 666;
     }
-
-    public body: p2.Body;
 
     public set Direction(direction: PIXI.Point) {
         //  normalize movement vector
@@ -72,7 +76,6 @@ export class Bullet extends PIXI.Sprite {
         return this.onDeath;
     }
 
-
     public onUpdate = () => {
         // TTL expiry
         if (!this.isDead) {
@@ -81,4 +84,68 @@ export class Bullet extends PIXI.Sprite {
             this.IsDead = this.ttl < ellapsed;
         }
     }
+
+    private static bullets: Bullet[] = [];
+    public static emitBullet = (textureName: string, position: PIXI.Point, target:{x: number, y: number} | number[], damage: number): Bullet => {
+        let bullet = Bullet.findDeadBullet();
+        if (!bullet) {
+
+            //  create new bullet
+            bullet = new Bullet(PIXI.loader.resources[textureName].texture, 200, 5, damage);
+            bullet.anchor.set(0.5);
+            bullet.scale.set(0.5);
+            Bullet.bullets.push(bullet);
+            Global.worldContainer.addChild(bullet);
+
+            //-----------------------------
+            //  create body (sensor shape)
+            //-----------------------------
+            let shape = new p2.Circle({ radius: bullet.width / 2 });
+            shape.collisionGroup = COL_GRP_BULLET;
+            shape.collisionMask = COL_GRP_PLAYER | COL_GRP_SCENE | COL_GRP_GROUND;
+            shape.sensor = true;
+            var options: p2.BodyOptions = {
+                mass: 0,
+                position: [position.x, position.y],
+                angle: 0,
+                fixedRotation: false,
+                angularDamping: 0,
+                damping: 0
+            } as p2.BodyOptions;
+            let body = new p2.Body(options);
+            body.addShape(shape);
+            body.setDensity(0.0);
+            body.gravityScale = 0;
+            body.angularVelocity = 2;
+            body.collisionResponse = false;
+            body.type = p2.Body.DYNAMIC;
+            (body as any).DisplayObject = bullet;
+            bullet.body = body;
+            wp2.addBody(body);
+        } 
+
+        bullet.position = position;
+        let pt = (target instanceof Array) ? new PIXI.Point(target[0] - position.x, target[1] - position.y) : new PIXI.Point(target.x - position.x, target.y - position.y);
+        bullet.Direction = pt;
+        bullet.damage = damage;
+        bullet.IsDead = false;
+        bullet.body.velocity[0] = bullet.Direction.x * bullet.velocity;
+        bullet.body.velocity[1] = bullet.Direction.y * bullet.velocity;
+
+        return bullet;
+    };
+
+    public static reset(){
+        Bullet.bullets = [];
+    }
+
+    private static findDeadBullet = (): Bullet => {
+        for (var i = 0, len = Bullet.bullets.length; i < len; i++) {
+            let blt = Bullet.bullets[i];
+            if (blt.IsDead) {
+                return blt;
+            }
+        }
+        return null;
+    };
 }

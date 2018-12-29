@@ -1,8 +1,7 @@
-﻿import { GameLevels } from '../global';
+﻿import { LevelDefinitions } from '../global';
 import { eventEmitter, DAMAGE_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC} from "../events";
 import { LevelLoader } from '../world/LevelLoader';
 import { ILevel } from '../world/LevelInterfaces';
-import { snd } from '../world/SoundMan';
 
 export enum BaseStatType {
     MaxHP,
@@ -136,7 +135,7 @@ class PlayerStats {
      */
     public get LevelLoader(){
         if(!this.levelLoader){
-            this.levelLoader = new LevelLoader(GameLevels);
+            this.levelLoader = new LevelLoader(LevelDefinitions);
         }
         return this.levelLoader;
     }
@@ -192,7 +191,7 @@ class PlayerStats {
             //  dps
             if (this.dpsDecreaseAmount >= 1) {
                 var amount = Math.floor(this.dpsDecreaseAmount);
-                let event = {
+                let event: IDpsChangeEvent = {
                     OldValue: this.stats[StatType.HP],
                     Amount: -amount
                 };                
@@ -225,8 +224,8 @@ class PlayerStats {
     public currentLevel : ILevel;
 
     public loadLevel(){
+        this.loadUserState();
         this.currentLevel =  this.LevelLoader.buildLevel(this.currentGameLevel);
-        snd.playTrack(this.currentLevel.audioTrack || 0);
     }
 
     /**
@@ -256,38 +255,36 @@ class PlayerStats {
     /**
      * Loads user data.
      */
-    // public loadUserState(): Promise<boolean> {
-    //     var promise = $.Deferred();
+    public loadUserState() {
+        let model = { id: this.id };
+        var data = {
+            Exp : 100,
+            HP: 150,
+            Coins: 300,
+            Gold: 0,
+            Dust: 200,
+            AtrPts: 0,
+            LastLevel: 1
+        };
+        //  todo: http get
+        console.log("loadUserState() response", data);
 
-    //     let model = { id: this.id };
-    //     AjaxHelper.GetWithData(baseUrl + "/api/user/data", model, (data, status) => {
-    //         console.log("resetPlayerStats() response", data);
+            stats.currentGameLevel = data.LastLevel;
 
-    //         this.gameLevel = data.LastLevel;
-    //         this.setStat(StatType.TotalExp, data.Exp);
-    //         //  TODO: attributeStats
-    //         this.rebuildStats();
+            //  we never accept 0 hp, convert to full health instead
+            if (data.HP <= 0) {
+                data.HP = this.stats[StatType.MaxHP];
+            }
+            this.setStat(StatType.HP, data.HP);
+            this.setStat(StatType.Coins, data.Coins);
+            this.setStat(StatType.Gold, data.Gold);
+            this.setStat(StatType.Dust, data.Dust);
+            this.setStat(StatType.AttributePoints, data.AtrPts);
+            this.setStat(StatType.TotalExp, data.Exp);
+            //  TODO: attributeStats
+            this.rebuildStats();
+    }
 
-
-    //         //  we never accept 0 hp, convert to full health instead
-    //         if (data.HP <= 0) {
-    //             data.HP = this.stats[StatType.MaxHP];
-    //         }
-    //         this.setStat(StatType.HP, data.HP);
-    //         this.setStat(StatType.Coins, data.Coins);
-    //         this.setStat(StatType.Gold, data.Gold);
-    //         this.setStat(StatType.Dust, data.Dust);
-    //         this.setStat(StatType.AttributePoints, data.AtrPts);
-
-    //         //this.setStat(StatType.MaxDust, 1000);
-    //         //this.setStat(StatType.MaxHP, 150);
-    //         //this.setStat(StatType.HP, 120);
-
-    //         promise.resolve(true);
-    //     });
-
-    //     return promise;
-    // }
     public get HasJumpAtack() {
         return this.hasJumpAttack;
     }

@@ -2,9 +2,9 @@ import * as particles from "pixi-particles";
 import * as TWEEN from "@tweenjs/tween.js";
 import { Global } from '..';
 import { createParticleEmitter } from '../global';
-import { StatType, IStatChangeEvent, stats } from './PlayerStats';
-import { eventEmitter, STATCHANGE_TOPIC } from '../events';
-import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_HEIGHT, SCENE_HALF_HEIGHT, EXP_BAR_STYLE } from '../constants';
+import { StatType, IStatChangeEvent, stats, IDpsChangeEvent } from './PlayerStats';
+import { eventEmitter, STATCHANGE_TOPIC, DAMAGE_TOPIC } from '../events';
+import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_HEIGHT, SCENE_HALF_HEIGHT, EXP_BAR_STYLE, MSG_HP_STYLE, QUEST_ITEM_STYLE, SCENE_WIDTH, QUEST_STYLE } from '../constants';
 
 export class StatsHud extends PIXI.Container {
     private txtHP: PIXI.Text;
@@ -18,6 +18,13 @@ export class StatsHud extends PIXI.Container {
 
     private emitter:particles.Emitter;
 
+    private questRect: PIXI.Sprite;
+    private txtQuestMessage: PIXI.Text;
+    private questMsgEndTime = 0;
+    private onCompleteCB?: () => void;
+    
+    private txtPlayerPosition: PIXI.Text;
+
     constructor() {
         super();
         this.setup();
@@ -25,6 +32,16 @@ export class StatsHud extends PIXI.Container {
 
     public onUpdate(dt: number) {
         this.emitter.update(dt*0.001);
+
+        //  turn off the quest message
+        if (this.questRect.visible && this.questMsgEndTime < performance.now()) {
+            this.questRect.visible = false;
+            if (this.onCompleteCB) {
+                this.onCompleteCB();
+            }
+        }
+
+        this.txtPlayerPosition.text = `${Global.position.x.toFixed(0)}, ${Global.position.y.toFixed(0)}`;
     }
 
     /**
@@ -58,7 +75,60 @@ export class StatsHud extends PIXI.Container {
         scale.chain(fade).start();
     }
 
+    /**
+     * Ads text message about acquired quest items.
+     * @param message the message to be added
+     * @param style optional PIXI.ITextStyle
+     */
+    public addQuestItemMessage(message: string, style?: PIXI.TextStyle): void {
+        var stl = style || QUEST_ITEM_STYLE;
+        var txtInfo = new PIXI.Text(message, stl);
+        txtInfo.anchor.set(0.5, 0.5);
+        txtInfo.position.set(SCENE_HALF_WIDTH, 150);
+
+        this.addChild(txtInfo);
+
+        var scale = new TWEEN.Tween(txtInfo.scale)
+            .to({ x: 1.8, y: 1.8 }, 2200)
+            .easing(TWEEN.Easing.Linear.None);
+
+        var fade = new TWEEN.Tween(txtInfo)
+            .to({ alpha: 0 }, 3000)
+            .onComplete(() => this.removeChild(txtInfo));
+        scale.chain(fade).start();
+    }
+
+    /**
+     * Displays the quest message in the quest rectangle.
+     * @param msg
+     * @param ttlMilis
+     */
+    public setQuestMessage(msg: string, ttlMilis: number = 8000, onCompleteCB: () => void = null) {
+        this.txtQuestMessage.text = msg;
+        this.questRect.visible = true;
+        this.questMsgEndTime = performance.now() + ttlMilis;
+        this.onCompleteCB = onCompleteCB;
+    }
+
+
     private setup() {
+        //  TODO: remove or make a hud for lvl, position
+        this.txtPlayerPosition = new PIXI.Text("", QUEST_STYLE);
+        this.txtPlayerPosition.position = new PIXI.Point(SCENE_WIDTH, SCENE_HEIGHT);
+        this.txtPlayerPosition.anchor.set(1,1);
+        this.addChild(this.txtPlayerPosition);
+
+        //  callout for quest message
+        this.questRect = new PIXI.Sprite(PIXI.Texture.fromImage("assets/gui/rect.png"));
+        this.questRect.position.set(SCENE_WIDTH - this.questRect.width - 4, SCENE_HEIGHT - this.questRect.height - 4);
+        this.questRect.name = "TriggerMessage";
+        this.addChild(this.questRect);
+
+        this.txtQuestMessage = new PIXI.Text("Hello world", QUEST_STYLE);
+        this.txtQuestMessage.resolution = window.devicePixelRatio;
+        this.txtQuestMessage.position.set(25, 25);
+        this.questRect.addChild(this.txtQuestMessage);
+
         //  HP
         {
             let y: number = 5;
@@ -155,9 +225,15 @@ export class StatsHud extends PIXI.Container {
             this.txtLevel.position.set(pnl.x + pnl.width + 4, pnl.y);
             this.addChild(this.txtLevel);
         }
+        
         eventEmitter.on(STATCHANGE_TOPIC, this.handleStatChange);
+        eventEmitter.on(DAMAGE_TOPIC, this.handleDpsChange);
     }
-    
+
+    private handleDpsChange = (event: IDpsChangeEvent) => {
+        this.addInfoMessage(Global.position, `${event.Amount} HP`, MSG_HP_STYLE, 50);
+    };
+
     private handleStatChange = (event:IStatChangeEvent) => {
         switch (event.Type) {
             case StatType.Coins:

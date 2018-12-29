@@ -1,4 +1,4 @@
-﻿import { PIXI, Scene} from "..";
+﻿import { PIXI, Scene, Global} from "..";
 import { SceneManager } from "..";
 import { MasterHud } from "../objects/MasterHud"
 import { LoaderScene } from "./LoaderScene";
@@ -6,6 +6,8 @@ import { LoaderScene } from "./LoaderScene";
 import { MainScene } from './MainScene';
 import { OptionsScene } from './OptionsScene';
 import { SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT } from '..';
+import { CutScene } from './CutScene';
+import { Quest } from '../QuestSystem/Quest';
 
 const PRELOAD_BOOT_ASSETS = [
     //  cursors
@@ -13,6 +15,7 @@ const PRELOAD_BOOT_ASSETS = [
     'assets/gui/cur_hover.png',
     'assets/gui/cur_target.png',
     'assets/levels.json',
+    'assets/quests.json'
 ];
 
 /**
@@ -86,8 +89,20 @@ export class BootScene extends Scene {
         this.sceneManager.Renderer.plugins.interaction.cursorStyles.target = targetIcon;
         document.body.style.cursor = defaultIcon;
 
+        Global.LevelDefinitions = PIXI.loader.resources["assets/levels.json"].data;
+        var questsObj = PIXI.loader.resources["assets/quests.json"].data;
+        Global.LevelDefinitions.quests = questsObj.quests as Array<Quest>;
+        Global.LevelDefinitions.quests.forEach((q: Quest) => {
+            q.itemId = q.itemId || 0;
+            q.itemsNeeded = q.itemsNeeded || 0;
+            q.itemsCollected = 0;
+            q.rewardCoins = q.rewardCoins || 0;
+            q.rewardExp = q.rewardExp || 0;
+        });
+
+
         //  TODO: add assets depending on initial state
-        var assets : string[] = [   
+        var assets : string[] = [  
             
             //  gui stuff
             'assets/gui/gui_fs_enter.png',
@@ -100,30 +115,15 @@ export class BootScene extends Scene {
 
             'assets/gui/heart.png',
             'assets/gui/coin.png',
+            'assets/gui/rect.png',
             'assets/gui/stat_panel.png',
             'assets/gui/exp_panel.png',
             'assets/gui/exp_prefill.png',
             'assets/gui/exp_fill.png',
 
-            //  backgrounds and parallax
-            // 'assets/img/background/Canyon.png',
-            // 'assets/img/background/front01.png',
-            // 'assets/img/background/front02.png',
-            // 'assets/img/background/ground.png',
-            // 'assets/img/background/IceSnow.png',
-            // 'assets/img/background/Mountains.png',
-            // 'assets/img/background/trees01.png',
-            // 'assets/img/background/trees02.png',
-            // 'assets/img/background/trees03.png',
-            // 'assets/img/background/trees04.png',
-            // 'assets/img/background/trees05.png',
-            // 'assets/img/background/trees06.png',
-            // 'assets/img/background/trees07.png',
-            // 'assets/img/background/trees08.png',
-            // 'assets/img/background/trees09.png',
-
             //
-            'assets/Hero.png',
+            'assets/hero.png',
+            'assets/hero-dead.png',
             'assets/star.png',
             'assets/img/effects/flame.png',
             'assets/img/effects/jump_smoke.png'
@@ -134,21 +134,15 @@ export class BootScene extends Scene {
         this.sceneManager.ActivateScene(ls); 
     }
 
-    private createScenesAndStart = async ()=>{        
-        // configureToasts({
-        //     topOrigin: -20
-        // });
-
+    private createScenesAndStart = async ()=>{    
+        console.log('adding scenes...');    
         this.sceneManager.Renderer.roundPixels = true;
         this.sceneManager.AddScene(new MainScene(this.sceneManager));
         this.sceneManager.AddScene(new OptionsScene(this.sceneManager));
+        this.sceneManager.AddScene(new CutScene(this.sceneManager));
         
-        //   TODO: add scenes
-
-        //  add master hud overlay
+        //  add master hud overlay and start main scene
         var masterHud = new MasterHud(this.sceneManager);
-        this.sceneManager.MasterHudOverlay = masterHud;
-
-        this.sceneManager.ActivateScene("Main");
+        this.sceneManager.MasterHudOverlay = masterHud;        
     }
 }

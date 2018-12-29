@@ -54,6 +54,18 @@ export const MSG_HP_STYLE: PIXI.TextStyleOptions =
     strokeThickness: 3,
     stroke: 0x111111
 };
+
+export const MSG_EXP_STYLE: PIXI.TextStyleOptions =
+    {
+        align: "center",
+        padding: 0,
+        fontSize: 24,
+        fontFamily: GUI_FONT,
+        fill: 0x84c202,
+        strokeThickness: 3,
+        stroke: 0x112111
+    };
+
 export const MSG_WARN_STYLE: PIXI.TextStyleOptions =
 {
     align: "center",
@@ -69,9 +81,34 @@ export const EXP_BAR_STYLE: PIXI.TextStyleOptions =
 {
     align: "center",
     padding: 0,
-    fontSize: "13px",
+    fontSize: 13,
     fontFamily: GUI_FONT,
     fill: 0x111111,
     strokeThickness: 4,
     stroke: 0xffffff
 };
+
+export const QUEST_ITEM_STYLE: PIXI.TextStyleOptions =
+    {
+        align: "center",
+        padding: 0,
+        fontSize: 28,
+        fontFamily: GUI_FONT,
+        fill: 0x84c2f2,
+        strokeThickness: 4,
+        stroke: 0x111121
+    };
+
+    export const QUEST_STYLE: PIXI.TextStyleOptions =
+    {
+        align: "left",
+        padding: 0,
+        fontSize: 26,
+        fontFamily: GUI_FONT,
+        fill: 0x8a8313,
+        strokeThickness: 3,
+        stroke: 0x0f0faf,
+        dropShadow: true,
+        dropShadowDistance: 6,
+        dropShadowBlur:7
+    };

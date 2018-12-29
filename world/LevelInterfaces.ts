@@ -1,5 +1,6 @@
 import { Parallax } from '..';
 import { SpawnPoint } from '../mobs/SpawnPoint';
+import { Quest } from '../QuestSystem/Quest';
 
 export interface ILevel {
     parallax: Parallax[];
@@ -151,5 +152,5 @@ export interface ILevelDefinition {
 export interface IRootObject {
     templates: ITemplate[];
     levels: ILevelDefinition[];
-   // quests: Quest[];
+    quests: Quest[];
 }

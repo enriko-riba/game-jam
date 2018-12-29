@@ -1,9 +1,9 @@
 ﻿import { AnimatedSprite, AnimationSequence } from "../_engine/AnimatedSprite";
 import { Bullet } from "../objects/Bullet";
 import { snd } from "../world/SoundMan";
-import * as Global from "../global";
 import { AI } from "./AI";
 import { BasicStaticAI } from "./BasicStaticAI";
+import { wp2 } from '../world/WorldP2';
 
 let FRAME_SIZE: number = 48;
 
@@ -29,23 +29,18 @@ export class Mob extends AnimatedSprite {
     private _attributes: number[];
     private _ai: AI;
     private _direction: DirectionH;
-    private emitBullet: (textureName: string, position: PIXI.Point | PIXI.ObservablePoint, damage: number)=> Bullet;    
-
+    
     constructor(private textureName: string) {
         super();
 
-        this.addAnimations(new AnimationSequence("left", textureName, [0, 1, 2], FRAME_SIZE, FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("right", textureName, [3, 4, 5], FRAME_SIZE, FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("latk", textureName, [6, 7, 8], FRAME_SIZE, FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("ratk", textureName, [9, 10, 11], FRAME_SIZE, FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("lsquish", textureName, [12, 13, 14, 15, 16, 17], FRAME_SIZE, FRAME_SIZE));
-        this.addAnimations(new AnimationSequence("rsquish", textureName, [18, 19, 20, 21, 22, 23], FRAME_SIZE, FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("left", this.textureName, [0, 1, 2], FRAME_SIZE, FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("right", this.textureName, [3, 4, 5], FRAME_SIZE, FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("latk", this.textureName, [6, 7, 8], FRAME_SIZE, FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("ratk", this.textureName, [9, 10, 11], FRAME_SIZE, FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("lsquish", this.textureName, [12, 13, 14, 15, 16, 17], FRAME_SIZE, FRAME_SIZE));
+        this.addAnimations(new AnimationSequence("rsquish", this.textureName, [18, 19, 20, 21, 22, 23], FRAME_SIZE, FRAME_SIZE));
         this.play("left");   
-        this._direction = DirectionH.Left;  
-
-        //  borrow bullet emitter from in game scene
-        var igs = Global.getScm().GetScene("InGame") as any;
-        this.emitBullet = igs.emitBullet;        
+        this._direction = DirectionH.Left;      
     }
 
     public isLoading: boolean = false;
@@ -129,7 +124,7 @@ export class Mob extends AnimatedSprite {
             //  TODO: animated sprite
         } else {
             //  sprite
-            this.emitBullet(this.atkTexture as string, this.position, this._attributes[AtrType.Atk]);
+            Bullet.emitBullet(this.atkTexture as string, this.position, wp2.playerBody.position, this._attributes[AtrType.Atk]);
         }
     }
 

@@ -79,7 +79,7 @@ export class LevelLoader {
         //--------------------------------------
         //  merge global with level templates
         //--------------------------------------
-        var templates = Global.GameLevels.templates.concat(level.map.templates);
+        var templates = Global.LevelDefinitions.templates.concat(level.map.templates);
         result.templates = templates;
 
         //--------------------------------------

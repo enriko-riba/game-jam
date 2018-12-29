@@ -2,12 +2,14 @@
 import { GetLevelAssets } from '../world/LevelHelper';
 import { stats } from '../objects/PlayerStats';
 import { SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT } from '../constants';
+import { MainScene } from './MainScene';
+
 
 export class LoaderScene extends Scene {
     private loadingMessage: PIXI.Text;
     private spinner: PIXI.Sprite;
 
-    constructor(scm:SceneManager, private onLoaded: () => void, private preloadAsdsets: string[]) {
+    constructor(scm:SceneManager, private onLoaded: () => void, private preloadAssets: string[]) {
         super(scm, "Loader");
         this.BackGroundColor = 0;
         this.loadingMessage = new PIXI.Text("loading ...", { 
@@ -38,15 +40,42 @@ export class LoaderScene extends Scene {
     }
 
     public onActivate = () => {   
-        Global.GameLevels = PIXI.loader.resources["assets/levels.json"].data;
-        let assets: string[] = GetLevelAssets(Global.GameLevels, stats.currentGameLevel);
-        this.preloadAsdsets = assets.concat(this.preloadAsdsets);
-
+        PIXI.loader.reset();
         PIXI.loader
-            .add(this.preloadAsdsets)
-            .load(this.onLoaded)
+            .add(this.preloadAssets)
+            .load(this.handleLoading)
             .on("progress", this.onProgress);
-    };    
+    };
+   
+    private handleLoading = ()=>{
+        //  fire one time callback
+        if(this.onLoaded){
+            this.onLoaded();
+            this.onLoaded = null;
+        }
+        this.downloadNextLevel();
+    }
+
+    private downloadNextLevel = (): void => {
+        console.log(`downloading level ${stats.currentGameLevel}...`);
+        let assets: string[] = GetLevelAssets(Global.LevelDefinitions, stats.currentGameLevel);
+        assets = assets.concat(this.preloadAssets);
+        PIXI.loader.reset();
+        PIXI.loader
+            .add(assets)
+            .load(() => {
+                //---------------------------------------------
+                //  Bootstrap new game scene or reuse existing
+                //---------------------------------------------
+                try {
+                    let mainScene = this.sceneManager.GetScene("Main") as MainScene;
+                    mainScene.startLevel();
+                    this.sceneManager.ActivateScene(mainScene);
+                } catch (e) {
+                    console.log("exception: ", e);
+                }
+            });
+    }
 
     private onProgress = (loader: PIXI.loaders.Loader, resource: PIXI.loaders.Resource) => {
         var progress = loader.progress;

@@ -4,7 +4,7 @@ import { OutlineFilter } from '@pixi/filter-outline';
 export enum OutlineMode {
     /**
      * The outline is backed in the buttons texture.
-     * This looks excelent if the button's size matches teh texture.  
+     * This looks excelent if the button's size matches the texture.  
      * */
     Texture,
     /**

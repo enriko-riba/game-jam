@@ -66,7 +66,7 @@ export class HeroCharacter extends AnimatedSprite {
         //   attached to container since it must emit outside hero sprite
         this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);  
 
-        const asset = "assets/Hero.png";
+        const asset = "assets/hero.png";
         this.addAnimations(new AnimationSequence("right", asset, [18, 19, 20, 21, 22, 23], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("left", asset, [12, 13, 14, 15, 16, 17], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpleft", asset, [24, 25, 26, 27, 28, 29], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
