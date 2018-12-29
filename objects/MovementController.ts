@@ -1,11 +1,12 @@
 import { KeyboardMapper, Global } from '..';
 import { WorldP2 } from '../world/WorldP2';
-import { StatType, stats } from './PlayerStats';
+import { stats } from './PlayerStats';
 import { eventEmitter, MOVE_TOPIC } from '../events';
+import { StatType } from '../enums';
 
 export class MovementController {
     private readonly VELOCITY = 150;
-    private readonly JUMP_FORCE = 17700;
+    private readonly JUMP_FORCE = 17800;
     private readonly JUMP_ATTACK_FORCE = -14000;
 
     private readonly JUMP_COOLDOWN = 500;

@@ -1,15 +1,18 @@
 import * as particles from "pixi-particles";
+import * as TWEEN from "@tweenjs/tween.js";
 import { createParticleEmitter } from '../global';
-import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL } from '..';
+import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL, MSG_HP_STYLE } from '..';
 import { eventEmitter, MOVE_TOPIC } from './../events';
 import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
 import { wp2 } from '../world/WorldP2';
-import { StatType, stats } from './PlayerStats';
+import { stats } from './PlayerStats';
 import { Mob, AtrType } from '../mobs/Mob';
 import { LevelLoader } from '../world/LevelLoader';
 import { IInteractionType } from '../world/LevelInterfaces';
 import { snd } from '../world/SoundMan';
+import { Bullet } from './Bullet';
+import { StatType } from '../enums';
 
 const HERO_FRAME_SIZE: number = 64;
 
@@ -24,6 +27,7 @@ export class HeroCharacter extends AnimatedSprite {
         
         this.movementCtrl = new MovementController(wp2);
         wp2.on("playerContact", this.onPlayerContact, this);
+        wp2.on("bulletContact", this.onBulletContact, this);
 
         var cfg = {     
             alpha: {
@@ -79,55 +83,7 @@ export class HeroCharacter extends AnimatedSprite {
         this.addAnimations(new AnimationSequence("jumpdown", asset, [42, 43, 44], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.anchor.set(0.5, 0.58);
 
-        eventEmitter.on(MOVE_TOPIC, (event: any) => {
-            var state: MovementState = event.newState as MovementState;
-            var fps = event.isRunning ? ANIMATION_FPS_NORMAL * 1.6 : ANIMATION_FPS_NORMAL;
-            switch (state) {
-                case MovementState.Idle:
-                    if(this.idleAnimationTimeoutHandle) clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.idleAnimationTimeoutHandle = setTimeout(() => {
-                        this.play("idle", ANIMATION_FPS_SLOW);
-                        snd.idle();
-                    }, 250);
-                    //this.play("idle", ANIMATION_FPS_SLOW);
-                    break;
-                case MovementState.Left:
-                    clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.play("left", fps);
-                    snd.walk(event.isRunning);
-                    break;
-                case MovementState.Right:
-                    clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.play("right", fps);
-                    snd.walk(event.isRunning);
-                    break;
-                case MovementState.JumpLeft:
-                    clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.play("jumpleft", fps);
-                    snd.jump();
-                    break;
-                case MovementState.JumpRight:
-                    clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.play("jumpright", fps);
-                    snd.jump();
-                    break;
-                case MovementState.JumpUp:
-                    clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.play("jumpup", fps);
-                    snd.jump();
-                    break;
-                case MovementState.JumpDownLeft:
-                    clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.play("jumpdownleft", fps);
-                    snd.jumpAttack();
-                    break;
-                case MovementState.JumpDownRight:
-                    clearTimeout(this.idleAnimationTimeoutHandle);
-                    this.play("jumpdownright", fps);
-                    snd.jumpAttack();
-                    break;
-            }
-        });
+        eventEmitter.on(MOVE_TOPIC, this.onPlayerMove);
     }
 
 
@@ -214,6 +170,55 @@ export class HeroCharacter extends AnimatedSprite {
         super.onUpdate(dt);        
     };
 
+    private onPlayerMove = (event: any) => {
+        var state: MovementState = event.newState as MovementState;
+        var fps = event.isRunning ? ANIMATION_FPS_NORMAL * 1.6 : ANIMATION_FPS_NORMAL;
+        switch (state) {
+            case MovementState.Idle:
+                if(this.idleAnimationTimeoutHandle) clearTimeout(this.idleAnimationTimeoutHandle);
+                this.idleAnimationTimeoutHandle = setTimeout(() => {
+                    this.play("idle", ANIMATION_FPS_SLOW);
+                    snd.idle();
+                }, 250);
+                break;
+            case MovementState.Left:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("left", fps);
+                snd.walk(event.isRunning);
+                break;
+            case MovementState.Right:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("right", fps);
+                snd.walk(event.isRunning);
+                break;
+            case MovementState.JumpLeft:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("jumpleft", fps);
+                snd.jump();
+                break;
+            case MovementState.JumpRight:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("jumpright", fps);
+                snd.jump();
+                break;
+            case MovementState.JumpUp:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("jumpup", fps);
+                snd.jump();
+                break;
+            case MovementState.JumpDownLeft:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("jumpdownleft", fps);
+                snd.jumpAttack();
+                break;
+            case MovementState.JumpDownRight:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("jumpdownright", fps);
+                snd.jumpAttack();
+                break;
+        }
+    }
+
     /**
      * Checks if the player has jumped on something with a high velocity.
      * Adds smoke for ground contacts and handles mob collision for npc's.
@@ -268,6 +273,41 @@ export class HeroCharacter extends AnimatedSprite {
         if(verticalVelocity > SND_TRESHOLD_VELOCITY){
             snd.jumpContact();
             console.log("velocity: " + event.velocity);
+        }
+    }
+
+    /**
+     * Handles bullets hitting the player or obstacle.
+     *
+     * @param event
+     */
+    private onBulletContact(event: any): void {
+        let bullet: Bullet = event.bulletBody.DisplayObject as Bullet;
+        if (!bullet.IsDead) {
+            if (event.playerHit) {
+                snd.hitPain();
+                //this.hud.addInfoMessage(this.position, `${-bullet.damage} HP`, MSG_HP_STYLE, 50);
+                stats.increaseStat(StatType.HP, -bullet.damage);
+            } else {
+
+                //  TODO: recycle explode animations
+                var explode: AnimatedSprite = new AnimatedSprite();
+                explode.addAnimations(new AnimationSequence("exp",
+                    "assets/img/effects/slime_atk_exp.png",
+                    [0, 1, 2, 3, 4, 5], 32, 32)
+                );
+                explode.anchor.set(0.5);
+                explode.pivot.set(0.5);
+                explode.x = bullet.x;
+                explode.y = bullet.y;
+                explode.alpha = 0.7;
+                explode.rotation = Math.random() * Math.PI;
+                this.container.addChild(explode);
+                explode.onComplete = () => this.container.removeChild(explode);
+                explode.play("exp", 10, false);
+                snd.bulletHitWall();
+            }
+            bullet.IsDead = true;
         }
     }
 

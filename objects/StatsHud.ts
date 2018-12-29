@@ -2,9 +2,10 @@ import * as particles from "pixi-particles";
 import * as TWEEN from "@tweenjs/tween.js";
 import { Global } from '..';
 import { createParticleEmitter } from '../global';
-import { StatType, IStatChangeEvent, stats, IDpsChangeEvent } from './PlayerStats';
-import { eventEmitter, STATCHANGE_TOPIC, DAMAGE_TOPIC } from '../events';
+import { stats } from './PlayerStats';
+import { eventEmitter, STATCHANGE_TOPIC, DAMAGE_TOPIC, IStatChangeEvent, IDpsChangeEvent } from '../events';
 import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_HEIGHT, SCENE_HALF_HEIGHT, EXP_BAR_STYLE, MSG_HP_STYLE, QUEST_ITEM_STYLE, SCENE_WIDTH, QUEST_STYLE } from '../constants';
+import { StatType } from '../enums';
 
 export class StatsHud extends PIXI.Container {
     private txtHP: PIXI.Text;

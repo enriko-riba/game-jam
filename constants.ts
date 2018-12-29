@@ -93,7 +93,7 @@ export const QUEST_ITEM_STYLE: PIXI.TextStyleOptions =
         align: "center",
         padding: 0,
         fontSize: 28,
-        fontFamily: GUI_FONT,
+        fontFamily: "Farsan",
         fill: 0x84c2f2,
         strokeThickness: 4,
         stroke: 0x111121
@@ -104,7 +104,7 @@ export const QUEST_ITEM_STYLE: PIXI.TextStyleOptions =
         align: "left",
         padding: 0,
         fontSize: 26,
-        fontFamily: GUI_FONT,
+        fontFamily: "Farsan",
         fill: 0x8a8313,
         strokeThickness: 3,
         stroke: 0x0f0faf,

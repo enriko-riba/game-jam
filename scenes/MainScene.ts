@@ -4,9 +4,9 @@ import { PIXI, SceneManager, Scene, Parallax, Global } from "..";
 import { wp2 } from '../world/WorldP2';
 import { HeroCharacter } from '../objects/HeroCharacter';
 import { StatsHud } from '../objects/StatsHud';
-import { DamageType, StatType, IBurnChangeEvent, stats } from '../objects/PlayerStats';
+import { stats } from '../objects/PlayerStats';
 import { Bullet } from '../objects/Bullet';
-import { eventEmitter, BURN_TOPIC } from '../events';
+import { eventEmitter, BURN_TOPIC, IBurnChangeEvent } from '../events';
 import { SCENE_HEIGHT, SCENE_HALF_WIDTH, SCENE_BACKCOLOR, MSG_COIN_STYLE, MSG_WARN_STYLE, ANIMATION_FPS_SLOW } from '../constants';
 import { Lava } from '../objects/Lava';
 import { LevelLoader } from '../world/LevelLoader';
@@ -15,11 +15,11 @@ import { Bumper } from '../objects/Bumper';
 import { snd } from '../world/SoundMan';
 import { CutScene } from './CutScene';
 import { QuestManager } from '../questSystem/QuestManager';
+import { StatType, DamageType } from '../enums';
 
 
 export class MainScene extends Scene {
     private worldContainer: PIXI.Container;
-    private parallax: Parallax[] = [];
     private hero: HeroCharacter;
     private questMngr : QuestManager;
     private hud : StatsHud;
@@ -42,7 +42,7 @@ export class MainScene extends Scene {
         //-------------------------------------------
         //  update parallax
         //-------------------------------------------
-        this.parallax.forEach(p => {
+        stats.currentLevel.parallax.forEach(p => {
             p.SetViewPortX(this.hero.x);
             p.position.x = this.hero.x - SCENE_HALF_WIDTH;
         });
@@ -96,6 +96,13 @@ export class MainScene extends Scene {
                 child.onUpdate(dt);
             }
         };
+
+        //-------------------------------------------
+        //  Spawn points
+        //-------------------------------------------
+        for (var i = 0, len = stats.currentLevel.spawnPoints.length; i < len; i++) {
+            stats.currentLevel.spawnPoints[i].onUpdate(dt);
+        }
 
         this.hud.onUpdate(dt);
         stats.onUpdate(dt);
@@ -162,10 +169,10 @@ export class MainScene extends Scene {
         stats.loadLevel();
         snd.playTrack(stats.currentLevel.audioTrack || 0);
         stats.currentLevel.parallax.forEach((plx, idx) => {
-            this.parallax.push(plx);
             this.worldContainer.addChildAt(plx, idx);
             plx.SetViewPortX(stats.currentLevel.start[0]);
         });
+
         //--------------------------------------
         //  add all objects from level to scene
         //--------------------------------------
@@ -186,6 +193,7 @@ export class MainScene extends Scene {
         this.questMngr.reset();
         this.hero.visible = true;
         this.IsHeroInteractive = true;
+        this.hud.visible = true;
         this.sceneManager.ActivateScene(this);
     }
 
@@ -269,14 +277,14 @@ export class MainScene extends Scene {
                 this.hud.addInfoMessage(dispObj.position, "Kendo knowledge acquired!", MSG_COIN_STYLE);
                 this.collectObject(body);
                 snd.questItem();
-                //this.questMngr.acquireItem(201);
+                this.questMngr.acquireItem(201);
                 break;
 
             case 202:  //  KI
                 this.hud.addInfoMessage(dispObj.position, "1 Ki acquired!", MSG_COIN_STYLE);
                 this.collectObject(body);
                 snd.questItem();
-                //this.questMngr.acquireItem(202);
+                this.questMngr.acquireItem(202);
                 //  TODO: quest manager
                 break;
 
@@ -301,9 +309,6 @@ export class MainScene extends Scene {
                     stats.buffs[DamageType.Lava] = this.secondsFromNow(4);
                 }
                 break;
-
-            default:
-                throw "Unsupported interactionType: " + interactionType.toString();
         }
     }
 

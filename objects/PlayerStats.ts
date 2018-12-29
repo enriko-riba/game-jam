@@ -1,57 +1,9 @@
 ﻿import { LevelDefinitions } from '../global';
-import { eventEmitter, DAMAGE_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC} from "../events";
+import { eventEmitter, DAMAGE_TOPIC, STATCHANGE_TOPIC, BURN_TOPIC, IStatChangeEvent, IDpsChangeEvent} from "../events";
 import { LevelLoader } from '../world/LevelLoader';
 import { ILevel } from '../world/LevelInterfaces';
+import { BaseStatType, StatType, DamageType } from '../enums';
 
-export enum BaseStatType {
-    MaxHP,
-    MaxDust,
-    RegenHP,
-    RegenDust,
-}
-export enum StatType {
-    MaxHP,
-    HP,
-
-    MaxDust,
-    Dust,
-
-    RegenHP,
-    RegenDust,
-
-    Coins,
-    Gold,           //  not used
-
-    LevelExp,       // calculated value: current level exp, starts from 0 each level
-    LevelMaxExp,    // calculated value: current level exp needed to reach next level 
-    TotalExp,       // total exp  
-
-    AttributePoints,
-
-    CharacterLevel, // calculated value: current char level based on total experience
-}
-
-export enum DamageType {
-    LavaBorder = 1000,
-    Lava = 1001,
-    Poison = 1002
-}
-
-export interface IStatChangeEvent {
-    Type: StatType;
-    OldValue: number;
-    NewValue: number;
-    Stats: Array<number>;
-}
-
-export interface IDpsChangeEvent {
-    OldValue: number;
-    Amount: number;
-}
-
-export interface IBurnChangeEvent {
-    isBurning: boolean;
-}
 
 
 class PlayerStats {
@@ -77,7 +29,7 @@ class PlayerStats {
 
     //  achievement levels
     public characterLevel: number = 0;
-    public currentGameLevel: number = 1;
+    public currentGameLevel: number = 2;
     private expForNextLevel: number = 0;
 
     //  user related
@@ -264,7 +216,7 @@ class PlayerStats {
             Gold: 0,
             Dust: 200,
             AtrPts: 0,
-            LastLevel: 1
+            LastLevel: this.currentGameLevel
         };
         //  todo: http get
         console.log("loadUserState() response", data);

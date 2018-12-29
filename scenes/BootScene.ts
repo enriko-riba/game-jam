@@ -126,7 +126,8 @@ export class BootScene extends Scene {
             'assets/hero-dead.png',
             'assets/star.png',
             'assets/img/effects/flame.png',
-            'assets/img/effects/jump_smoke.png'
+            'assets/img/effects/jump_smoke.png',
+            'assets/img/effects/load.png'
         ];
 
         const ls = new LoaderScene(this.sceneManager, this.createScenesAndStart, assets);

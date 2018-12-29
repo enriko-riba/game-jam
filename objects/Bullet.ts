@@ -86,7 +86,7 @@ export class Bullet extends PIXI.Sprite {
     }
 
     private static bullets: Bullet[] = [];
-    public static emitBullet = (textureName: string, position: PIXI.Point, target:{x: number, y: number} | number[], damage: number): Bullet => {
+    public static emitBullet = (textureName: string, position: PIXI.Point, target:any, damage: number): Bullet => {
         let bullet = Bullet.findDeadBullet();
         if (!bullet) {
 
@@ -125,7 +125,7 @@ export class Bullet extends PIXI.Sprite {
         } 
 
         bullet.position = position;
-        let pt = (target instanceof Array) ? new PIXI.Point(target[0] - position.x, target[1] - position.y) : new PIXI.Point(target.x - position.x, target.y - position.y);
+        let pt = (target instanceof Float32Array) ? new PIXI.Point(target[0] - position.x, target[1] - position.y) : new PIXI.Point(target.x - position.x, target.y - position.y);
         bullet.Direction = pt;
         bullet.damage = damage;
         bullet.IsDead = false;

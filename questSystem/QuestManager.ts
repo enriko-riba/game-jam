@@ -4,11 +4,12 @@ import { Quest } from "./Quest";
 import { ITriggerDefinition } from "../world/LevelInterfaces";
 import { MainScene } from "../Scenes/MainScene";
 import { CutScene } from "../Scenes/CutScene";
-import { StatType, stats } from "../objects/PlayerStats";
+import { stats } from "../objects/PlayerStats";
 import { StatsHud } from "../objects/StatsHud";
 import { wp2 } from '../world/WorldP2';
 import { snd } from '../world/SoundMan';
 import { QUEST_STYLE, MSG_EXP_STYLE } from '..';
+import { StatType } from '../enums';
 
 /**
  * Contains quest related logic, checks and helpers.

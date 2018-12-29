@@ -87,7 +87,11 @@ export class Parallax extends PIXI.Container {
     private getTexture(textures: Array<string | PIXI.Texture>, textureIndex: number){
         var t: PIXI.Texture;
         if (typeof textures[textureIndex] === "string") {
-            t = PIXI.loader.resources[textures[textureIndex] as string].texture;
+            var res = PIXI.loader.resources[textures[textureIndex] as string];
+            if(!res || !res.texture){
+                console.error('texture not fouind: ' + textures[textureIndex]);
+            }
+            t = res.texture;
         } else {
             t = textures[textureIndex] as PIXI.Texture;
         }
