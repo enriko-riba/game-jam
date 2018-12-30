@@ -1,18 +1,19 @@
 import * as particles from "pixi-particles";
 import * as TWEEN from "@tweenjs/tween.js";
+
 import { createParticleEmitter } from '../global';
-import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL, MSG_HP_STYLE } from '..';
-import { eventEmitter, MOVE_TOPIC } from './../events';
+import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL } from '..';
+import { MOVE_TOPIC, GROUND_SHAKE, eventEmitter } from '../events';
 import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
 import { wp2 } from '../world/WorldP2';
 import { stats } from './PlayerStats';
-import { Mob, AtrType } from '../mobs/Mob';
+import { Mob } from '../mobs/Mob';
 import { LevelLoader } from '../world/LevelLoader';
 import { IInteractionType } from '../world/LevelInterfaces';
 import { snd } from '../world/SoundMan';
 import { Bullet } from './Bullet';
-import { StatType } from '../enums';
+import { StatType, AtrType } from '../enums';
 
 const HERO_FRAME_SIZE: number = 64;
 
@@ -20,8 +21,8 @@ export class HeroCharacter extends AnimatedSprite {
     private emitterPixies: particles.Emitter;
     private emitterBurn: particles.Emitter;
     private movementCtrl: MovementController;
-
     private idleAnimationTimeoutHandle: any;
+
     constructor(private container: PIXI.Container) {
         super();
         
@@ -87,12 +88,6 @@ export class HeroCharacter extends AnimatedSprite {
     }
 
 
-    /**
-    *  Returns the current movement state.
-    */
-    public get MovementState() {
-        return this.movementCtrl.MovementState;
-    }    
 
     /**
      * Returns if the player can interact via controls.
@@ -108,13 +103,7 @@ export class HeroCharacter extends AnimatedSprite {
         this.movementCtrl.isInteractive = newValue;
     }
 
-    /**
-     * Returns true if the player is jumping.
-     */
-    public get isJumping() {
-        return this.movementCtrl.IsJumping;
-    }
-
+   
 
     /**
      * Checks movementCtrl.MovementState and updates pixi dust emitter and consumption.
@@ -179,7 +168,7 @@ export class HeroCharacter extends AnimatedSprite {
                 this.idleAnimationTimeoutHandle = setTimeout(() => {
                     this.play("idle", ANIMATION_FPS_SLOW);
                     snd.idle();
-                }, 250);
+                }, 300);
                 break;
             case MovementState.Left:
                 clearTimeout(this.idleAnimationTimeoutHandle);
@@ -243,13 +232,14 @@ export class HeroCharacter extends AnimatedSprite {
                     this.handleMobInteraction(mob, body);
                 }
             }
-            if (this.MovementState === MovementState.JumpDown || 
-                this.MovementState === MovementState.JumpDownLeft ||
-                this.MovementState === MovementState.JumpDownRight
+
+            var movementState = this.movementCtrl.MovementState;
+            if (movementState === MovementState.JumpDown || 
+                movementState === MovementState.JumpDownLeft ||
+                movementState === MovementState.JumpDownRight
             ) {
                 snd.jumpContact();
-                //TODO: implement
-                //this.startGroundShake(400, 6);
+                eventEmitter.emit(GROUND_SHAKE, {milliSeconds: 600, magnitudeInPixels: 9});
                 return;
             }
         } 
@@ -332,7 +322,7 @@ export class HeroCharacter extends AnimatedSprite {
 
         this.removeEntity(body);
         mob.squish(() => this.container.removeChild(dispObj));
-        snd.mobSquish();
+        
 
         //  add exp       
         var exp = mob.attributes[AtrType.HP] / 2;

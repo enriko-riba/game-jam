@@ -6,7 +6,7 @@ import { StatType } from '../enums';
 
 export class MovementController {
     private readonly VELOCITY = 150;
-    private readonly JUMP_FORCE = 17800;
+    private readonly JUMP_FORCE = 17900;
     private readonly JUMP_ATTACK_FORCE = -14000;
 
     private readonly JUMP_COOLDOWN = 500;
@@ -96,23 +96,23 @@ export class MovementController {
                 this.newState = MovementState.JumpDown;
                 break;
         }
-        //console.log("state change: " + MovementState[this.movementState] + " -> " + MovementState[this.newState]);
-        this.movementState = this.newState;
-
+        console.log("state change: " + MovementState[this.movementState] + " -> " + MovementState[this.newState]);
+        
         var forceVector: number[] = [0, this.JUMP_ATTACK_FORCE];
         this.world.playerBody.setZeroForce();
         this.world.playerBody.applyImpulse(forceVector);
         this.nextJumpDownAllowed = performance.now() + this.JUMP_ATTACK_COOLDOWN;
-
+        
         this.isInteractive = false;
         setTimeout(() => this.isInteractive = true, this.JUMP_ATTACK_FREEZE);
-
+        
         eventEmitter.emit(MOVE_TOPIC, {
-                newState: this.newState,
-                oldState: this.movementState,
-                isJumping: true,
-                isRunning: false // makes no difference during jumps
-            });
+            newState: this.newState,
+            oldState: this.movementState,
+            isJumping: true,
+            isRunning: false // makes no difference during jumps
+        });
+        this.movementState = this.newState;
     }
 
     public update(dt: number): void {

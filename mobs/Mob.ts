@@ -4,20 +4,11 @@ import { snd } from "../world/SoundMan";
 import { AI } from "./AI";
 import { BasicStaticAI } from "./BasicStaticAI";
 import { wp2 } from '../world/WorldP2';
+import { DirectionH, AtrType } from '../enums';
 
-let FRAME_SIZE: number = 48;
+const FRAME_SIZE: number = 48;
 
-export enum AtrType {
-    HP,
-    Atk,
-    AtkCD,
-    Def,
-}
 
-export enum DirectionH {
-    Left,
-    Right,
-}
 
 /**
  * Represents a monster entity
@@ -71,7 +62,7 @@ export class Mob extends AnimatedSprite {
     public atkTexture: string | string[];
 
     /**
-     * Kills the mob, plays squish animation and invokes the optional call back
+     * Kills the mob, plays squish animation and sound. Optionaly invokes the call back on animation end.
      * @param cb
      */
     public squish(cb?: () => void) {     
@@ -79,6 +70,7 @@ export class Mob extends AnimatedSprite {
         var aname = (this._direction == DirectionH.Left ? "lsquish" : "rsquish");
         this.onComplete = cb;
         this.play(aname, 12, false);
+        snd.mobSquish();
     }
 
     public get direction(): DirectionH {
@@ -135,6 +127,7 @@ export class Mob extends AnimatedSprite {
                 break;
 
             case "basic":
+                //  TODO: implement AI logic variations 
                 break;
         }
     }

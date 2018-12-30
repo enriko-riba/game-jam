@@ -126,6 +126,15 @@ export class SceneManager {
     }
 
     /**
+     * Returns true if the scene exists.
+     * @param name
+     */
+    public HasScene(name: string): boolean {
+        var found = this.scenes.filter((item: Scene) => { return item.Name === name; });
+        return (found && found.length > 0);
+    }
+
+    /**
      * Returns the scene by its name.
      * @param name
      */

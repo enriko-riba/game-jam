@@ -113,7 +113,7 @@ export class StatsHud extends PIXI.Container {
 
 
     private setup() {
-        //  TODO: remove or make a hud for lvl, position
+        //  TODO: remove or make a hud for player position
         this.txtPlayerPosition = new PIXI.Text("", QUEST_STYLE);
         this.txtPlayerPosition.position = new PIXI.Point(SCENE_WIDTH, SCENE_HEIGHT);
         this.txtPlayerPosition.anchor.set(1,1);
@@ -121,13 +121,14 @@ export class StatsHud extends PIXI.Container {
 
         //  callout for quest message
         this.questRect = new PIXI.Sprite(PIXI.Texture.fromImage("assets/gui/rect.png"));
-        this.questRect.position.set(SCENE_WIDTH - this.questRect.width - 4, SCENE_HEIGHT - this.questRect.height - 4);
+        this.questRect.position.set(SCENE_HALF_WIDTH, 4);
         this.questRect.name = "TriggerMessage";
+        this.questRect.anchor.set(0.5, 0);
         this.addChild(this.questRect);
-
-        this.txtQuestMessage = new PIXI.Text("Hello world", QUEST_STYLE);
-        this.txtQuestMessage.resolution = window.devicePixelRatio;
-        this.txtQuestMessage.position.set(25, 25);
+        
+        this.txtQuestMessage = new PIXI.Text("", QUEST_STYLE);
+        this.txtQuestMessage.position.set(0, 50);  
+        this.txtQuestMessage.anchor.set(0.5); 
         this.questRect.addChild(this.txtQuestMessage);
 
         //  HP
@@ -141,7 +142,6 @@ export class StatsHud extends PIXI.Container {
             this.addChild(pnl);
 
             this.txtHP = new PIXI.Text("0", TEXT_STYLE);
-            this.txtHP.resolution = window.devicePixelRatio;
             this.txtHP.position = new PIXI.Point(80, y + 15);
             this.addChild(this.txtHP);
 
@@ -161,7 +161,6 @@ export class StatsHud extends PIXI.Container {
             this.addChild(pnl);
 
             this.txtDust = new PIXI.Text("0", TEXT_STYLE);
-            this.txtDust.resolution = window.devicePixelRatio;
             this.txtDust.position = new PIXI.Point(80, y + 15);
             this.addChild(this.txtDust);  
 
@@ -183,7 +182,6 @@ export class StatsHud extends PIXI.Container {
             this.addChild(pnl);
 
             this.txtCoins = new PIXI.Text("0", TEXT_STYLE);
-            this.txtCoins.resolution = window.devicePixelRatio;
             this.txtCoins.position = new PIXI.Point(80, y + 15);
             this.addChild(this.txtCoins);
 
@@ -215,13 +213,11 @@ export class StatsHud extends PIXI.Container {
             this.txtExp = new PIXI.Text("0 / 1000", EXP_BAR_STYLE);
             this.txtExp.pivot.set(0.5);
             this.txtExp.anchor.set(0.5);
-            this.txtExp.resolution = window.devicePixelRatio;
             this.txtExp.position = new PIXI.Point(pnl.width / 2, pnl.height / 2);
             pnl.addChild(this.txtExp);
 
             //  character level
             this.txtLevel = new PIXI.Text(`Level ${stats.characterLevel}`, TEXT_STYLE);
-            this.txtLevel.resolution = window.devicePixelRatio;
             this.txtLevel.anchor.set(0, 0.2);
             this.txtLevel.position.set(pnl.x + pnl.width + 4, pnl.y);
             this.addChild(this.txtLevel);
@@ -253,8 +249,9 @@ export class StatsHud extends PIXI.Container {
                 this.txtHP.text = `${Math.round(event.Stats[StatType.HP])} / ${event.NewValue}`;
                 break;
             case StatType.TotalExp:
-            let exp = event.NewValue - event.OldValue;
-                this.addInfoMessage({x: 0, y: 90}, `+${exp} exp`, null, -50);
+                let exp = event.NewValue - event.OldValue;
+                if(exp!=0)
+                    this.addInfoMessage({x: 0, y: 90}, `+${exp} exp`, null, -50);
                 this.renderExp(event);
                 break;
             // case StatType.CharacterLevel:

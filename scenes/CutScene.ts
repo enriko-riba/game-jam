@@ -43,7 +43,7 @@ export class CutScene extends Scene {
         //--------------------------------
         this.btnContinue = new Button(  "assets/gui/gui_button1.png",
                                         (SCENE_WIDTH - BTN_WIDTH) / 2,
-                                        this.callout.height,
+                                        this.callout.height + BTN_HEIGHT,
                                         BTN_WIDTH, 
                                         BTN_HEIGHT);
         this.btnContinue.text = new PIXI.Text("Continue", BTN_STYLE);

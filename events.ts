@@ -3,8 +3,11 @@ import { StatType } from './enums';
 export var eventEmitter = new PIXI.utils.EventEmitter();
 export var MOVE_TOPIC = "MOVE";
 export var BURN_TOPIC = "BURN";
-export var STATCHANGE_TOPIC = "stat_changed";
+export var STATCHANGE_TOPIC = "STATCHANGE";
 export var DAMAGE_TOPIC = "DAMAGE";
+
+//  action signaling topics
+export var GROUND_SHAKE = "SHAKE";
 
 export interface IStatChangeEvent {
     Type: StatType;
@@ -19,5 +22,6 @@ export interface IDpsChangeEvent {
 }
 
 export interface IBurnChangeEvent {
+    wasBurning: boolean;
     isBurning: boolean;
 }

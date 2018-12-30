@@ -1,5 +1,6 @@
 ﻿import * as Global from "../global";
-import { Mob, AtrType, DirectionH } from "./Mob";
+import { Mob} from "./Mob";
+import { AtrType, DirectionH } from '../enums';
 
 /**
  * Max distance at which the target can be acquired.

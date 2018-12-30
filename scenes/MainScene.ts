@@ -6,7 +6,7 @@ import { HeroCharacter } from '../objects/HeroCharacter';
 import { StatsHud } from '../objects/StatsHud';
 import { stats } from '../objects/PlayerStats';
 import { Bullet } from '../objects/Bullet';
-import { eventEmitter, BURN_TOPIC, IBurnChangeEvent } from '../events';
+import { BURN_TOPIC, IBurnChangeEvent, GROUND_SHAKE, eventEmitter } from '../events';
 import { SCENE_HEIGHT, SCENE_HALF_WIDTH, SCENE_BACKCOLOR, MSG_COIN_STYLE, MSG_WARN_STYLE, ANIMATION_FPS_SLOW } from '../constants';
 import { Lava } from '../objects/Lava';
 import { LevelLoader } from '../world/LevelLoader';
@@ -24,6 +24,15 @@ export class MainScene extends Scene {
     private questMngr : QuestManager;
     private hud : StatsHud;
 
+
+    private shakeDuration: number = 0;
+    private shakeEnd: number = 0;
+    private nextShake: number = 0;
+    private magnitude: number = 0;
+    private shakeX: number;
+    private shakeY: number;
+    private readonly SHAKE_COUNT = 15;
+
     constructor(scm: SceneManager) {
         super(scm, "Main");
         this.BackGroundColor = SCENE_BACKCOLOR;
@@ -31,7 +40,6 @@ export class MainScene extends Scene {
     }
 
     public onUpdate(dt: number) {
-
         //-------------------------------------------
         //  update world & world container position
         //-------------------------------------------        
@@ -86,7 +94,6 @@ export class MainScene extends Scene {
             }            
         }
 
-
         //-------------------------------------------
         //  invoke update on each updateable
         //-------------------------------------------
@@ -107,6 +114,8 @@ export class MainScene extends Scene {
         this.hud.onUpdate(dt);
         stats.onUpdate(dt);
 
+        var now = performance.now();
+
         //-------------------------------------------
         //  check if player is dead
         //-------------------------------------------
@@ -118,7 +127,24 @@ export class MainScene extends Scene {
             cutScene.SetBackGround(backGroundTexture, this.scale);
             cutScene.DeathScene = true;
             this.sceneManager.ActivateScene(cutScene);
-        } 
+        }  else if (this.shakeEnd >= now) {
+            if (this.nextShake <= now) {
+                //  original start position
+                let x = (SCENE_HALF_WIDTH - this.hero.x);
+                let y = (SCENE_HEIGHT - 70);
+
+                this.shakeX = x + this.randomRange(-this.magnitude / 2, this.magnitude / 2);
+                this.shakeY = y + this.randomRange(-this.magnitude, this.magnitude);
+                //console.log("shake: " + this.shakeX + ", " + this.shakeY, this.magnitude, this.shakeEnd);
+
+                //  reduce for next shake
+                this.magnitude -= this.magnitude / this.SHAKE_COUNT;
+                this.nextShake = now + this.shakeDuration;
+            }
+
+            this.worldContainer.x = this.shakeX;
+            this.worldContainer.y = this.shakeY;
+        }
     }
 
     private setup() {
@@ -156,7 +182,8 @@ export class MainScene extends Scene {
         LevelLoader.registerFactory("Bumper", (def)=> new Bumper());
 
         this.questMngr = new QuestManager(this);
-        eventEmitter.on(BURN_TOPIC, (event: IBurnChangeEvent) => event.isBurning ? snd.burn():snd.burnStop() );       
+        eventEmitter.on(BURN_TOPIC, (event: IBurnChangeEvent) => event.isBurning ? snd.burn():snd.burnStop() );  
+        eventEmitter.on(GROUND_SHAKE, this.startGroundShake);
     }
 
     public startLevel(){
@@ -358,5 +385,15 @@ export class MainScene extends Scene {
             wp2.clearLevel();
             Bullet.reset();
         }
+    }
+
+    private randomRange(min: number, max: number) {
+        return min + (Math.random() * (max - min));
+    }
+
+    private startGroundShake = (event: {milliSeconds: number, magnitudeInPixels: number})=> {
+        this.shakeEnd = performance.now() + event.milliSeconds;
+        this.magnitude = event.magnitudeInPixels;
+        this.shakeDuration = event.milliSeconds / this.SHAKE_COUNT;
     }
 }

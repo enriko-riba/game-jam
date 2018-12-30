@@ -101,7 +101,7 @@ export const QUEST_ITEM_STYLE: PIXI.TextStyleOptions =
 
     export const QUEST_STYLE: PIXI.TextStyleOptions =
     {
-        align: "left",
+        align: "center",
         padding: 0,
         fontSize: 26,
         fontFamily: "Farsan",

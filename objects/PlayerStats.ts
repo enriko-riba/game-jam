@@ -29,7 +29,7 @@ class PlayerStats {
 
     //  achievement levels
     public characterLevel: number = 0;
-    public currentGameLevel: number = 2;
+    public currentGameLevel: number = 1;
     private expForNextLevel: number = 0;
 
     //  user related

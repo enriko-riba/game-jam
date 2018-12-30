@@ -32,3 +32,16 @@ export enum DamageType {
     Lava = 1001,
     Poison = 1002
 }
+
+
+export enum AtrType {
+    HP,
+    Atk,
+    AtkCD,
+    Def,
+}
+
+export enum DirectionH {
+    Left,
+    Right,
+}
