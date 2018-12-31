@@ -150,7 +150,7 @@
       "name": "mob_bird",
       "displayObject": {
         "typeName": "Mob",
-        "fps": 5,
+        "fps": 6,
         "sequences": [
           {
             "name": "left",

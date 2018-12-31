@@ -26,9 +26,9 @@ export const BTN_STYLE = {
 export const TEXT_STYLE: PIXI.TextStyleOptions = {
     align: "left",
     padding: 0,
-    fontSize: 22,
+    fontSize: 21,
     fontFamily: GUI_FONT,
-    fill: 0xaaaa13,
+    fill: 0xE5E51B,
     strokeThickness: 3,
     stroke: 0x0f0f2f,
 };
@@ -103,12 +103,12 @@ export const QUEST_ITEM_STYLE: PIXI.TextStyleOptions =
     {
         align: "center",
         padding: 0,
-        fontSize: 26,
+        fontSize: 30,
         fontFamily: "Farsan",
-        fill: 0x8a8313,
-        strokeThickness: 3,
-        stroke: 0x0f0faf,
+        fill: 0xffffff,
+        strokeThickness: 2,
+        stroke: 0x8a8343,
         dropShadow: true,
         dropShadowDistance: 6,
-        dropShadowBlur:7
+        dropShadowBlur:3
     };

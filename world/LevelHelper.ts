@@ -132,24 +132,17 @@ export function getEntityDefinition(templates: Array<any>, entity: IMapEntity | 
     if (entityTemplate && entityTemplate.length > 0) {
         template = entityTemplate[0];
     }
-    // var temp = $.extend(true, {}, template.displayObject);        
-    // displayObjectDefinition = $.extend(temp, entity);
     displayObjectDefinition = { ...template.displayObject, ...entity };
 
     if (template.drop) {
-        // temp = $.extend(true, {}, template.drop); 
-        // displayObjectDefinition.drop = $.extend(true, temp, displayObjectDefinition.drop);
         displayObjectDefinition = { ...displayObjectDefinition, drop: template.drop }
     }
     if (template.body) {
-        //bodyDefinition = {...template.body, body: entity.body};
         bodyDefinition = template.body;
     }
 
     let triggerTemplate = undefined;
     if (template.trigger || displayObjectDefinition.trigger) {
-        // triggerTemplate = $.extend(true, {}, template.trigger);
-        // triggerTemplate = $.extend(true, triggerTemplate, displayObjectDefinition.trigger)
         triggerTemplate = { ...template.trigger, ...displayObjectDefinition.trigger };
     }
     return {

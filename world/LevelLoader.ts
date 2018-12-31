@@ -2,8 +2,6 @@
 import * as p2 from "p2";
 import { Parallax, AnimatedSprite, AnimationSequence  } from "..";
 import { COL_GRP_PLAYER, COL_GRP_GROUND, COL_GRP_NPC, COL_GRP_SCENE, COL_GRP_BULLET } from "./CollisionGroups";
-import { Lava } from "../objects/Lava";
-import { Platform } from "../objects/Platform";
 import { SpawnPoint } from '../mobs/SpawnPoint';
 import { Mob } from '../mobs/Mob';
 import { IRootObject, ILevel, ILevelDefinition, IMapEntity, IMobEntity, ISpawnPoint, IDisplayObjectDefinition, IInteractionType, IBodyDefinition } from './LevelInterfaces';
@@ -113,7 +111,7 @@ export class LevelLoader {
 
         //  display object
         let dispObj: PIXI.DisplayObject = LevelLoader.buildDisplayObject(defs.doDef);
-        dispObj.name = entity.name;
+        dispObj.name = entity.name || entity.template;
         (dispObj as any).templateName = defs.templateName;
 
         //  body
@@ -148,7 +146,7 @@ export class LevelLoader {
 
         //  display object
         let mobDispObj: Mob = LevelLoader.buildDisplayObject(defs.doDef) as Mob;
-        mobDispObj.name = entity.name;
+        mobDispObj.name = entity.name || entity.template;
         (mobDispObj as any).templateName = defs.templateName;
 
         // attributes and AI

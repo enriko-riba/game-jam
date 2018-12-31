@@ -29,6 +29,7 @@ export class LoaderScene extends Scene {
         'assets/gui/exp_panel.png',
         'assets/gui/exp_prefill.png',
         'assets/gui/exp_fill.png',
+        'assets/gui/panel.png',
 
         //
         'assets/hero.png',

@@ -19,7 +19,7 @@ export class StatsHud extends PIXI.Container {
 
     private emitter:particles.Emitter;
 
-    private questRect: PIXI.Sprite;
+    private panel: PIXI.Sprite;
     private txtQuestMessage: PIXI.Text;
     private questMsgEndTime = 0;
     private onCompleteCB?: () => void;
@@ -35,8 +35,14 @@ export class StatsHud extends PIXI.Container {
         this.emitter.update(dt*0.001);
 
         //  turn off the quest message
-        if (this.questRect.visible && this.questMsgEndTime < performance.now()) {
-            this.questRect.visible = false;
+        // if (this.questRect.visible && this.questMsgEndTime < performance.now()) {
+        //     this.questRect.visible = false;
+        //     if (this.onCompleteCB) {
+        //         this.onCompleteCB();
+        //     }
+        // }
+        if (this.questMsgEndTime < performance.now()) {
+            this.txtQuestMessage.visible = false;
             if (this.onCompleteCB) {
                 this.onCompleteCB();
             }
@@ -77,7 +83,7 @@ export class StatsHud extends PIXI.Container {
     }
 
     /**
-     * Ads text message about acquired quest items.
+     * Adds text message about acquired quest items.
      * @param message the message to be added
      * @param style optional PIXI.ITextStyle
      */
@@ -106,7 +112,8 @@ export class StatsHud extends PIXI.Container {
      */
     public setQuestMessage(msg: string, ttlMilis: number = 8000, onCompleteCB: () => void = null) {
         this.txtQuestMessage.text = msg;
-        this.questRect.visible = true;
+        this.panel.visible = true;
+        this.txtQuestMessage.visible = true;
         this.questMsgEndTime = performance.now() + ttlMilis;
         this.onCompleteCB = onCompleteCB;
     }
@@ -120,52 +127,50 @@ export class StatsHud extends PIXI.Container {
         this.addChild(this.txtPlayerPosition);
 
         //  callout for quest message
-        this.questRect = new PIXI.Sprite(PIXI.Texture.fromImage("assets/gui/rect.png"));
-        this.questRect.position.set(SCENE_HALF_WIDTH, 4);
-        this.questRect.name = "TriggerMessage";
-        this.questRect.anchor.set(0.5, 0);
-        this.addChild(this.questRect);
+        this.panel = new PIXI.Sprite(PIXI.Texture.fromImage("assets/gui/panel.png"));
+        this.panel.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+        this.panel.position.set(4);
+        this.panel.name = "TriggerMessage";
+        this.panel.anchor.set(0);
+        this.addChild(this.panel);
         
         this.txtQuestMessage = new PIXI.Text("", QUEST_STYLE);
-        this.txtQuestMessage.position.set(0, 50);  
-        this.txtQuestMessage.anchor.set(0.5); 
-        this.questRect.addChild(this.txtQuestMessage);
+        this.txtQuestMessage.position.set(384, 100);  
+        this.txtQuestMessage.anchor.set(0.5, 0); 
+        this.panel.addChild(this.txtQuestMessage);
 
+        let y: number = 5;
         //  HP
         {
-            let y: number = 5;
 
             let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
             pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(5, y);
-            pnl.scale.set(0.5);
-            this.addChild(pnl);
+            this.panel.addChild(pnl);
 
             this.txtHP = new PIXI.Text("0", TEXT_STYLE);
-            this.txtHP.position = new PIXI.Point(80, y + 15);
-            this.addChild(this.txtHP);
+            this.txtHP.position = new PIXI.Point(70, y + 10);
+            pnl.addChild(this.txtHP);
 
             let spr = new PIXI.Sprite(PIXI.loader.resources["assets/gui/heart.png"].texture);
-            spr.position.set(21, y + 17);
-            spr.scale.set(0.5);
-            this.addChild(spr);
+            spr.position.set(8, y + 4);
+            pnl.addChild(spr);
         }
 
         //  pixi dust
         {
-            let y = 75;
+            //let y = 75;
             let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
             pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
-            pnl.position.set(5, y);
-            pnl.scale.set(0.5);
-            this.addChild(pnl);
+            pnl.position.set(261, y);
+            this.panel.addChild(pnl);
 
             this.txtDust = new PIXI.Text("0", TEXT_STYLE);
-            this.txtDust.position = new PIXI.Point(80, y + 15);
-            this.addChild(this.txtDust);  
+            this.txtDust.position = new PIXI.Point(70, y + 10);
+            pnl.addChild(this.txtDust);  
 
             this.emitter = createParticleEmitter(pnl, [PIXI.Texture.fromImage("assets/star.png")]);
-            this.emitter.updateOwnerPos(65, 90);
+            this.emitter.updateOwnerPos(32, 55);
             this.emitter.maxLifetime = 0.6;
             this.emitter.maxParticles = 50;
             this.emitter.emit = true;
@@ -173,22 +178,20 @@ export class StatsHud extends PIXI.Container {
 
         //  coins
         {
-            let y = 145;
+            //let y = 145;
 
             let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
             pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
-            pnl.position.set(5, y);
-            pnl.scale.set(0.5);
-            this.addChild(pnl);
+            pnl.position.set(517, y);
+            this.panel.addChild(pnl);
 
             this.txtCoins = new PIXI.Text("0", TEXT_STYLE);
-            this.txtCoins.position = new PIXI.Point(80, y + 15);
-            this.addChild(this.txtCoins);
+            this.txtCoins.position = new PIXI.Point(70, y + 10);
+            pnl.addChild(this.txtCoins);
 
             let spr = new PIXI.Sprite(PIXI.loader.resources["assets/gui/coin.png"].texture);
-            spr.position.set(21, y + 17);
-            spr.scale.set(0.5);
-            this.addChild(spr);
+            spr.position.set(8, y + 4);
+            pnl.addChild(spr);
         }
 
         //  Exp

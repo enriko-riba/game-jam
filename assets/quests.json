@@ -41,7 +41,7 @@
     },
     {
       "id": 201,
-      "welcomeMsg": "You shall not pass...unless you\nbring me knowledge of Kendo!",
+      "welcomeMsg": "You shall not pass...unless you bring me knowledge of Kendo!",
       "objectiveMsg": "Find the Kendo knowledge.",
       "completedMsg": "Return to the white castle.",
       "finishedMsg": "What? Could it be...\nI need so much this knowledge!\n\nYou must be the chosen one,\nproceed now!",
@@ -52,8 +52,8 @@
     },
     {
       "id": 202,
-      "welcomeMsg": "Find Hanshi - the great Kendo master,\nhe will train you.\nHis dojo is on the east.\n\n\nBeware of magic slimes!",
-      "objectiveMsg": "Find the Kendo master in his dojo on\n the east.",
+      "welcomeMsg": "Find Hanshi - the great Kendo master, he will train you.\nHis dojo is on the east. Beware of magic slimes!",
+      "objectiveMsg": "Find the Kendo master in his dojo on the east.",
       "completedMsg": "",
       "finishedMsg": "",
       "rewardExp": 300,
@@ -61,8 +61,8 @@
     },
     {
       "id": 203,
-      "welcomeMsg": "I expected you, we must hurry!\nYour first lesson will be:\nFumikomi-ashi (jump attack).\nJump on the enemy and press 's'.\n\nLets practice Fumikomi-ashi,\ncollect 10 ki from magic slimes!",
-      "objectiveMsg": "Collect 10 Ki from magic slimes.\n\nAttack with: Jump + 's'",
+      "welcomeMsg": "I expected you, we must hurry! Your first lesson will be the jump attack.\nJump on the enemy and press 's'.Collect 10 ki from magic slimes!",
+      "objectiveMsg": "Collect 10 Ki from magic slimes.\nAttack with: Jump + 's'",
       "completedMsg": "Quest completed!\nHurry back to the dojo!",
       "finishedMsg": "",
       "itemId": 202,
@@ -72,8 +72,8 @@
     },
     {
       "id": 204,
-      "welcomeMsg": "I saw little girls performing better.\n\nYou show no potential...\nbut still, lets practice some more.",
-      "objectiveMsg": "Collect 25 Ki from magic slimes.\n\nAttack with: Jump + 's'",
+      "welcomeMsg": "I saw little girls performing better.You show no potential...\nbut still, lets practice some more.",
+      "objectiveMsg": "Collect 25 Ki from magic slimes.\nAttack with: Jump + 's'",
       "completedMsg": "Quest completed!\nHurry back to the dojo!",
       "finishedMsg": "You made it!",
       "itemId": 202,

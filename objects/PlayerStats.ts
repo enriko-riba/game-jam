@@ -34,7 +34,6 @@ class PlayerStats {
 
     //  user related
     public id: number;
-    public name: string;
 
     private isBurningBuff: boolean = false;
 
@@ -65,7 +64,7 @@ class PlayerStats {
         this.stats[StatType.MaxHP] = 0;
         this.stats[StatType.HP] = 0;
         this.stats[StatType.MaxDust] = 0;
-        this.stats[StatType.Dust] = 100;
+        this.stats[StatType.Dust] = 1000;
         this.stats[StatType.TotalExp] = 0;
         this.stats[StatType.AttributePoints] = 0;
 
@@ -214,7 +213,7 @@ class PlayerStats {
             HP: 150,
             Coins: 300,
             Gold: 0,
-            Dust: 200,
+            Dust: 1000,
             AtrPts: 0,
             LastLevel: this.currentGameLevel
         };
