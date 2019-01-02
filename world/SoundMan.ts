@@ -43,7 +43,6 @@ export class SoundMan {
             var trackName = this.musicTrackNames[i];
             this.musicTracks.push(new Howl({
                 src: [trackName],
-                preload: true,
                 autoplay: false,
                 loop: true,
                 volume: 0.6
@@ -101,42 +100,36 @@ export class SoundMan {
         });
         this.questItemSnd = new Howl({
             src: ['assets/audio/effects/quest-item.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
         });
         this.winSnd = new Howl({
             src: ['assets/audio/effects/win.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
         });
         this.atkMag1 = new Howl({
             src: ['assets/audio/effects/atk-mag01.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1,
         });
         this.hitMag1 = new Howl({
             src: ['assets/audio/effects/hit-mag01.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
         });
         this.jumpAtk = new Howl({
             src: ['assets/audio/effects/jump-atk01.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
         });
         this.pain = new Howl({
             src: ['assets/audio/effects/pain01.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
@@ -144,7 +137,6 @@ export class SoundMan {
 
         this.jmpContact = new Howl({
             src:['assets/audio/effects/jmp-contact.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
@@ -152,14 +144,12 @@ export class SoundMan {
 
         this.woosh = new Howl({
             src: ['assets/audio/effects/woosh.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
         });
         this.squish = new Howl({
             src: ['assets/audio/effects/mob-squish.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1
@@ -167,7 +157,6 @@ export class SoundMan {
 
         this.fxDemoSnd = new Howl({
             src: ['assets/audio/effects/fx-demo.mp3'],
-            preload: true,
             autoplay: false,
             loop: false,
             volume: 1

@@ -102,8 +102,8 @@ export class QuestManager {
                         this.setQuestState(trigger.questId, QuestState.Completed);
                         this.gameScene.IsHeroInteractive = false;
 
-                        this.hud.setQuestMessage(quest.welcomeMsg, 4000, () => {
-                            this.hud.setQuestMessage(quest.completedMsg, 4000, () => {
+                        this.hud.setQuestMessage(quest.welcomeMsg, 2000, () => {
+                            this.hud.setQuestMessage(quest.completedMsg, 2000, () => {
                                 this.gameScene.IsHeroInteractive = true;
                                 this.setQuestState(trigger.questId, QuestState.Finished);
                                 this.giveRewards(quest);
@@ -120,7 +120,7 @@ export class QuestManager {
                     if (this.getQuestState(1) > QuestState.Finished) {
                         if (state === QuestState.InProgress) {
                             this.setQuestState(trigger.questId, QuestState.Completed);
-                            this.gameScene.IsHeroInteractive = false;
+                            //this.gameScene.IsHeroInteractive = false;
                             this.hud.setQuestMessage(quest.completedMsg, 4000, () => {
                                 this.gameScene.IsHeroInteractive = true;
                                 this.setQuestState(trigger.questId, QuestState.Finished);
