@@ -1,85 +1,84 @@
 ﻿{
-  "quests": [
-    {
-      "id": -1,
-      "welcomeMsg": "The message (at NPC site) when the quest is triggered",
-      "objectiveMsg": "Plain quest description for Quests overview",
-      "completedMsg": "Message displayed immediately after the quest is completed (optional)",
-      "finishedMsg": "Message displayed when returned to the quest issuer (optional)",
-      "itemId": -1,
-      "itemsNeeded": -1,
-      "rewardExp": 0,
-      "rewardCoins": 0
-    },
-
-    {
-      "id": 1,
-      "welcomeMsg": "Hello there, I will teach you the basics.\nFollow my instructions and you will be fine.",
-      "objectiveMsg": "",
-      "completedMsg": "OK lad, use 'w' or space to jump and 'a', 'd' to move!",
-      "finishedMsg": "Now jump on that big box.",
-      "rewardExp": 25,
-      "rewardCoins": 0
-    },
-    {
-      "id": 2,
-      "welcomeMsg": "Now jump on that big box.",
-      "objectiveMsg": "Jump on the box to your right.",
-      "completedMsg": "Excellent! To run hold shift.\nIf running you can jump much higher and longer!",
-      "finishedMsg": "",
-      "rewardExp": 50,
-      "rewardCoins": 0
-    },
-    {
-      "id": 3,
-      "welcomeMsg": "Now run to the exit sign on the east!",
-      "objectiveMsg": "Go to the exit sign on the east.",
-      "completedMsg": "Well done!",
-      "finishedMsg": "Listen up lad, you did well...for a n00b.\nThe time is running out.Now hurry to the white castle. The real adventure merely begins!",
-      "rewardExp": 100,
-      "rewardCoins": 50
-    },
-    {
-      "id": 201,
-      "welcomeMsg": "You shall not pass...unless you bring me knowledge of Kendo!",
-      "objectiveMsg": "Find the Kendo knowledge.",
-      "completedMsg": "Return to the white castle.",
-      "finishedMsg": "What? Could it be...\nI need so much this knowledge!\n\nYou must be the chosen one,\nproceed now!",
-      "itemId": 201,
-      "itemsNeeded": 1,
-      "rewardExp": 500,
-      "rewardCoins": 100
-    },
-    {
-      "id": 202,
-      "welcomeMsg": "Find Hanshi - the great Kendo master, he will train you.\nHis dojo is on the east. Beware of magic slimes!",
-      "objectiveMsg": "Find the Kendo master in his dojo on the east.",
-      "completedMsg": "",
-      "finishedMsg": "",
-      "rewardExp": 300,
-      "rewardCoins": 150
-    },
-    {
-      "id": 203,
-      "welcomeMsg": "I expected you, we must hurry! Your first lesson will be the jump attack.\nJump on the enemy and press 's'. Collect 10 ki from magic slimes!",
-      "objectiveMsg": "Collect 10 Ki from magic slimes.\nAttack with: Jump + 's'",
-      "completedMsg": "Quest completed!\nHurry back to the dojo!",
-      "finishedMsg": "",
-      "itemId": 202,
-      "itemsNeeded": 10,
-      "rewardExp": 500,
-      "rewardCoins": 500
-    },
-    {
-      "id": 204,
-      "welcomeMsg": "I saw little girls performing better.You show no potential...\nbut still, lets practice some more.",
-      "objectiveMsg": "Collect 15 Ki from magic slimes.\nAttack with: Jump + 's'",
-      "completedMsg": "Quest completed!\nHurry back to the dojo!",
-      "finishedMsg": "You made it!",
-      "itemId": 202,
-      "itemsNeeded": 15,
-      "rewardExp": 750,
-      "rewardCoins": 1000
-    }
-  ]
+	"quests": [
+		{
+			"id": -1,
+			"welcomeMsg": "The message (at NPC site) when the quest is triggered",
+			"objectiveMsg": "Plain quest description for Quests overview",
+			"completedMsg": "Message displayed immediately after the quest is completed (optional)",
+			"finishedMsg": "Message displayed when returned to the quest issuer (optional)",
+			"itemId": -1,
+			"itemsNeeded": -1,
+			"rewardExp": 0,
+			"rewardCoins": 0
+		},
+		{
+			"id": 1,
+			"welcomeMsg": "Hello there, I will teach you the basics.\nFollow my instructions and you will be fine.",
+			"objectiveMsg": "",
+			"completedMsg": "OK lad, use 'w' or space to jump and 'a', 'd' to move!",
+			"finishedMsg": "Now jump on that big box.",
+			"rewardExp": 25,
+			"rewardCoins": 0
+		},
+		{
+			"id": 2,
+			"welcomeMsg": "Now jump on that big box.",
+			"objectiveMsg": "Jump on the box to your right.",
+			"completedMsg": "Excellent! To run hold shift.\nIf running you can jump much higher and longer!",
+			"finishedMsg": "",
+			"rewardExp": 50,
+			"rewardCoins": 0
+		},
+		{
+			"id": 3,
+			"welcomeMsg": "Now run to the exit sign on the east!",
+			"objectiveMsg": "Go to the exit sign on the east.",
+			"completedMsg": "Well done!",
+			"finishedMsg": "Listen up lad, you did well...for a n00b.\nThe time is running out.Now hurry to the white castle. The real adventure merely begins!",
+			"rewardExp": 100,
+			"rewardCoins": 50
+		},
+		{
+			"id": 201,
+			"welcomeMsg": "You shall not pass...unless you bring me knowledge of Kendo!",
+			"objectiveMsg": "Find the Kendo knowledge.",
+			"completedMsg": "Return to the white castle.",
+			"finishedMsg": "What? Could it be...\nI need so much this knowledge!\n\nYou must be the chosen one,\nproceed now!",
+			"itemId": 201,
+			"itemsNeeded": 1,
+			"rewardExp": 500,
+			"rewardCoins": 100
+		},
+		{
+			"id": 202,
+			"welcomeMsg": "Find Hanshi - the great Kendo master, he will train you.\nHis dojo is on the east. Beware of magic slimes!",
+			"objectiveMsg": "Find the Kendo master in his dojo on the east.",
+			"completedMsg": "",
+			"finishedMsg": "",
+			"rewardExp": 300,
+			"rewardCoins": 150
+		},
+		{
+			"id": 203,
+			"welcomeMsg": "I expected you, we must hurry! Your first lesson will be the jump attack.\nJump on the enemy and press 's'. Collect 10 ki from magic slimes!",
+			"objectiveMsg": "Collect 10 Ki from magic slimes.\nAttack with: Jump + 's'",
+			"completedMsg": "Quest completed!\nHurry back to the dojo!",
+			"finishedMsg": "",
+			"itemId": 202,
+			"itemsNeeded": 10,
+			"rewardExp": 500,
+			"rewardCoins": 500
+		},
+		{
+			"id": 204,
+			"welcomeMsg": "I saw little girls performing better.You show no potential...\nbut still, lets practice some more.",
+			"objectiveMsg": "Collect 15 Ki from magic slimes.\nAttack with: Jump + 's'",
+			"completedMsg": "Quest completed!\nHurry back to the dojo!",
+			"finishedMsg": "You made it!",
+			"itemId": 202,
+			"itemsNeeded": 15,
+			"rewardExp": 750,
+			"rewardCoins": 1000
+		}
+	]
 }
