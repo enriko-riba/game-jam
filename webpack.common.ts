@@ -2,20 +2,17 @@ import * as webpack from 'webpack';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as  CopyWebpackPlugin from 'copy-webpack-plugin';
 import * as  ExtractTextPlugin  from 'extract-text-webpack-plugin';
-import * as  CleanWebpackPlugin from 'clean-webpack-plugin';
-import { BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 
 const config: webpack.Configuration = {
       
     entry: {
         main:   "./app.ts",
-        common: ["@tweenjs/tween.js", "pixi.js", "pixi-filters"], //, "toaster-js"],
+        common: ["@tweenjs/tween.js", "pixi.js", "pixi-filters"],
         //frb: ["firebase/app","firebase/auth", "firebaseui"],
-        //pixi:       "pixi.js"
     },
     
     output: {
-        filename: "./[name].bundle.js",
+        filename: "./[name].[hash].js",
     },
 
     resolve: {
