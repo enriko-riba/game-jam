@@ -8,7 +8,7 @@ import { stats } from "../objects/PlayerStats";
 import { StatsHud } from "../objects/StatsHud";
 import { wp2 } from '../world/WorldP2';
 import { snd } from '../world/SoundMan';
-import { QUEST_STYLE, MSG_EXP_STYLE } from '..';
+import { QUEST_STYLE } from '..';
 import { StatType } from '../enums';
 
 /**
@@ -26,6 +26,12 @@ export class QuestManager {
      * Resets state of all quests.
      */
     public reset() {
+        this.questState.forEach((qs, index) => {
+            if (qs != QuestState.None) {
+                var quest = this.findQuest(index);
+                quest.itemsCollected  = 0;
+            }
+        });
         this.questState = [];
     }
 
@@ -137,9 +143,11 @@ export class QuestManager {
                         this.setQuestState(trigger.questId, QuestState.Finished);
                         this.giveRewards(quest);
                         this.gameScene.IsHeroInteractive = false;
-                        this.hud.setQuestMessage(quest.completedMsg);
+                        this.hud.setQuestMessage(quest.completedMsg, 4000, () => {
+                            Global.getScm().ActivateScene("Loader");
+                        });
                         stats.saveUserState(true);
-                        snd.win();                        
+                        snd.win();
                     }
                     break;
 
@@ -148,7 +156,7 @@ export class QuestManager {
                         () => {
                             let item = Global.worldContainer.getChildByName("quest_item_201");
                             item.visible = true;
-                            var lock: any = this.findBodyByName("lock");                            
+                            var lock: any = this.findBodyByName("lock");
                             this.gameScene.removeEntity(lock, true);
                         },
                         () => { },
@@ -170,26 +178,37 @@ export class QuestManager {
                     ]);
                     break;
 
-                case 202:   //  seek the hanshi Kendo master
-                    this.genericQuestHandler(quest, state, body);
-                    break;
+                // case 202:   //  seek the hanshi Kendo master
+                //     this.genericQuestHandler(quest, state, body);
+                //     break;
 
                 case 203:   //  hanshi Kendo master dojo: collect 10 ki
                     this.genericQuestHandler(quest, state, body, [
-                        () => { stats.HasJumpAtack = true;},
+                        () => { stats.HasJumpAtack = true; },
                         () => { },
                         () => { },
                         () => { }
                     ]);
                     break;
 
-                case 204:   //  hanshi Kendo master dojo: collect 25 ki
+                // case 204:   //  hanshi Kendo master dojo: collect 25 ki
+                //     this.genericQuestHandler(quest, state, body);
+                //     break;
+
+                default:
                     this.genericQuestHandler(quest, state, body);
                     break;
             }
         }
     }
 
+    /**
+     * 
+     * @param quest 
+     * @param state 
+     * @param body the physics sensor or trigger that causes this quest
+     * @param actions array of actions (one optional action for each state)
+     */
     private genericQuestHandler(quest: Quest, state: QuestState, body, actions?: Array<() => void>) {
         let trigger: ITriggerDefinition = body.Trigger;
         switch (state) {
@@ -204,7 +223,7 @@ export class QuestManager {
                 if (quest.itemId && quest.itemsCollected >= quest.itemsNeeded) { //  if the acquireItem has set quest to completed move to next stated
                     this.setQuestState(quest.id, QuestState.Finished);
                     trigger.lastActive = 0;
-                } else { 
+                } else {
                     this.hud.setQuestMessage(quest.completedMsg);
                 }
                 break;
@@ -223,13 +242,13 @@ export class QuestManager {
         snd.questItem();
         if (quest.rewardExp) {
             stats.increaseStat(StatType.TotalExp, quest.rewardExp);
-            let pt = new PIXI.Point(Global.position.x, Global.position.y + 50);
-            this.hud.addInfoMessage(pt, `+${quest.rewardExp} exp`, MSG_EXP_STYLE);
+            // let pt = new PIXI.Point(Global.position.x, Global.position.y + 50);
+            // this.hud.addInfoMessage(pt, `+${quest.rewardExp} exp`, MSG_EXP_STYLE);
         }
         if (quest.rewardCoins) {
             stats.increaseStat(StatType.Coins, quest.rewardCoins);
-            let pt = new PIXI.Point(Global.position.x + 50, Global.position.y + 100);
-            this.hud.addInfoMessage(pt, `+${quest.rewardCoins} coins`);
+            // let pt = new PIXI.Point(Global.position.x + 50, Global.position.y + 100);
+            // this.hud.addInfoMessage(pt, `+${quest.rewardCoins} coins`);
         }
         this.setQuestState(quest.id, QuestState.Rewarded);
     }
@@ -247,7 +266,7 @@ export class QuestManager {
             if (q.itemId === itemId) {
                 let state = this.getQuestState(q.id);
                 return state < QuestState.Completed && state > QuestState.None;
-            }            
+            }
             return false;
         });
         if (quests.length > 0) {

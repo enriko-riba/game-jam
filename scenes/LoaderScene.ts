@@ -94,8 +94,7 @@ export class LoaderScene extends Scene {
 
         try {
             let mainScene = this.sceneManager.GetScene("Main") as MainScene;
-            mainScene.startLevel();
-            this.sceneManager.ActivateScene(mainScene);
+            mainScene.startLevel();            
         } catch (e) {
             console.log("exception: ", e);
         }

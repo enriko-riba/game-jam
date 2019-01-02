@@ -51,8 +51,8 @@ export class MainScene extends Scene {
         //  update parallax
         //-------------------------------------------
         stats.currentLevel.parallax.forEach(p => {
-            p.SetViewPortX(this.hero.x);
-            p.position.x = this.hero.x - SCENE_HALF_WIDTH;
+            p.SetViewPortX(Global.position.x);
+            p.position.x = Global.position.x - SCENE_HALF_WIDTH;
         });
 
         //-------------------------------------------

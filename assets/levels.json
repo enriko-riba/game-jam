@@ -213,7 +213,162 @@
       }
     }
   ],
-  "levels": [   
+  "levels": [  
+    {
+      "id": 0,
+      "name": "Intro",
+      "audioTrack": 1,
+      "parallax": [
+        {
+          "index": 0,
+          "name": "Background",
+          "parallaxFactor": 0.25,
+          "y": 20,
+          "scale": 2,
+          "textures": [
+            "assets/img/background/Mountains.png"
+          ]
+        },
+        {
+          "index": 1,
+          "name": "Far",
+          "parallaxFactor": 0.45,
+          "y": 25,
+          "scale": 1.6,
+          "textures": [
+            "assets/img/background/trees06.png",
+            "assets/img/background/trees07.png",
+            "assets/img/background/trees08.png"
+          ]
+        },
+        {
+          "index": 2,
+          "name": "Near",
+          "parallaxFactor": 0.65,
+          "y": 10,
+          "scale": 1.3,
+          "textures": [
+            "assets/img/background/trees01.png",
+            "assets/img/background/trees05.png",
+            "assets/img/background/trees04.png",
+            "assets/img/background/trees03.png"
+          ]
+        },
+        {
+          "index": 3,
+          "name": "Ground",
+          "parallaxFactor": 1,
+          "y": -85,
+          "textures": [
+            "assets/img/background/ground.png"
+          ]
+        },
+        {
+          "name": "Bushes",
+          "parallaxFactor": 1,
+          "y": -70,
+          "textures": [
+            "assets/img/background/front01.png",
+            "assets/img/background/front02.png"
+          ]
+        }
+      ],
+      "map": {
+        "start": [1768,24],
+        "templates": [         
+          {
+            "name": "balloon_vv",
+            "displayObject": {
+              "typeName": "Sprite",
+              "texture": "assets/img/objects/Bumper_01.png"
+            },
+            "body": {
+              "shape": "Box",
+              "type": 2,
+              "material": "box_default"
+            }
+          }
+        ],
+        "entities": [
+          {
+            "template": "edge",
+            "name": "edge-left",
+            "xy": [ 1300, 64 ]
+          },
+          {
+            "template": "balloon_vv",
+            "name": "balloon",
+            "xy": [ 2100, 580 ]
+          },
+          {
+            "template": "box64",
+            "xy": [ 1950, 32 ],
+            "trigger": {
+              "questId": 1,
+              "type": "distance",
+              "distance": 200            
+            }
+          },
+          {
+            "template": "box128",
+            "xy": [ 2050, 64 ]
+          },
+          {
+            "template": "sensor",
+            "xy": [ 2050, 128 ],
+            "trigger": {
+              "questId": 2,
+              "type": "collision"             
+            }
+          },
+          {
+            "template": "box64",
+            "xy": [ 2150, 32 ]
+          },
+          {
+            "template": "platform-desert",
+            "xy": [ 2210, 185 ],
+            "tilesX": 3
+          },
+          {
+            "template": "platform1-desert",
+            "xy": [ 2650, 230 ]
+          },
+          {
+            "template": "platform-desert",
+            "xy": [ 2830, 285 ],
+            "tilesX": 4,
+            "tilesY": 3
+          },
+
+          {
+            "template": "platform1-desert",
+            "xy": [ 3270, 330 ]
+          },
+          {
+            "template": "exit",
+            "xy": [ 3322, 360 ],
+            "trigger": {
+              "type": "collision",              
+              "questId": 3
+            }
+          },
+          {
+            "template": "edge",
+            "xy": [ 3650, 50 ],
+            "rotation": 1.6,
+            "scale": [ 1, 1.5 ]
+          },
+          {
+            "template": "edge",
+            "xy": [3900,100],
+            "rotation": 0.5,
+            "scale": [2,1.5]
+          }
+        ]
+      }
+    },
+
     {
       "id": 1,
       "name": "Kendo",

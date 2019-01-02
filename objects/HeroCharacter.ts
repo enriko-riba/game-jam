@@ -357,7 +357,7 @@ export class HeroCharacter extends AnimatedSprite {
             .easing(TWEEN.Easing.Linear.None);
 
         var endX = this.x;
-        var endY = this.y + 10;
+        var endY = this.y + 8;
         var moveAway = new TWEEN.Tween(dispObj.position)
             .to({ x: endX, y: endY }, 350)
             .easing(TWEEN.Easing.Back.In)

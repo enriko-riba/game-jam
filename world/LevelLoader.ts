@@ -68,9 +68,8 @@ export class LevelLoader {
         //--------------------------------------            
         var vps = new PIXI.Point(SCENE_WIDTH, SCENE_HEIGHT);
         level.parallax.forEach((iplx) => {
-            var parallax = new Parallax(vps, iplx.parallaxFactor, iplx.scale);
+            var parallax = new Parallax(vps, iplx.parallaxFactor, iplx.textures, iplx.scale);
             parallax.y = iplx.y;
-            parallax.setTextures(iplx.textures);
             result.parallax.push(parallax);
         });
 

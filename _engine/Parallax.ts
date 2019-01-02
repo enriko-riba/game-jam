@@ -20,11 +20,14 @@ export class Parallax extends PIXI.Container {
     /**
      *   Creates a new ParalaxSprite instance.
      */
-    constructor(size?: PIXI.Point, parallaxFactor?: number, private textureScale?: number) {
+    constructor(size: PIXI.Point, parallaxFactor: number, textures: Array<string | PIXI.Texture>, private textureScale?: number) {
         super();
         this.ViewPortSize = size || new PIXI.Point(100, 100);
         this.parallaxFactor = parallaxFactor || 1;
         this.textureScale = this.textureScale || 1;
+        this.setTextures(textures);
+        this.worldPosition = 0;
+        this.SetViewPortX(1);
     }
 
     public get WorldPosition(){

@@ -29,7 +29,7 @@ class PlayerStats {
 
     //  achievement levels
     public characterLevel: number = 0;
-    public currentGameLevel: number = 1;
+    public currentGameLevel: number = 0;
     private expForNextLevel: number = 0;
 
     //  user related
@@ -53,23 +53,11 @@ class PlayerStats {
         this.attributeStats[BaseStatType.MaxHP] = 0;
         this.attributeStats[BaseStatType.MaxDust] = 0;
 
-        //  base stats
-        this.baseStats[BaseStatType.MaxHP] = 150;
-        this.baseStats[BaseStatType.MaxDust] = 1000;
-        this.baseStats[BaseStatType.RegenHP] = 1;
-        this.baseStats[BaseStatType.RegenDust] = 2;
-
         // runtime stats
         this.stats[StatType.Coins] = 0;
-        this.stats[StatType.MaxHP] = 0;
-        this.stats[StatType.HP] = 0;
-        this.stats[StatType.MaxDust] = 0;
-        this.stats[StatType.Dust] = 1000;
+        this.stats[StatType.Dust] = 600;
         this.stats[StatType.TotalExp] = 0;
         this.stats[StatType.AttributePoints] = 0;
-
-        this.stats[StatType.MaxDust] = 1000;
-        this.stats[StatType.MaxHP] = 150;
         this.stats[StatType.HP] = 120;
 
         let diff = 1000;
@@ -209,11 +197,11 @@ class PlayerStats {
     public loadUserState() {
         let model = { id: this.id };
         var data = {
-            Exp : 100,
-            HP: 150,
-            Coins: 300,
+            HP: this.getStat(StatType.MaxHP),
+            Exp : this.getStat(StatType.TotalExp),
+            Coins: this.getStat(StatType.Coins),
+            Dust: this.getStat(StatType.MaxDust),
             Gold: 0,
-            Dust: 1000,
             AtrPts: 0,
             LastLevel: this.currentGameLevel
         };
@@ -242,7 +230,6 @@ class PlayerStats {
     public set HasJumpAtack(value: boolean) {
         this.hasJumpAttack = value;
     }
-
 
     public setStat(type: StatType, value: number) {
         this.stats[type] = value;
@@ -290,6 +277,7 @@ class PlayerStats {
                 this.scevent.OldValue = this.characterLevel - 1;
                 this.scevent.NewValue = this.characterLevel;
                 this.scevent.Stats = this.stats;
+                eventEmitter.emit(STATCHANGE_TOPIC, this.scevent);
 
                 //  attr change event
                 newValue = this.stats[StatType.AttributePoints] + 5;
@@ -298,7 +286,8 @@ class PlayerStats {
                 this.scevent.NewValue = newValue;
                 this.setStat(StatType.AttributePoints, newValue);
                 this.scevent.Stats = this.stats;
-                
+                eventEmitter.emit(STATCHANGE_TOPIC, this.scevent);
+
                 // refill HP & dust
                 this.setStat(StatType.Dust, this.stats[StatType.MaxDust]);
                 this.setStat(StatType.HP, this.stats[StatType.MaxHP]);
@@ -308,7 +297,6 @@ class PlayerStats {
                 this.scevent.OldValue = 0;
                 this.scevent.NewValue = this.stats[StatType.LevelExp];
                 this.scevent.Stats = this.stats;
-
                 //this.saveUserState(false);
             }
         }
@@ -328,23 +316,10 @@ class PlayerStats {
         }
     }
 
-
-    /**
-     * Searches the exp level starting from the current exp level.
-     * @param exp
-     */
-    //private findExpLevelInternal(exp: number) {
-    //    for (var i = this.characterLevel, len = PlayerStats.expForLevel.length; i < len; i++) {
-    //        if (exp < PlayerStats.expForLevel[i]) {
-    //            return i - 1;
-    //        }
-    //    }
-    //}
-
     private rebuildStats() {
         //  calc max & regen stats
         this.baseStats[BaseStatType.MaxHP] = 150 + (this.characterLevel * 10);
-        this.baseStats[BaseStatType.MaxDust] = 1000 + (this.characterLevel * 50);
+        this.baseStats[BaseStatType.MaxDust] = 600 + (this.characterLevel * 50);
         this.baseStats[BaseStatType.RegenDust] = 2 + (this.characterLevel / 2);
         this.baseStats[BaseStatType.RegenHP] = 1 + (this.characterLevel / 2);
 
