@@ -37,8 +37,6 @@ export class SoundMan {
     private currentTrack: number = 0;
 
     constructor() {
-        //let h = howler.Howl;//  HACK: dummy assignment needed to force the transpiler generate the import
-
         for (var i = 0, len = this.musicTrackNames.length; i < len; i++) {
             var trackName = this.musicTrackNames[i];
             this.musicTracks.push(new Howl({
