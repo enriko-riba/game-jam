@@ -5,7 +5,7 @@
 .vscode
 node_modules/
 *.txt
-*.js
+
 *.user
 bin/
 obj/
