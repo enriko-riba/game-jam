@@ -7,7 +7,8 @@
     "start": "webpack-dev-server --config webpack.dev.ts --hot",
     "start:open": "webpack-dev-server --open --config webpack.dev.ts --hot",
     "build:d": "node_modules/.bin/webpack --config webpack.dev.ts",
-    "build:p": "node_modules/.bin/webpack --config webpack.prod.ts"
+    "build:p": "node_modules/.bin/webpack --config webpack.prod.ts",
+    "gh-pages:publish":"git subtree push --prefix dist origin gh-pages"
   },
   "author": "Enriko Riba",
   "license": "",
