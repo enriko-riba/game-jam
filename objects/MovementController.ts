@@ -1,4 +1,4 @@
-import { KeyboardMapper, Global } from '..';
+import { KeyboardMapper } from '..';
 import { WorldP2 } from '../world/WorldP2';
 import { stats } from './PlayerStats';
 import { eventEmitter, MOVE_TOPIC } from '../events';
