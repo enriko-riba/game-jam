@@ -1,4 +1,5 @@
 ﻿import * as PIXI from 'pixi.js';
+import { TextureLoader } from '.';
 
 /**
  *   Represents a parallax background with textures that tile inside the viewport. 
@@ -90,11 +91,13 @@ export class Parallax extends PIXI.Container {
     private getTexture(textures: Array<string | PIXI.Texture>, textureIndex: number){
         var t: PIXI.Texture;
         if (typeof textures[textureIndex] === "string") {
-            var res = PIXI.loader.resources[textures[textureIndex] as string];
-            if(!res || !res.texture){
-                console.error('texture not fouind: ' + textures[textureIndex]);
-            }
-            t = res.texture;
+            //var res = PIXI.loader.resources[textures[textureIndex] as string];            
+            // if(!res || !res.texture){
+            //     console.error('texture not found: ' + textures[textureIndex]);
+            // }
+            // t = res.texture;
+            t = TextureLoader.Get(textures[textureIndex] as string);
+            //t.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         } else {
             t = textures[textureIndex] as PIXI.Texture;
         }

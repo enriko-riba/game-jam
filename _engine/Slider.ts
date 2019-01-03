@@ -1,5 +1,6 @@
 ﻿import * as PIXI from 'pixi.js';
 import { OutlineFilter } from '@pixi/filter-outline';
+import { TextureLoader } from '.';
 
 let COLUMN_PADDING = 1;
 
@@ -206,10 +207,11 @@ export class Slider extends PIXI.Container {
     }
 
     public SetTexture(textureName: string, handleWidth: number) {
+        let t = TextureLoader.Get(textureName);
         //  prepare textures
-        this.textureControl = new PIXI.Texture(PIXI.loader.resources[textureName].texture.baseTexture);
+        this.textureControl = new PIXI.Texture(t.baseTexture);
         this.textureControl.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-        this.textureHandle = new PIXI.Texture(PIXI.loader.resources[textureName].texture.baseTexture);
+        this.textureHandle = new PIXI.Texture(t.baseTexture);
         
         //  calculate rect frames for textures
         var frameHeight = this.textureControl.height / 3;

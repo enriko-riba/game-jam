@@ -197,12 +197,17 @@ export class HeroCharacter extends AnimatedSprite {
                 break;
             case MovementState.JumpDownLeft:
                 clearTimeout(this.idleAnimationTimeoutHandle);
-                this.play("jumpdownleft", fps);
+                this.play("jumpdownleft", fps, false);
                 snd.jumpAttack();
                 break;
             case MovementState.JumpDownRight:
                 clearTimeout(this.idleAnimationTimeoutHandle);
-                this.play("jumpdownright", fps);
+                this.play("jumpdownright", fps, false);
+                snd.jumpAttack();
+                break;
+            case MovementState.JumpDown:
+                clearTimeout(this.idleAnimationTimeoutHandle);
+                this.play("jumpdown", fps, false);
                 snd.jumpAttack();
                 break;
         }

@@ -1,4 +1,6 @@
-﻿export class Platform extends PIXI.Container {
+﻿import { TextureLoader } from '..';
+
+export class Platform extends PIXI.Container {
 
     /**
      * 
@@ -35,7 +37,8 @@
         //  left border
         //--------------------------
         if (textureNameTopLeft) {
-            texture = PIXI.loader.resources[textureNameTopLeft].texture;
+            //texture = PIXI.loader.resources[textureNameTopLeft].texture;
+            texture = TextureLoader.Get(textureNameTopLeft);
             spr = new PIXI.Sprite(texture);
             spr.position.set(x+1, 0);
             x += texture.width;
@@ -45,7 +48,8 @@
         //--------------------------
         //  mid tiles
         //--------------------------
-        var texture = PIXI.loader.resources[textureNameTopMid].texture;
+        //var texture = PIXI.loader.resources[textureNameTopMid].texture;
+        var texture = TextureLoader.Get(textureNameTopMid);
         if (tilesX > 1) {
             let w = texture.width * tilesX;
             let h = texture.height;
@@ -63,7 +67,8 @@
         //  right border
         //--------------------------
         if (textureNameTopRight) {
-            texture = PIXI.loader.resources[textureNameTopRight].texture;
+            //texture = PIXI.loader.resources[textureNameTopRight].texture;
+            texture = TextureLoader.Get(textureNameTopRight);
             spr = new PIXI.Sprite(texture);
             spr.position.set(x -1, 0);
             x += spr.width;
@@ -88,7 +93,8 @@
                 }
 
                 for (var y = 1; y < tilesY; y++) {                    
-                    texture = PIXI.loader.resources[name].texture;
+                    //texture = PIXI.loader.resources[name].texture;
+                    texture = TextureLoader.Get(name);
                     spr = new PIXI.Sprite(texture);
                     spr.position.set(x * spr.width, y * spr.height);
                     this.addChild(spr);

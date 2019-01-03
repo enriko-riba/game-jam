@@ -1,5 +1,6 @@
 ﻿import * as PIXI from 'pixi.js';
 import { OutlineFilter } from '@pixi/filter-outline';
+import { TextureLoader } from '.';
 
 export enum OutlineMode {
     /**
@@ -18,7 +19,7 @@ export class Button extends PIXI.Sprite {
     private textureUp: PIXI.Texture;
     private textureHighlight!: PIXI.Texture;
     private textureDown: PIXI.Texture;
-    private _outlineMode: OutlineMode;
+    private _outlineMode: OutlineMode = OutlineMode.Filter;
     private _outlineColor: number;
     private _isHighlighted: boolean = false;
     private _isPressed: boolean = false;
@@ -175,7 +176,8 @@ export class Button extends PIXI.Sprite {
     }
     
     public setTexture(textureAtlasName: string) {
-        var atlasTexture = PIXI.loader.resources[textureAtlasName].texture;
+        //var atlasTexture = PIXI.loader.resources[textureAtlasName].texture;
+        var atlasTexture = TextureLoader.Get(textureAtlasName);
         atlasTexture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         var btnHeight = atlasTexture.height / 3;
         var btnWidth = atlasTexture.width;

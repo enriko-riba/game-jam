@@ -17,9 +17,9 @@ export class MasterHud extends PIXI.Container {
         ["", "webkit", "moz", "ms"].forEach(
             prefix => document.addEventListener(prefix + "fullscreenchange", (event) => {
                 if (this.isFullScreen) {
-                    btnFullScreen.setTexture("assets/gui/gui_fs_exit.png");
+                    btnFullScreen.setTexture("assets/gui-atlas.json@gui_fs_exit.png");
                 } else {
-                    btnFullScreen.setTexture("assets/gui/gui_fs_enter.png");
+                    btnFullScreen.setTexture("assets/gui-atlas.json@gui_fs_enter.png");
                 }
                 btnFullScreen.scale.set(BTN_SCALE);
             }, false)
@@ -29,12 +29,12 @@ export class MasterHud extends PIXI.Container {
         //  add full screen, options and 
         //  back buttons
         //--------------------------------       
-        var btnFullScreen = new Button("assets/gui/gui_fs_enter.png", BTN_X, BTN_Y);
+        var btnFullScreen = new Button("assets/gui-atlas.json@gui_fs_enter.png", BTN_X, BTN_Y);
         btnFullScreen.onClick = () => this.toggleFullScreen();
         btnFullScreen.scale.set(BTN_SCALE);
         this.addChild(btnFullScreen);
 
-        var btnOptions = new Button("assets/gui/gui_options.png", BTN_X - 48, BTN_Y);
+        var btnOptions = new Button("assets/gui-atlas.json@gui_options.png", BTN_X - 48, BTN_Y);
         btnOptions.onClick = () => this.sceneManager.ActivateScene("Options");
         btnOptions.name = "BTN_OPTIONS";
         btnOptions.scale.set(BTN_SCALE);

@@ -39,7 +39,7 @@ export class OptionsScene extends Scene {
         //--------------------
         //  back to game
         //--------------------
-        var btnBack = new Button("assets/gui/gui_button1.png", OFFSET, y, BTN_WIDTH, BTN_HEIGHT);
+        var btnBack = new Button("assets/gui-atlas.json@gui_button1.png", OFFSET, y, BTN_WIDTH, BTN_HEIGHT);
         btnBack.text = new PIXI.Text("Back to game", BTN_STYLE);
         btnBack.onClick = () => {
             //this.resetSounds();

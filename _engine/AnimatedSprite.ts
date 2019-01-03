@@ -1,5 +1,6 @@
 ﻿import { Dictionary } from "./Dictionary";
 import * as PIXI from 'pixi.js';
+import { TextureLoader } from './TextureLoader';
 
 export class AnimatedSprite extends PIXI.Sprite {
     constructor() {
@@ -18,7 +19,7 @@ export class AnimatedSprite extends PIXI.Sprite {
 
             //  if no clip exists create it from first animation sequence
             if (!this.texture.valid && idx === 0) {
-                this.texture = seq.textureAtlas;
+                this.texture = seq.spriteSheet;
                 this.texture.frame = seq.frames[0];
             }
         });
@@ -37,7 +38,7 @@ export class AnimatedSprite extends PIXI.Sprite {
         if (!this.currentSequence || this.currentSequence.sequenceName !== name) {
             this.resetAnimation();
             this.currentSequence = this.animations.get(name);
-            this.texture = this.currentSequence.textureAtlas;
+            this.texture = this.currentSequence.spriteSheet;
             this.texture.frame = this.currentSequence.frames[0];            
             this.isPlaying = true;
         }
@@ -111,17 +112,28 @@ export class AnimatedSprite extends PIXI.Sprite {
  *   Creates textures for all individual frames of the sequence from the given texture atlas.
  */
 export class AnimationSequence  {
-    public textureAtlas: PIXI.Texture;
+    public spriteSheet: PIXI.Texture;
     public frames: PIXI.Rectangle[] = [];
+    public isAtlas : boolean = false;
 
-    constructor(public sequenceName: string, textureAtlasName:string, frames: Array<number> = [], frameWidth : number, frameHeight : number) {
-        let tempTexure : PIXI.Texture = PIXI.utils.TextureCache[textureAtlasName];
-        this.textureAtlas = new PIXI.Texture(tempTexure.baseTexture);
-        var xFrames = Math.floor(this.textureAtlas.baseTexture.width / frameWidth);
+    constructor(public sequenceName: string, spriteSheetName:string, frames: Array<number> = [], frameWidth : number, frameHeight : number) {
+        //let tempTexure : PIXI.Texture = PIXI.utils.TextureCache[spriteSheetName];
+        let tempTexure = TextureLoader.Get(spriteSheetName);
+        this.isAtlas = tempTexure.frame.width != tempTexure.baseTexture.width || tempTexure.frame.height != tempTexure.baseTexture.height;
+        
+        this.spriteSheet = new PIXI.Texture(tempTexure.baseTexture);
+        var xFrames = this.isAtlas ? Math.floor(tempTexure.frame.width / frameWidth) : Math.floor(this.spriteSheet.width / frameWidth);
+        
         frames.forEach((frame:number) => {
             let y = Math.floor(frame / xFrames);
             let x = frame % xFrames;
-            let rect = new PIXI.Rectangle(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
+            let rect : PIXI.Rectangle = null;
+            if(this.isAtlas){
+                rect = new PIXI.Rectangle(tempTexure.frame.x +  x * frameWidth, tempTexure.frame.y + y * frameHeight, frameWidth, frameHeight);
+            }
+            else{                
+                rect = new PIXI.Rectangle(x * frameWidth, y * frameHeight, frameWidth, frameHeight);
+            }
             this.frames.push(rect);
         });
     }

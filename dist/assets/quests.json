@@ -71,7 +71,7 @@
 		},
 		{
 			"id": 204,
-			"welcomeMsg": "I saw little girls performing better.You show no potential...\nbut still, lets practice some more.",
+			"welcomeMsg": "You show no potential...I saw little girls performing better.\nStill, lets practice some more.",
 			"objectiveMsg": "Collect 15 Ki from magic slimes.\nAttack with: Jump + 's'",
 			"completedMsg": "Quest completed!\nHurry back to the dojo!",
 			"finishedMsg": "You made it!",

@@ -7,7 +7,7 @@ import { Mob } from '../mobs/Mob';
 import { IRootObject, ILevel, ILevelDefinition, IMapEntity, IMobEntity, ISpawnPoint, IDisplayObjectDefinition, IInteractionType, IBodyDefinition } from './LevelInterfaces';
 import { getEntityDefinition } from './LevelHelper';
 import { SCENE_HEIGHT, SCENE_WIDTH } from '../constants';
-import { Dictionary } from '../_engine';
+import { Dictionary, TextureLoader } from '../_engine';
 
 declare type Fn = (definition: IDisplayObjectDefinition) => PIXI.DisplayObject;
 
@@ -216,8 +216,8 @@ export class LevelLoader {
                 break;
 
             case "Sprite":
-                var text = PIXI.loader.resources[definition.texture as string].texture;
-                var spr = new PIXI.Sprite(text);
+                var sprTexture = TextureLoader.Get(definition.texture as string);
+                var spr = new PIXI.Sprite(sprTexture);
 
                 if (definition.anchor === undefined)
                     definition.anchor = 0.5;

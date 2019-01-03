@@ -2,6 +2,7 @@
 import { COL_GRP_PLAYER, COL_GRP_BULLET, COL_GRP_SCENE, COL_GRP_GROUND } from '../world/CollisionGroups';
 import { wp2 } from '../world/WorldP2';
 import { Global } from '..';
+import { TextureLoader } from '../_engine';
 
 /**
  * Base for bullets, decals etc.
@@ -91,7 +92,8 @@ export class Bullet extends PIXI.Sprite {
         if (!bullet) {
 
             //  create new bullet
-            bullet = new Bullet(PIXI.loader.resources[textureName].texture, 200, 5, damage);
+            var t = TextureLoader.Get(textureName);
+            bullet = new Bullet(t, 200, 5, damage);
             bullet.anchor.set(0.5);
             bullet.scale.set(0.5);
             Bullet.bullets.push(bullet);

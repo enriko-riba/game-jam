@@ -109,6 +109,11 @@ export function GetLevelAssets(root: IRootObject, levelId: number): string[] {
         });
     }
 
+    //  convert json atlas prefixed texture names to only json file names
+    assets = assets.map((name)=> {
+        let idx = name.indexOf('.json@');        
+        return idx > 0 ? name.substr(0, idx + 5) : name;
+    });
     assets = getUniqueItems(assets);
     return assets;
 }

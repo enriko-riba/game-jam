@@ -7,3 +7,4 @@ export {Parallax} from "./Parallax";
 export {Scene} from "./Scene";
 export {SceneManager, DefaultResizer, ISize, ISceneResizer} from "./SceneManager";
 export {Slider} from "./Slider";
+export {TextureLoader} from "./TextureLoader";

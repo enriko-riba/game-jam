@@ -14,22 +14,23 @@ export class LoaderScene extends Scene {
 
     private readonly preloadAssets : string[] = [  
         //  gui stuff
-        'assets/gui/gui_fs_enter.png',
-        'assets/gui/gui_fs_exit.png',
-        'assets/gui/gui_options.png',
-        'assets/gui/gui_back.png',
-        'assets/gui/gui_button1.png',
-        'assets/gui/gui_slider1.png', 
-        'assets/gui/gui_minus.png',  
+        'assets/gui-atlas.json',
+        // 'assets/gui/gui_fs_enter.png',
+        // 'assets/gui/gui_fs_exit.png',
+        // 'assets/gui/gui_options.png',
+        // 'assets/gui/gui_back.png',
+        // 'assets/gui/gui_button1.png',
+        // 'assets/gui/gui_slider1.png', 
+        // 'assets/gui/gui_minus.png',  
 
-        'assets/gui/heart.png',
-        'assets/gui/coin.png',
-        'assets/gui/rect.png',
-        'assets/gui/stat_panel.png',
-        'assets/gui/exp_panel.png',
-        'assets/gui/exp_prefill.png',
-        'assets/gui/exp_fill.png',
-        'assets/gui/panel.png',
+        // 'assets/gui/heart.png',
+        // 'assets/gui/coin.png',
+        // 'assets/gui/rect.png',
+        // 'assets/gui/stat_panel.png',
+        // 'assets/gui/exp_panel.png',
+        // 'assets/gui/exp_prefill.png',
+        // 'assets/gui/exp_fill.png',
+        // 'assets/gui/panel.png',
 
         //
         'assets/hero.png',
@@ -85,7 +86,6 @@ export class LoaderScene extends Scene {
     private handleLevelLoading = ()=> {        
         if(!this.sceneManager.HasScene("Main")){
             console.log('adding scenes...');    
-            //this.sceneManager.Renderer.roundPixels = true;
             this.sceneManager.AddScene(new MainScene(this.sceneManager));
             this.sceneManager.AddScene(new OptionsScene(this.sceneManager));
             this.sceneManager.AddScene(new CutScene(this.sceneManager));

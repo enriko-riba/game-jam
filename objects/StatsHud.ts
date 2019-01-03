@@ -1,6 +1,6 @@
 import * as particles from "pixi-particles";
 import * as TWEEN from "@tweenjs/tween.js";
-import { Global } from '..';
+import { Global, TextureLoader } from '..';
 import { createParticleEmitter } from '../global';
 import { stats } from './PlayerStats';
 import { eventEmitter, STATCHANGE_TOPIC, DAMAGE_TOPIC, IStatChangeEvent, IDpsChangeEvent } from '../events';
@@ -39,8 +39,8 @@ export class StatsHud extends PIXI.Container {
         this.addChild(this.txtPlayerPosition);
 
         //  callout for quest message
-        this.panel = new PIXI.Sprite(PIXI.Texture.fromImage("assets/gui/panel.png"));
-        this.panel.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+        this.panel = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@panel.png"));
+        //this.panel.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         this.panel.position.set(4);
         this.panel.name = "TriggerMessage";
         this.panel.anchor.set(0);
@@ -55,8 +55,8 @@ export class StatsHud extends PIXI.Container {
         //  HP
         {
 
-            let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
-            pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
+            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(5, y);
             this.panel.addChild(pnl);
 
@@ -64,7 +64,7 @@ export class StatsHud extends PIXI.Container {
             this.txtHP.position = new PIXI.Point(70, y + 10);
             pnl.addChild(this.txtHP);
 
-            let spr = new PIXI.Sprite(PIXI.loader.resources["assets/gui/heart.png"].texture);
+            let spr = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@heart.png"));
             spr.position.set(8, y + 4);
             pnl.addChild(spr);
         }
@@ -72,8 +72,8 @@ export class StatsHud extends PIXI.Container {
         //  pixi dust
         {
             //let y = 75;
-            let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
-            pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
+            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(261, y);
             this.panel.addChild(pnl);
 
@@ -81,7 +81,7 @@ export class StatsHud extends PIXI.Container {
             this.txtDust.position = new PIXI.Point(70, y + 10);
             pnl.addChild(this.txtDust);
 
-            this.emitter = createParticleEmitter(pnl, [PIXI.Texture.fromImage("assets/star.png")]);
+            this.emitter = createParticleEmitter(pnl, [TextureLoader.Get("assets/star.png")]);
             this.emitter.updateOwnerPos(32, 55);
             this.emitter.maxLifetime = 0.6;
             this.emitter.maxParticles = 50;
@@ -92,8 +92,8 @@ export class StatsHud extends PIXI.Container {
         {
             //let y = 145;
 
-            let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/stat_panel.png"].texture);
-            pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
+            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(517, y);
             this.panel.addChild(pnl);
 
@@ -101,25 +101,25 @@ export class StatsHud extends PIXI.Container {
             this.txtCoins.position = new PIXI.Point(70, y + 10);
             pnl.addChild(this.txtCoins);
 
-            let spr = new PIXI.Sprite(PIXI.loader.resources["assets/gui/coin.png"].texture);
+            let spr = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@coin.png"));
             spr.position.set(8, y + 4);
             pnl.addChild(spr);
         }
 
         //  Exp
         {
-            let pnl = new PIXI.Sprite(PIXI.loader.resources["assets/gui/exp_panel.png"].texture);
-            pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@exp_panel.png"));
+            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(0, SCENE_HEIGHT - pnl.height);
             this.addChild(pnl);
 
             //  pre filler rect
-            this.expPreFiller = new PIXI.Sprite(PIXI.loader.resources["assets/gui/exp_prefill.png"].texture);
+            this.expPreFiller = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@exp_prefill.png"));
             this.expPreFiller.position.set(3, 3);
             pnl.addChild(this.expPreFiller);
 
             //  filler rect
-            this.expFiller = new PIXI.Sprite(PIXI.loader.resources["assets/gui/exp_fill.png"].texture);
+            this.expFiller = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@exp_fill.png"));
             this.expFiller.position.set(3, 3);
             pnl.addChild(this.expFiller);
             this.fillLen = pnl.width - 6; // 3 pixels for left/right border;

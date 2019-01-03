@@ -1,8 +1,7 @@
 ﻿import { Scene } from "../_engine/Scene";
 import { Button } from "../_engine/Button";
 import { snd } from "../world/SoundMan";
-import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE } from '..';
-import { LoaderScene } from './LoaderScene';
+import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
 
 export class CutScene extends Scene {
     private callout: PIXI.Sprite;
@@ -28,7 +27,7 @@ export class CutScene extends Scene {
         this.corpse.filters = [this.corpseBlurFilter];
 
 
-        this.callout = new PIXI.Sprite(PIXI.loader.resources["assets/gui/rect.png"].texture);
+        this.callout = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@rect.png"));
         this.callout.anchor.set(0.5);
         this.callout.position.set(SCENE_HALF_WIDTH, SCENE_HEIGHT / 5);
         this.addChild(this.callout);
@@ -41,7 +40,7 @@ export class CutScene extends Scene {
         //--------------------------------
         //  btn for next level
         //--------------------------------
-        this.btnContinue = new Button(  "assets/gui/gui_button1.png",
+        this.btnContinue = new Button(  "assets/gui-atlas.json@gui_button1.png",
                                         (SCENE_WIDTH - BTN_WIDTH) / 2,
                                         this.callout.height + BTN_HEIGHT,
                                         BTN_WIDTH, 
