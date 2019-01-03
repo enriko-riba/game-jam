@@ -1,0 +1,1 @@
+magick.exe convert %1 -write mpr:temp -background black -alpha Remove mpr:temp -compose Copy_Opacity -composite %1
