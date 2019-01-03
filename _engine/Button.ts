@@ -176,14 +176,14 @@ export class Button extends PIXI.Sprite {
     }
     
     public setTexture(textureAtlasName: string) {
-        //var atlasTexture = PIXI.loader.resources[textureAtlasName].texture;
-        var atlasTexture = TextureLoader.Get(textureAtlasName);
-        atlasTexture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-        var btnHeight = atlasTexture.height / 3;
-        var btnWidth = atlasTexture.width;
-        this.textureUp = new PIXI.Texture(atlasTexture.baseTexture, new PIXI.Rectangle(0, 0 * btnHeight, btnWidth, btnHeight));
-        this.textureHighlight = new PIXI.Texture(atlasTexture.baseTexture, new PIXI.Rectangle(0, 1 * btnHeight, btnWidth, btnHeight));
-        this.textureDown = new PIXI.Texture(atlasTexture.baseTexture, new PIXI.Rectangle(0, 2 * btnHeight, btnWidth, btnHeight));
+        //var spriteSheet = PIXI.loader.resources[textureAtlasName].texture;
+        var spriteSheet = TextureLoader.Get(textureAtlasName);
+        spriteSheet.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+        var btnHeight = spriteSheet.height / 3;
+        var btnWidth = spriteSheet.width;
+        this.textureUp = new PIXI.Texture(spriteSheet.baseTexture, new PIXI.Rectangle(spriteSheet.frame.x, spriteSheet.frame.y, btnWidth, btnHeight));
+        this.textureHighlight = new PIXI.Texture(spriteSheet.baseTexture, new PIXI.Rectangle(spriteSheet.frame.x, spriteSheet.frame.y +  1 * btnHeight, btnWidth, btnHeight));
+        this.textureDown = new PIXI.Texture(spriteSheet.baseTexture, new PIXI.Rectangle(spriteSheet.frame.x, spriteSheet.frame.y + 2 * btnHeight, btnWidth, btnHeight));
 
         //  calc the scale based on desired height/width
         var scaleW = (this.requestedWidth || btnWidth ) / btnWidth;

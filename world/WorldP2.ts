@@ -33,7 +33,7 @@ export class WorldP2 {
 
     constructor() {
         this.world = new p2.World({
-            gravity: [0, -1550],
+            gravity: [0, -1000],
         });
 
         this.setupMaterials();
@@ -305,7 +305,7 @@ export class WorldP2 {
             this.materials.get("player"),
             this.materials.get("mob_default"),
             {
-                friction: 0.2,
+                friction: 0.1,
                 restitution: 0.4,
                 stiffness: p2.Equation.DEFAULT_STIFFNESS,
                 relaxation: p2.Equation.DEFAULT_RELAXATION,
@@ -320,7 +320,7 @@ export class WorldP2 {
             this.materials.get("player"),
             this.materials.get("box_default"),
             {
-                friction: 0.50,
+                friction: 0.20,
                 restitution: 0.25,
                 stiffness: p2.Equation.DEFAULT_STIFFNESS,
                 relaxation: p2.Equation.DEFAULT_RELAXATION,
@@ -349,7 +349,7 @@ export class WorldP2 {
             this.materials.get("bumper"),
             {
                 friction: 0.35,
-                restitution: 0.85,
+                restitution: 0.75,
                 stiffness: Number.MAX_VALUE,
                 relaxation: p2.Equation.DEFAULT_RELAXATION,
                 frictionStiffness: Number.MAX_VALUE,

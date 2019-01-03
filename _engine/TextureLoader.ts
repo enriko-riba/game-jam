@@ -1,5 +1,6 @@
 import { PIXI } from "..";
 export class TextureLoader{
+
     public static Get = (fullName: string): PIXI.Texture | null => {
         var idx = fullName.indexOf('.json@');
         var textureName = (idx > 0) ? fullName.substr(idx + 6) : fullName; 
@@ -22,5 +23,9 @@ export class TextureLoader{
             console.error(`Resource:'${fullName}' unknown load type!`, res);
         }  
         return null;      
+    }
+
+    public static IsAtlas(texture:PIXI.Texture) {
+        return texture.frame.width != texture.baseTexture.width || texture.frame.height != texture.baseTexture.height;
     }
 }

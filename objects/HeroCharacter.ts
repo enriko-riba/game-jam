@@ -222,7 +222,7 @@ export class HeroCharacter extends AnimatedSprite {
     private onPlayerContact(event: any): void {
         const SND_TRESHOLD_VELOCITY: number = 400;
         const SMOKE_VELOCITY: number = 450;
-        const ATTACK_VELOCITY: number = 550;
+        const ATTACK_VELOCITY: number = 505;
 
         let body: p2.Body = event.body as p2.Body;
         var mob: Mob = event.body.DisplayObject as Mob;

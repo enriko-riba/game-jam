@@ -114,21 +114,20 @@ export class AnimatedSprite extends PIXI.Sprite {
 export class AnimationSequence  {
     public spriteSheet: PIXI.Texture;
     public frames: PIXI.Rectangle[] = [];
-    public isAtlas : boolean = false;
 
     constructor(public sequenceName: string, spriteSheetName:string, frames: Array<number> = [], frameWidth : number, frameHeight : number) {
         //let tempTexure : PIXI.Texture = PIXI.utils.TextureCache[spriteSheetName];
         let tempTexure = TextureLoader.Get(spriteSheetName);
-        this.isAtlas = tempTexure.frame.width != tempTexure.baseTexture.width || tempTexure.frame.height != tempTexure.baseTexture.height;
+        let isAtlas = TextureLoader.IsAtlas(tempTexure);
         
         this.spriteSheet = new PIXI.Texture(tempTexure.baseTexture);
-        var xFrames = this.isAtlas ? Math.floor(tempTexure.frame.width / frameWidth) : Math.floor(this.spriteSheet.width / frameWidth);
+        var xFrames = isAtlas ? Math.floor(tempTexure.frame.width / frameWidth) : Math.floor(this.spriteSheet.width / frameWidth);
         
         frames.forEach((frame:number) => {
             let y = Math.floor(frame / xFrames);
             let x = frame % xFrames;
             let rect : PIXI.Rectangle = null;
-            if(this.isAtlas){
+            if(isAtlas){
                 rect = new PIXI.Rectangle(tempTexure.frame.x +  x * frameWidth, tempTexure.frame.y + y * frameHeight, frameWidth, frameHeight);
             }
             else{                

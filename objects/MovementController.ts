@@ -6,8 +6,8 @@ import { StatType } from '../enums';
 
 export class MovementController {
     private readonly VELOCITY = 150;
-    private readonly JUMP_FORCE = 17900;
-    private readonly JUMP_ATTACK_FORCE = -14000;
+    private readonly JUMP_FORCE = 14000;
+    private readonly JUMP_ATTACK_FORCE = -17000;
 
     private readonly JUMP_COOLDOWN = 500;
     private readonly JUMP_ATTACK_COOLDOWN = 2000;
