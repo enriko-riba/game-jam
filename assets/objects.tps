@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.11.0</string>
+        <string>4.11.1</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -84,7 +84,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>4</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -263,6 +263,32 @@
                 <rect>64,8,128,16</rect>
                 <key>scale9Paddings</key>
                 <rect>64,8,128,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">img/objects/hero-dead.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,64,128,128</rect>
+                <key>scale9Paddings</key>
+                <rect>64,64,128,128</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">img/objects/hero.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>96,128,192,256</rect>
+                <key>scale9Paddings</key>
+                <rect>96,128,192,256</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
