@@ -43,7 +43,7 @@
 			"welcomeMsg": "You shall not pass...unless you bring me knowledge of Kendo!",
 			"objectiveMsg": "Find the Kendo knowledge.",
 			"completedMsg": "Return to the white castle.",
-			"finishedMsg": "What? Could it be...\nI need so much this knowledge!\n\nYou must be the chosen one,\nproceed now!",
+			"finishedMsg": "What? Could it be?\nYou must be the chosen one! Proceed now.",
 			"itemId": 201,
 			"itemsNeeded": 1,
 			"rewardExp": 500,

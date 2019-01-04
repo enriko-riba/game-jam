@@ -42,7 +42,7 @@
 },
 "gui_button1.png":
 {
-	"frame": {"x":1018,"y":8,"w":256,"h":192},
+	"frame": {"x":1009,"y":8,"w":256,"h":192},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":192},
@@ -162,7 +162,7 @@
 },
 "rect.png":
 {
-	"frame": {"x":1286,"y":8,"w":369,"h":263},
+	"frame": {"x":1277,"y":8,"w":369,"h":263},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":369,"h":263},
@@ -170,11 +170,11 @@
 },
 "stat_panel.png":
 {
-	"frame": {"x":778,"y":8,"w":228,"h":64},
+	"frame": {"x":778,"y":8,"w":219,"h":64},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":228,"h":64},
-	"sourceSize": {"w":228,"h":64}
+	"spriteSourceSize": {"x":0,"y":0,"w":219,"h":64},
+	"sourceSize": {"w":219,"h":64}
 }},
 "animations": {
 },
@@ -185,6 +185,6 @@
 	"format": "RGBA8888",
 	"size": {"w":2048,"h":512},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:2c8724e793fff4bdacc8d2325089657d:9d6e0ff8ab39b292316ee4d1c3ec3189:68296c0c88440f7d6084f8a4f6d91662$"
+	"smartupdate": "$TexturePacker:SmartUpdate:34e6d1cdec62c16273a640422cb495e9:485edddcd7adcf5f3dd5642c6d42e958:68296c0c88440f7d6084f8a4f6d91662$"
 }
 }

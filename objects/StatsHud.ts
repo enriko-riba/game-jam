@@ -46,8 +46,8 @@ export class StatsHud extends PIXI.Container {
         this.addChild(this.statContainer);
 
         this.txtQuestMessage = new PIXI.Text("", QUEST_STYLE);
-        this.txtQuestMessage.position.set(384, 100);
-        this.txtQuestMessage.anchor.set(0.5, 0);
+        this.txtQuestMessage.position.set(4, 100);
+        this.txtQuestMessage.anchor.set(0);
         this.statContainer.addChild(this.txtQuestMessage);
 
         let y: number = 5;

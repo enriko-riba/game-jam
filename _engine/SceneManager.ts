@@ -242,9 +242,7 @@ export class SceneManager {
 
         if (this.currentScene) {
             this.currentScene.scale.set(this.sceneResizer.CalculateScale(size));
-            //if (this.currentScene.onResize) {
-                this.currentScene.onResize();
-            //}
+            this.currentScene.onResize();
         }
 
         if(this.masterHudOverlay){
@@ -252,7 +250,7 @@ export class SceneManager {
         }
     };
 
-    private render = (timestamp) => {
+    private render = (timestamp:number) => {
         //stats.begin();
         
         this.animationFrameHandle = requestAnimationFrame(this.render);
@@ -269,13 +267,11 @@ export class SceneManager {
             this.startTime = timestamp;
         }
 
-        //if (this.currentScene.onUpdate) {
-            var dt = timestamp - this.startTime!;
-            if (dt > 50) {
-                dt = 50;
-            }
-            this.currentScene.onUpdate(dt);
-        //}
+        var dt = timestamp - this.startTime!;
+        if (dt > 50) {
+            dt = 50;
+        }
+        this.currentScene.onUpdate(dt);
 
         this.startTime = timestamp;       
         this.renderer.render(this.masterContainer, undefined, this.currentScene.clear); 
