@@ -1,5 +1,5 @@
 ﻿import { Global, PIXI, Scene, SceneManager } from "..";
-import { GetLevelAssets } from '../world/LevelHelper';
+import { GetLevelAssets, getUniqueItems } from '../world/LevelHelper';
 import { stats } from '../objects/PlayerStats';
 import { SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT } from '../constants';
 import { MasterHud } from '../objects/MasterHud';
@@ -13,32 +13,10 @@ export class LoaderScene extends Scene {
     private spinner: PIXI.Sprite;
 
     private readonly preloadAssets : string[] = [  
-        //  gui stuff
-        'assets/gui-atlas.json',
-        // 'assets/gui/gui_fs_enter.png',
-        // 'assets/gui/gui_fs_exit.png',
-        // 'assets/gui/gui_options.png',
-        // 'assets/gui/gui_back.png',
-        // 'assets/gui/gui_button1.png',
-        // 'assets/gui/gui_slider1.png', 
-        // 'assets/gui/gui_minus.png',  
-
-        // 'assets/gui/heart.png',
-        // 'assets/gui/coin.png',
-        // 'assets/gui/rect.png',
-        // 'assets/gui/stat_panel.png',
-        // 'assets/gui/exp_panel.png',
-        // 'assets/gui/exp_prefill.png',
-        // 'assets/gui/exp_fill.png',
-        // 'assets/gui/panel.png',
-
-        //
-        'assets/hero.png',
-        'assets/hero-dead.png',
-        'assets/star.png',
-        'assets/img/effects/flame.png',
-        'assets/img/effects/jump_smoke.png',
-        'assets/img/effects/load.png'
+        'assets/gui-atlas.json', 
+        'assets/objects-atlas.json',
+        'assets/entities-atlas.json',
+        'assets/background-atlas.json',     
     ];
 
     constructor(scm:SceneManager) {
@@ -75,7 +53,8 @@ export class LoaderScene extends Scene {
         console.log(`downloading level ${stats.currentGameLevel}...`);
         let assets: string[] = GetLevelAssets(Global.LevelDefinitions, stats.currentGameLevel);
         assets = assets.concat(this.preloadAssets);
-
+        assets = getUniqueItems(assets);
+        
         PIXI.loader
             .reset()
             .add(assets)

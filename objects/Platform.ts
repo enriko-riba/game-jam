@@ -10,9 +10,7 @@ export class Platform extends PIXI.Container {
      */
     constructor(tilesX: number = 1, tilesY: number = 1, textures:string[]) {
         super();
-
-        this.scale.set(1, -1);   //  scale invert since everything is upside down due to coordinate system
-
+        this.scale.y *= -1; //  the worldContainer has -y scale so we must flip it up again
         var textureNameTopLeft: string,
             textureNameTopRight: string,
             textureNameBtmMid: string,

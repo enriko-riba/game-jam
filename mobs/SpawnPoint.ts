@@ -49,11 +49,11 @@ export class SpawnPoint {
                 this.worldContainer.addChild(dispObj);
 
                 let loadSpr = new AnimatedSprite();
-                loadSpr.addAnimations(new AnimationSequence("load", "assets/img/effects/load.png", [0, 1, 2, 3], 64, 64));
+                loadSpr.addAnimations(new AnimationSequence("load", "assets/entities-atlas.json@load.png", [0, 1, 2, 3], 64, 64));
                 loadSpr.anchor.set(0.5);
                 loadSpr.position.set(x, y + 10);
                 loadSpr.play("load", 4, true);
-                //loadSpr.scale.set(1, -1);
+                loadSpr.scale.set(1, -1);   //  the worldContainer has -y scale so we must flip it up again 
                 this.worldContainer.addChild(loadSpr);
 
                 setTimeout(() => {

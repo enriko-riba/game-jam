@@ -31,7 +31,7 @@ export class Mob extends AnimatedSprite {
         this.addAnimations(new AnimationSequence("lsquish", this.textureName, [12, 13, 14, 15, 16, 17], FRAME_SIZE, FRAME_SIZE));
         this.addAnimations(new AnimationSequence("rsquish", this.textureName, [18, 19, 20, 21, 22, 23], FRAME_SIZE, FRAME_SIZE));
         this.play("left");   
-        this._direction = DirectionH.Left;      
+        this._direction = DirectionH.Left;  
     }
 
     public isLoading: boolean = false;

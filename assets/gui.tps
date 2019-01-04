@@ -26,7 +26,7 @@
             </struct>
         </array>
         <key>allowRotation</key>
-        <true/>
+        <false/>
         <key>shapeDebug</key>
         <false/>
         <key>dpi</key>
@@ -70,7 +70,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>8</uint>
+        <uint>4</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -84,7 +84,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>4</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -106,7 +106,7 @@
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
-            <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
+            <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
             <key>forceSquared</key>
             <false/>
             <key>maxRects</key>
@@ -132,7 +132,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../gui-atlas.json</filename>
+                <filename>gui-atlas.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -142,7 +142,7 @@
         <key>outputFormat</key>
         <enum type="SettingsBase::OutputFormat">RGBA8888</enum>
         <key>alphaHandling</key>
-        <enum type="SettingsBase::AlphaHandling">ClearTransparentPixels</enum>
+        <enum type="SettingsBase::AlphaHandling">PremultiplyAlpha</enum>
         <key>contentProtection</key>
         <struct type="ContentProtection">
             <key>key</key>
@@ -163,7 +163,7 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>extrude</key>
-            <uint>0</uint>
+            <uint>4</uint>
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMargin</key>
@@ -181,12 +181,11 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">coin.png</key>
-            <key type="filename">cur_target.png</key>
-            <key type="filename">heart.png</key>
+            <key type="filename">gui/coin.png</key>
+            <key type="filename">gui/heart.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -196,25 +195,11 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">cur_default.png</key>
-            <key type="filename">cur_hover.png</key>
+            <key type="filename">gui/exp_fill.png</key>
+            <key type="filename">gui/exp_prefill.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>5,6,11,12</rect>
-                <key>scale9Paddings</key>
-                <rect>5,6,11,12</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">exp_fill.png</key>
-            <key type="filename">exp_prefill.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -224,10 +209,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">exp_panel.png</key>
+            <key type="filename">gui/exp_panel.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -237,19 +222,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">gui_back.png</key>
-            <key type="filename">gui_fs_enter.png</key>
-            <key type="filename">gui_fs_exit.png</key>
-            <key type="filename">gui_minus.png</key>
-            <key type="filename">gui_options.png</key>
-            <key type="filename">gui_plus.png</key>
-            <key type="filename">gui_snd_fx_off.png</key>
-            <key type="filename">gui_snd_fx_on.png</key>
-            <key type="filename">gui_snd_music_off.png</key>
-            <key type="filename">gui_snd_music_on.png</key>
+            <key type="filename">gui/gui_back.png</key>
+            <key type="filename">gui/gui_fs_enter.png</key>
+            <key type="filename">gui/gui_fs_exit.png</key>
+            <key type="filename">gui/gui_minus.png</key>
+            <key type="filename">gui/gui_options.png</key>
+            <key type="filename">gui/gui_plus.png</key>
+            <key type="filename">gui/gui_snd_fx_off.png</key>
+            <key type="filename">gui/gui_snd_fx_on.png</key>
+            <key type="filename">gui/gui_snd_music_off.png</key>
+            <key type="filename">gui/gui_snd_music_on.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -259,10 +244,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">gui_button1.png</key>
+            <key type="filename">gui/gui_button1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -272,10 +257,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">gui_slider1.png</key>
+            <key type="filename">gui/gui_slider1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -285,10 +270,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">menu-background.png</key>
+            <key type="filename">gui/menu-background.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -298,10 +283,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">panel.png</key>
+            <key type="filename">gui/panel.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -311,10 +296,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">rect.png</key>
+            <key type="filename">gui/panel_open.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>192,29,384,59</rect>
+                <key>scale9Paddings</key>
+                <rect>192,29,384,59</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">gui/rect.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -324,10 +322,10 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">stat_panel.png</key>
+            <key type="filename">gui/stat_panel.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
+                <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -340,7 +338,7 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>.</filename>
+            <filename>gui</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

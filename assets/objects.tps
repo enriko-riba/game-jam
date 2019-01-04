@@ -203,7 +203,6 @@
             <key type="filename">img/objects/box_64_01.png</key>
             <key type="filename">img/objects/box_64_02.png</key>
             <key type="filename">img/objects/box_64_03.png</key>
-            <key type="filename">img/objects/flame.png</key>
             <key type="filename">img/objects/kendo-knowledge.png</key>
             <key type="filename">img/objects/plat-des-btm-border-l.png</key>
             <key type="filename">img/objects/plat-des-btm-border-r.png</key>

@@ -7,7 +7,6 @@ export class AnimatedSprite extends PIXI.Sprite {
         super();
         this.pivot.set(0.5);
         this.anchor.set(0.5);
-        this.scale.set(1, -1);
     }
     
     private animations = new Dictionary<AnimationSequence>();

@@ -17,7 +17,7 @@ export class CutScene extends Scene {
         super(scm, "CutScene");
         this.BackGroundColor = 0x1099bb;
 
-        this.corpse = new PIXI.Sprite(PIXI.loader.resources["assets/hero-dead.png"].texture);
+        this.corpse = new PIXI.Sprite(TextureLoader.Get("assets/objects-atlas.json@hero-dead.png"));
         this.corpse.anchor.set(0.5);
         this.corpse.pivot.set(0.5);
         this.corpse.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT);

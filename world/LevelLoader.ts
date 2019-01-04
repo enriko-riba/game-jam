@@ -177,6 +177,7 @@ export class LevelLoader {
      */
     private static buildDisplayObject(definition: IDisplayObjectDefinition): PIXI.DisplayObject {
         var dispObj: PIXI.DisplayObject;
+        definition = {...{anchor: 0.5, pivot: 0.5, scale:[1,1]}, ...definition};
         switch (definition.typeName) {
             case "Mob":
                 let mob = new Mob(definition.texture as string);
@@ -192,8 +193,7 @@ export class LevelLoader {
                 }
                 if (definition.fps) {
                     mob.fps = definition.fps;
-                }
-                mob.anchor.set(0.5, 0.5);
+                }                
                 (mob as any).typeName = "Mob";
                 dispObj = mob;
                 break;
@@ -210,7 +210,6 @@ export class LevelLoader {
                     aspr.addAnimations(aseq);
                 });
                 aspr.play(definition.sequences[0].name, definition.fps);
-                aspr.anchor.set(0.5, 0.5);
                 (aspr as any).typeName = "AnimatedSprite";
                 dispObj = aspr;
                 break;
@@ -218,32 +217,10 @@ export class LevelLoader {
             case "Sprite":
                 var sprTexture = TextureLoader.Get(definition.texture as string);
                 var spr = new PIXI.Sprite(sprTexture);
-
-                if (definition.anchor === undefined)
-                    definition.anchor = 0.5;
-                spr.anchor.set(definition.anchor);
-
-                if (definition.pivot === undefined)
-                    definition.pivot = 0.5;
-
-                if (definition.scale === undefined)
-                    definition.scale = [1, -1];
-
-                spr.pivot.set(definition.pivot);
                 (spr as any).typeName = "Sprite";
                 dispObj = spr;
                 break;
 
-            // case "Balloon":
-            //     var bln = new Balloon();
-            //     dispObj = bln;
-            //     break;
-
-            // case "Bumper":
-            //     var bmp = new Bumper();
-            //     bmp.anchor.set(0.5);
-            //     dispObj = bmp;
-            //     break;
             default:
                 var factory = this.factoryList.get(definition.typeName);
                 if(factory)
@@ -252,6 +229,9 @@ export class LevelLoader {
                     throw "Factory not found for object name: " + definition.typeName;
                 break;            
         }
+        (dispObj).scale.set(definition.scale[0], definition.scale[1] * -1); //  the worldContainer has -y scale so we must flip it up again 
+        if((dispObj as any).anchor)(dispObj as any).anchor.set(definition.anchor);
+        dispObj.pivot.set(definition.pivot);
 
         if (definition.visible !== undefined) {
             dispObj.visible = definition.visible;
@@ -259,10 +239,7 @@ export class LevelLoader {
         dispObj.rotation = definition.rotation || 0;
         if (definition.xy) {
             dispObj.position.set(definition.xy[0], definition.xy[1]);
-        }
-        if (definition.scale) {
-            dispObj.scale.set(definition.scale[0], definition.scale[1]);
-        }
+        }        
         if (definition.interactionType) {
             (dispObj as IInteractionType).interactionType = definition.interactionType;
         }

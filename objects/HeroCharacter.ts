@@ -2,7 +2,7 @@ import * as particles from "pixi-particles";
 import * as TWEEN from "@tweenjs/tween.js";
 
 import { createParticleEmitter } from '../global';
-import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL } from '..';
+import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL, TextureLoader } from '..';
 import { MOVE_TOPIC, GROUND_SHAKE, eventEmitter } from '../events';
 import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
@@ -67,11 +67,11 @@ export class HeroCharacter extends AnimatedSprite {
             }
         };
         //    attached to hero sprite
-        this.emitterBurn = createParticleEmitter(this, [PIXI.Texture.fromImage("assets/img/effects/flame.png")], cfg);  
+        this.emitterBurn = createParticleEmitter(this, [TextureLoader.Get("assets/entities-atlas.json@flame.png")], cfg);  
         //   attached to container since it must emit outside hero sprite
-        this.emitterPixies = createParticleEmitter(container, [PIXI.Texture.fromImage("assets/star.png")]);  
+        this.emitterPixies = createParticleEmitter(container, [TextureLoader.Get("assets/objects-atlas.json@star.png")]);  
 
-        const asset = "assets/hero.png";
+        const asset = "assets/objects-atlas.json@hero.png";
         this.addAnimations(new AnimationSequence("right", asset, [18, 19, 20, 21, 22, 23], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("left", asset, [12, 13, 14, 15, 16, 17], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpleft", asset, [24, 25, 26, 27, 28, 29], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
@@ -83,7 +83,7 @@ export class HeroCharacter extends AnimatedSprite {
         this.addAnimations(new AnimationSequence("jumpdownright", asset, [39, 40, 41], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.addAnimations(new AnimationSequence("jumpdown", asset, [42, 43, 44], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
         this.anchor.set(0.5, 0.58);
-
+        this.scale.y *= -1; //  the worldContainer has -y scale so we must flip it up again 
         eventEmitter.on(MOVE_TOPIC, this.onPlayerMove);
     }
 
@@ -252,7 +252,7 @@ export class HeroCharacter extends AnimatedSprite {
         if (verticalVelocity > SMOKE_VELOCITY) {
             console.log("Vert velocity: " + verticalVelocity);
             var smoke: AnimatedSprite = new AnimatedSprite();
-            smoke.addAnimations(new AnimationSequence("smoke", "assets/img/effects/jump_smoke.png",
+            smoke.addAnimations(new AnimationSequence("smoke", "assets/entities-atlas.json@jump_smoke.png",
                 [0, 1, 2, 3, 4, 5], HERO_FRAME_SIZE, HERO_FRAME_SIZE));
             smoke.anchor.set(0.5);
             smoke.pivot.set(0.5);
@@ -288,7 +288,7 @@ export class HeroCharacter extends AnimatedSprite {
                 //  TODO: recycle explode animations
                 var explode: AnimatedSprite = new AnimatedSprite();
                 explode.addAnimations(new AnimationSequence("exp",
-                    "assets/img/effects/slime_atk_exp.png",
+                    "assets/entities-atlas.json@slime_atk_exp.png",
                     [0, 1, 2, 3, 4, 5], 32, 32)
                 );
                 explode.anchor.set(0.5);

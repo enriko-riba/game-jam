@@ -95,7 +95,7 @@ export class Bullet extends PIXI.Sprite {
             var t = TextureLoader.Get(textureName);
             bullet = new Bullet(t, 200, 5, damage);
             bullet.anchor.set(0.5);
-            bullet.scale.set(0.5);
+            bullet.scale.set(0.5, -0.5);    //  worldcontainer is upside down
             Bullet.bullets.push(bullet);
             Global.worldContainer.addChild(bullet);
 

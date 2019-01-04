@@ -6,9 +6,9 @@ import { Quest } from '../QuestSystem/Quest';
 
 const PRELOAD_BOOT_ASSETS = [
     //  cursors
-    'assets/gui/cur_default.png',
-    'assets/gui/cur_hover.png',
-    'assets/gui/cur_target.png',
+    'assets/cur_default.png',
+    'assets/cur_hover.png',
+    'assets/cur_target.png',
     'assets/levels.json',
     'assets/quests.json'
 ];
@@ -76,9 +76,9 @@ export class BootScene extends Scene {
         //  preload of common content is finished
         
         //  setup custom cursors
-        var defaultIcon = "url('assets/gui/cur_default.png'),auto";
-        var hoverIcon = "url('assets/gui/cur_hover.png'),auto";
-        var targetIcon = "url('assets/gui/cur_target.png') 24 24, auto";
+        var defaultIcon = "url('assets/cur_default.png'),auto";
+        var hoverIcon = "url('assets/cur_hover.png'),auto";
+        var targetIcon = "url('assets/cur_target.png') 24 24, auto";
         this.sceneManager.Renderer.plugins.interaction.cursorStyles.default = defaultIcon;
         this.sceneManager.Renderer.plugins.interaction.cursorStyles.hover = hoverIcon;
         this.sceneManager.Renderer.plugins.interaction.cursorStyles.target = targetIcon;

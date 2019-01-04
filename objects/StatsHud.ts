@@ -19,7 +19,7 @@ export class StatsHud extends PIXI.Container {
 
     private emitter: particles.Emitter;
 
-    private panel: PIXI.Sprite;
+    private statContainer: PIXI.Sprite;
     private txtQuestMessage: PIXI.Text;
     private questMsgEndTime = 0;
     private onCompleteCB?: () => void;
@@ -38,27 +38,24 @@ export class StatsHud extends PIXI.Container {
         this.txtPlayerPosition.anchor.set(1, 1);
         this.addChild(this.txtPlayerPosition);
 
-        //  callout for quest message
-        this.panel = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@panel.png"));
-        //this.panel.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-        this.panel.position.set(4);
-        this.panel.name = "TriggerMessage";
-        this.panel.anchor.set(0);
-        this.addChild(this.panel);
+        //  top left stat container panel
+        this.statContainer = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@panel.png", true));
+        this.statContainer.position.set(4);
+        this.statContainer.name = "TriggerMessage";
+        this.statContainer.anchor.set(0);
+        this.addChild(this.statContainer);
 
         this.txtQuestMessage = new PIXI.Text("", QUEST_STYLE);
         this.txtQuestMessage.position.set(384, 100);
         this.txtQuestMessage.anchor.set(0.5, 0);
-        this.panel.addChild(this.txtQuestMessage);
+        this.statContainer.addChild(this.txtQuestMessage);
 
         let y: number = 5;
         //  HP
         {
-
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
-            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(5, y);
-            this.panel.addChild(pnl);
+            this.statContainer.addChild(pnl);
 
             this.txtHP = new PIXI.Text("0", TEXT_STYLE);
             this.txtHP.position = new PIXI.Point(70, y + 10);
@@ -75,13 +72,13 @@ export class StatsHud extends PIXI.Container {
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
             //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
             pnl.position.set(261, y);
-            this.panel.addChild(pnl);
+            this.statContainer.addChild(pnl);
 
             this.txtDust = new PIXI.Text("0", TEXT_STYLE);
             this.txtDust.position = new PIXI.Point(70, y + 10);
             pnl.addChild(this.txtDust);
 
-            this.emitter = createParticleEmitter(pnl, [TextureLoader.Get("assets/star.png")]);
+            this.emitter = createParticleEmitter(pnl, [TextureLoader.Get("assets/objects-atlas.json@star.png")]);
             this.emitter.updateOwnerPos(32, 55);
             this.emitter.maxLifetime = 0.6;
             this.emitter.maxParticles = 50;
@@ -92,10 +89,9 @@ export class StatsHud extends PIXI.Container {
         {
             //let y = 145;
 
-            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
-            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));            
             pnl.position.set(517, y);
-            this.panel.addChild(pnl);
+            this.statContainer.addChild(pnl);
 
             this.txtCoins = new PIXI.Text("0", TEXT_STYLE);
             this.txtCoins.position = new PIXI.Point(70, y + 10);
@@ -109,7 +105,7 @@ export class StatsHud extends PIXI.Container {
         //  Exp
         {
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@exp_panel.png"));
-            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+            
             pnl.position.set(0, SCENE_HEIGHT - pnl.height);
             this.addChild(pnl);
 
@@ -216,7 +212,7 @@ export class StatsHud extends PIXI.Container {
      */
     public setQuestMessage(msg: string, ttlMilis: number = 8000, onCompleteCB: () => void = null) {
         this.txtQuestMessage.text = msg;
-        this.panel.visible = true;
+        this.statContainer.visible = true;
         this.txtQuestMessage.visible = true;
         this.questMsgEndTime = performance.now() + ttlMilis;
         this.onCompleteCB = onCompleteCB;

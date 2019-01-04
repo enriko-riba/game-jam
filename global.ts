@@ -15,7 +15,7 @@ export function getScm() {
         const renderOptions: PIXI.RendererOptions = {
             view: canvas,
             backgroundColor: 0,
-            antialias: true,
+            antialias: false,
             transparent: false,
             roundPixels: true,
             resolution: window.devicePixelRatio

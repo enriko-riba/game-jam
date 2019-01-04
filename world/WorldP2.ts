@@ -33,7 +33,7 @@ export class WorldP2 {
 
     constructor() {
         this.world = new p2.World({
-            gravity: [0, -1000],
+            gravity: [0, -1500],
         });
 
         this.setupMaterials();
