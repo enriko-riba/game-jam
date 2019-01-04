@@ -14,10 +14,23 @@
 			}
 		},
 		{
-			"name": "edge",
+			"name": "edge1",
 			"displayObject": {
 				"typeName": "Sprite",
 				"texture": "assets/objects-atlas.json@boulder.png"
+			},
+			"body": {
+				"shape": "Box",
+				"type": 2,
+				"material": "box_default",
+				"collisionType": "ground"
+			}
+		},
+		{
+			"name": "edge2",
+			"displayObject": {
+				"typeName": "Sprite",
+				"texture": "assets/objects-atlas.json@boulder_03.png"
 			},
 			"body": {
 				"shape": "Box",
@@ -361,7 +374,7 @@
 				],
 				"entities": [
 					{
-						"template": "edge",
+						"template": "edge1",
 						"name": "edge-left",
 						"xy": [
 							1300,
@@ -440,15 +453,24 @@
 					{
 						"template": "platform1-desert",
 						"xy": [
-							3270,
+							3300,
 							330
 						]
 					},
 					{
+						"template": "platform-desert",
+						"xy": [
+							3450,
+							390
+						],
+						"tilesX": 2,
+						"tilesY": 3
+					},
+					{
 						"template": "exit",
 						"xy": [
-							3322,
-							360
+							3590,
+							420
 						],
 						"trigger": {
 							"type": "collision",
@@ -456,28 +478,21 @@
 						}
 					},
 					{
-						"template": "edge",
+						"template": "edge2",
 						"xy": [
-							3650,
-							50
-						],
-						"rotation": 1.6,
-						"scale": [
-							1,
-							1.5
+							3850,
+							65
 						]
+						
 					},
 					{
-						"template": "edge",
+						"template": "edge2",
+						"texture": "assets/objects-atlas.json@boulder_04.png",
 						"xy": [
-							3900,
-							100
-						],
-						"rotation": 0.5,
-						"scale": [
-							2,
-							1.5
+							4140,
+							65
 						]
+						
 					}
 				]
 			}					
@@ -583,7 +598,7 @@
 				],
 				"entities": [
 					{
-						"template": "edge",
+						"template": "edge1",
 						"name": "edge-left",
 						"xy": [
 							-1500,
@@ -1565,7 +1580,7 @@
 						}
 					},
 					{
-						"template": "edge",
+						"template": "edge1",
 						"name": "edge-right",
 						"xy": [
 							12000,
@@ -1573,7 +1588,7 @@
 						]
 					},
 					{
-						"template": "edge",
+						"template": "edge1",
 						"name": "edge-right2",
 						"xy": [
 							12150,
