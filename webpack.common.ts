@@ -51,8 +51,10 @@ const config: webpack.Configuration = {
             }}),
         new CopyWebpackPlugin([
             { from: 'site.css', to: '[name].[ext]' },
-            { from: 'assets/*.png', to:''},
-            { from: 'assets/*.json', to:''},
+            { from: 'assets/*.png'},
+            { from: 'assets/*.json'},
+            { from: 'assets/audio/*.*'},
+            { from: 'assets/audio/effects/*.*'},
         ]),
         new ExtractTextPlugin({filename: 'style.css'}),
         new webpack.HotModuleReplacementPlugin()
