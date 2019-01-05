@@ -18,7 +18,7 @@
 },
 "exp_panel.png":
 {
-	"frame": {"x":8,"y":412,"w":1024,"h":24},
+	"frame": {"x":8,"y":514,"w":1024,"h":24},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":24},
@@ -146,15 +146,15 @@
 },
 "panel.png":
 {
-	"frame": {"x":8,"y":283,"w":768,"h":78},
+	"frame": {"x":788,"y":385,"w":780,"h":78},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":768,"h":78},
-	"sourceSize": {"w":768,"h":78}
+	"spriteSourceSize": {"x":0,"y":0,"w":780,"h":78},
+	"sourceSize": {"w":780,"h":78}
 },
 "panel_open.png":
 {
-	"frame": {"x":788,"y":283,"w":768,"h":117},
+	"frame": {"x":8,"y":385,"w":768,"h":117},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":768,"h":117},
@@ -162,11 +162,11 @@
 },
 "rect.png":
 {
-	"frame": {"x":1277,"y":8,"w":369,"h":263},
+	"frame": {"x":1277,"y":8,"w":512,"h":365},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":369,"h":263},
-	"sourceSize": {"w":369,"h":263}
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":365},
+	"sourceSize": {"w":512,"h":365}
 },
 "stat_panel.png":
 {
@@ -183,8 +183,8 @@
 	"version": "1.0",
 	"image": "gui-atlas.png",
 	"format": "RGBA8888",
-	"size": {"w":2048,"h":512},
+	"size": {"w":2048,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:34e6d1cdec62c16273a640422cb495e9:485edddcd7adcf5f3dd5642c6d42e958:68296c0c88440f7d6084f8a4f6d91662$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d80d0b29d08c08382e8aa9f06fa110e6:1cb120088addfaccd98ab9ff80aba21b:68296c0c88440f7d6084f8a4f6d91662$"
 }
 }
