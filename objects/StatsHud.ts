@@ -54,7 +54,7 @@ export class StatsHud extends PIXI.Container {
         //  HP
         {
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
-            pnl.position.set(5, y);
+            pnl.position.set(25, y);
             this.statContainer.addChild(pnl);
 
             this.txtHP = new PIXI.Text("0", TEXT_STYLE);
@@ -70,8 +70,7 @@ export class StatsHud extends PIXI.Container {
         {
             //let y = 75;
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
-            //pnl.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
-            pnl.position.set(261, y);
+            pnl.position.set(281, y);
             this.statContainer.addChild(pnl);
 
             this.txtDust = new PIXI.Text("0", TEXT_STYLE);
@@ -90,7 +89,7 @@ export class StatsHud extends PIXI.Container {
             //let y = 145;
 
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));            
-            pnl.position.set(517, y);
+            pnl.position.set(537, y);
             this.statContainer.addChild(pnl);
 
             this.txtCoins = new PIXI.Text("0", TEXT_STYLE);

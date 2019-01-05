@@ -88,7 +88,7 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>1024</int>
+            <int>2048</int>
             <key>height</key>
             <int>2048</int>
         </QSize>
@@ -210,6 +210,33 @@
                 <rect>71,59,141,119</rect>
                 <key>scale9Paddings</key>
                 <rect>71,59,141,119</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">img/objects/boulder_03.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>59,58,119,115</rect>
+                <key>scale9Paddings</key>
+                <rect>59,58,119,115</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">img/objects/boulder_04.png</key>
+            <key type="filename">img/objects/boulder_05.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>60,58,121,115</rect>
+                <key>scale9Paddings</key>
+                <rect>60,58,121,115</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
