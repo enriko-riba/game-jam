@@ -10,7 +10,7 @@ export class MovementController {
     private readonly JUMP_ATTACK_FORCE = -17000;
 
     private readonly JUMP_COOLDOWN = 500;
-    private readonly JUMP_ATTACK_COOLDOWN = 2000;
+    private readonly JUMP_ATTACK_COOLDOWN = 1000;
     private readonly JUMP_ATTACK_FREEZE = 800;
 
 

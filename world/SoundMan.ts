@@ -1,4 +1,4 @@
-﻿import {Howl} from "howler";
+﻿import { Howl } from "howler";
 
 export class SoundMan {
     private backgroundSnd: Howl;
@@ -17,7 +17,7 @@ export class SoundMan {
     private squish: Howl;
     private pain: Howl;
     private jmpContact: Howl;
-    
+
     private fxDemoSnd: Howl;
 
     private questItemSnd: Howl;
@@ -40,6 +40,7 @@ export class SoundMan {
         for (var i = 0, len = this.musicTrackNames.length; i < len; i++) {
             var trackName = this.musicTrackNames[i];
             this.musicTracks.push(new Howl({
+                preload: false,
                 src: [trackName],
                 autoplay: false,
                 loop: true,
@@ -134,7 +135,7 @@ export class SoundMan {
         });
 
         this.jmpContact = new Howl({
-            src:['assets/audio/effects/jmp-contact.mp3'],
+            src: ['assets/audio/effects/jmp-contact.mp3'],
             autoplay: false,
             loop: false,
             volume: 1
@@ -327,17 +328,18 @@ export class SoundMan {
             console.log("playTrack " + trackId, this.backgroundSnd);
         }
 
-        if (this.backgroundSnd !== this.musicTracks[trackId]) {
+        if (this.backgroundSnd !== this.musicTracks[trackId] || !this.backgroundSnd.playing()) {
             this.backgroundSnd.stop();
             this.backgroundSnd = this.musicTracks[trackId];
             this.backgroundSnd.volume(this.musicVolume);
             this.backgroundSnd.play();
-        } else {
-            if (!this.backgroundSnd.playing()) {
-                this.backgroundSnd.volume(this.musicVolume);
-                this.backgroundSnd.play();
+            if (this.backgroundSnd.state() === 'unloaded') {
+                this.backgroundSnd.load();
+                this.backgroundSnd.once('load', () => {
+                    this.backgroundSnd.play();
+                });
             }
-        }
+        } 
         this.currentTrack = trackId;
     }
 }
