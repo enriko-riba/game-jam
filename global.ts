@@ -17,7 +17,7 @@ export function getScm() {
             backgroundColor: 0,
             antialias: false,
             transparent: false,
-            roundPixels: true,
+            roundPixels: false,
             resolution: window.devicePixelRatio
         };
         sceneManager = new SceneManager(SCENE_WIDTH, SCENE_HEIGHT, renderOptions);
