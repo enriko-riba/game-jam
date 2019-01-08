@@ -2,10 +2,11 @@
 import { Button } from "../_engine/Button";
 import { snd } from "../world/SoundMan";
 import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
+import { QUEST_ITEM_STYLE, QUEST_STYLE } from '../constants';
 
 export class CutScene extends Scene {
     private callout: PIXI.Sprite;
-    private textMessage: PIXI.Text;
+    private textMessage: PIXI.extras.BitmapText;
     private backSprite: PIXI.Sprite;
     private deathScene: boolean = false;
     private corpse: PIXI.Sprite;
@@ -32,8 +33,8 @@ export class CutScene extends Scene {
         this.callout.position.set(SCENE_HALF_WIDTH, SCENE_HEIGHT / 5);
         this.addChild(this.callout);
 
-        this.textMessage = new PIXI.Text("");
-        this.textMessage.anchor.set(0.5);
+        this.textMessage = new PIXI.extras.BitmapText("", QUEST_STYLE);
+        (this.textMessage.anchor as any).set(0.5);
         this.textMessage.position.set(0, 0);
         this.callout.addChild(this.textMessage);
 
@@ -115,11 +116,8 @@ export class CutScene extends Scene {
         this.backSprite.scale.set(1 / scale.x, 1 / scale.y);  //  rescale to fit full scene
     }
 
-    public SetText(text: string, style?: PIXI.TextStyleOptions) {
-        this.textMessage.text = text;
-        if (style) {
-            this.textMessage.style = new PIXI.TextStyle(style);
-        }
+    public SetText(text: string) {
+        this.textMessage.text = text;       
     }
 
     private deathMessages: string[] = [

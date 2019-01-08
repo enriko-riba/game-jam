@@ -52,7 +52,7 @@ export class LoaderScene extends Scene {
     public onActivate = () => {   
         console.log(`downloading level ${stats.currentGameLevel}...`);
         let assets: string[] = GetLevelAssets(Global.LevelDefinitions, stats.currentGameLevel);
-        assets = assets.concat(this.preloadAssets);
+        assets = assets.concat(this.preloadAssets, 'assets/font/orbitron.fnt', 'assets/font/bauhaus.fnt');
         assets = getUniqueItems(assets);
         
         PIXI.loader

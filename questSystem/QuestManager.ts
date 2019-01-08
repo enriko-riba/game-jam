@@ -170,7 +170,7 @@ export class QuestManager {
                             snd.win();
                             this.hud.visible = false;
                             var cs = scm.GetScene("CutScene") as CutScene;
-                            cs.SetText(quest.finishedMsg, QUEST_STYLE);
+                            cs.SetText(quest.finishedMsg);
                             var rt = scm.CaptureScene();
                             cs.SetBackGround(rt, this.gameScene.scale);
                             scm.ActivateScene(cs);

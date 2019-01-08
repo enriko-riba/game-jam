@@ -4,15 +4,15 @@ import { Global, TextureLoader } from '..';
 import { createParticleEmitter } from '../global';
 import { stats } from './PlayerStats';
 import { eventEmitter, STATCHANGE_TOPIC, DAMAGE_TOPIC, IStatChangeEvent, IDpsChangeEvent } from '../events';
-import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_HEIGHT, SCENE_HALF_HEIGHT, EXP_BAR_STYLE, MSG_HP_STYLE, QUEST_ITEM_STYLE, SCENE_WIDTH, QUEST_STYLE, GUI_FONT, MSG_EXP_STYLE } from '../constants';
+import { SCENE_HALF_WIDTH, SCENE_HEIGHT, SCENE_HALF_HEIGHT, MSG_HP_STYLE, QUEST_ITEM_STYLE, SCENE_WIDTH, QUEST_STYLE, GUI_FONT, MSG_EXP_STYLE } from '../constants';
 import { StatType } from '../enums';
 
 export class StatsHud extends PIXI.Container {
-    private txtHP: PIXI.Text;
-    private txtDust: PIXI.Text;
-    private txtCoins: PIXI.Text;
-    private txtExp: PIXI.Text;
-    private txtLevel: PIXI.Text;
+    private txtHP: PIXI.extras.BitmapText;
+    private txtDust: PIXI.extras.BitmapText;
+    private txtCoins: PIXI.extras.BitmapText;
+    private txtExp: PIXI.extras.BitmapText;
+    private txtLevel: PIXI.extras.BitmapText;
     private expPreFiller: PIXI.Sprite;
     private expFiller: PIXI.Sprite;
     private fillLen: number;
@@ -20,11 +20,11 @@ export class StatsHud extends PIXI.Container {
     private emitter: particles.Emitter;
 
     private statContainer: PIXI.Sprite;
-    private txtQuestMessage: PIXI.Text;
+    private txtQuestMessage: PIXI.extras.BitmapText;
     private questMsgEndTime = 0;
     private onCompleteCB?: () => void;
 
-    private txtPlayerPosition: PIXI.Text;
+    private txtPlayerPosition: PIXI.extras.BitmapText;
 
     constructor() {
         super();
@@ -33,9 +33,9 @@ export class StatsHud extends PIXI.Container {
 
     private setup() {
         //  TODO: remove or make a hud for player position
-        this.txtPlayerPosition = new PIXI.Text("", QUEST_STYLE);
+        this.txtPlayerPosition = new PIXI.extras.BitmapText("", QUEST_STYLE);
         this.txtPlayerPosition.position = new PIXI.Point(SCENE_WIDTH, SCENE_HEIGHT);
-        this.txtPlayerPosition.anchor.set(1, 1);
+        (this.txtPlayerPosition.anchor as any).set(1, 1);
         this.addChild(this.txtPlayerPosition);
 
         //  top left stat container panel
@@ -45,11 +45,12 @@ export class StatsHud extends PIXI.Container {
         this.statContainer.anchor.set(0);
         this.addChild(this.statContainer);
 
-        this.txtQuestMessage = new PIXI.Text("", QUEST_STYLE);
+        this.txtQuestMessage = new PIXI.extras.BitmapText("", QUEST_STYLE);
         this.txtQuestMessage.position.set(4, 100);
-        this.txtQuestMessage.anchor.set(0);
+        (this.txtQuestMessage.anchor as any).set(0);
         this.statContainer.addChild(this.txtQuestMessage);
 
+        let txtPanelStyle: PIXI.extras.BitmapTextStyle = {font:'26px Orbitron', tint: 0xfeff00};
         let y: number = 5;
         //  HP
         {
@@ -57,8 +58,9 @@ export class StatsHud extends PIXI.Container {
             pnl.position.set(25, y);
             this.statContainer.addChild(pnl);
 
-            this.txtHP = new PIXI.Text("0", TEXT_STYLE);
-            this.txtHP.position = new PIXI.Point(70, y + 10);
+            this.txtHP = new PIXI.extras.BitmapText("0", txtPanelStyle);//new PIXI.Text("0", TEXT_STYLE);
+            (this.txtHP.anchor as any).set(0, 0.5);
+            this.txtHP.position = new PIXI.Point(70, pnl.height/2);
             pnl.addChild(this.txtHP);
 
             let spr = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@heart.png"));
@@ -68,13 +70,13 @@ export class StatsHud extends PIXI.Container {
 
         //  pixi dust
         {
-            //let y = 75;
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
             pnl.position.set(281, y);
             this.statContainer.addChild(pnl);
 
-            this.txtDust = new PIXI.Text("0", TEXT_STYLE);
-            this.txtDust.position = new PIXI.Point(70, y + 10);
+            this.txtDust = new PIXI.extras.BitmapText("0", txtPanelStyle);            
+            (this.txtDust.anchor as any).set(0, 0.5);
+            this.txtDust.position = new PIXI.Point(70, pnl.height/2);
             pnl.addChild(this.txtDust);
 
             this.emitter = createParticleEmitter(pnl, [TextureLoader.Get("assets/objects-atlas.json@star.png")]);
@@ -86,14 +88,13 @@ export class StatsHud extends PIXI.Container {
 
         //  coins
         {
-            //let y = 145;
-
             let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));            
             pnl.position.set(537, y);
             this.statContainer.addChild(pnl);
 
-            this.txtCoins = new PIXI.Text("0", TEXT_STYLE);
-            this.txtCoins.position = new PIXI.Point(70, y + 10);
+            this.txtCoins = new PIXI.extras.BitmapText("0", txtPanelStyle);
+            (this.txtCoins.anchor as any).set(0, 0.5);
+            this.txtCoins.position = new PIXI.Point(70, pnl.height/2);
             pnl.addChild(this.txtCoins);
 
             let spr = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@coin.png"));
@@ -119,17 +120,18 @@ export class StatsHud extends PIXI.Container {
             pnl.addChild(this.expFiller);
             this.fillLen = pnl.width - 6; // 3 pixels for left/right border;
 
-
-            this.txtExp = new PIXI.Text("0 / 1000", EXP_BAR_STYLE);
+            let txtExpStyle = {font:'18px Bauhaus'}
+            this.txtExp = new PIXI.extras.BitmapText("0 / 1000", txtExpStyle);
             this.txtExp.pivot.set(0.5);
-            this.txtExp.anchor.set(0.5);
+            (this.txtExp.anchor as any).set(0.5);
             this.txtExp.position = new PIXI.Point(pnl.width / 2, pnl.height / 2);
+            this.txtExp.tint = 0xfeff44;
             pnl.addChild(this.txtExp);
 
             //  character level
-            this.txtLevel = new PIXI.Text(`Level ${stats.characterLevel}`, TEXT_STYLE);
-            this.txtLevel.anchor.set(0, 0.2);
+            this.txtLevel = new PIXI.extras.BitmapText(`Level ${stats.characterLevel}`, txtExpStyle);
             this.txtLevel.position.set(pnl.x + pnl.width + 4, pnl.y);
+            this.txtLevel.tint = 0xfeff44;
             this.addChild(this.txtLevel);
         }
 
@@ -156,13 +158,12 @@ export class StatsHud extends PIXI.Container {
      * @param message the message to be added
      * @param style optional PIXI.ITextStyle
      */
-    public addInfoMessage(position: PIXI.PointLike | { x: number, y: number }, message: string, style?: PIXI.TextStyleOptions, offsetX?: number): void {
-        var stl = style || TEXT_STYLE;
-        var txtInfo = new PIXI.Text(message, stl);
+    public addInfoMessage(position: PIXI.PointLike | { x: number, y: number }, message: string, style?: PIXI.extras.BitmapTextStyle, offsetX?: number): void {
+        var stl = {...{font:'24px Orbitron', tint: 0xffffff}, ...style};
+        var txtInfo = new PIXI.extras.BitmapText(message, stl);
         offsetX = offsetX || 0;
         txtInfo.position.set(SCENE_HALF_WIDTH + offsetX, SCENE_HEIGHT - position.y - 70);
         txtInfo.scale.set(1, 1);
-
         this.addChild(txtInfo);
 
         var dy = (position.y > SCENE_HALF_HEIGHT) ? 250 : -250;

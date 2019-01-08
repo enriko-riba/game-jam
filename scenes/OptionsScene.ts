@@ -27,9 +27,9 @@ export class OptionsScene extends Scene {
         btnOptions!.visible = true;
     }
     private setup = () => {
-        var title = new PIXI.Text("Options", TEXT_STYLE);
+        var title = new PIXI.extras.BitmapText("Options", TEXT_STYLE);
         this.addChild(title);
-        title.anchor.set(0.5);
+        (title.anchor as any).set(0.5);
         title.x = SCENE_HALF_WIDTH;
         title.y = 20;
 
