@@ -8,7 +8,6 @@ import { stats } from "../objects/PlayerStats";
 import { StatsHud } from "../objects/StatsHud";
 import { wp2 } from '../world/WorldP2';
 import { snd } from '../world/SoundMan';
-import { QUEST_STYLE } from '..';
 import { StatType } from '../enums';
 
 /**

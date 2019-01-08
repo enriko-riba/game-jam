@@ -2,7 +2,7 @@
 
 "canyon.png":
 {
-	"frame": {"x":1038,"y":950,"w":960,"h":540},
+	"frame": {"x":1044,"y":8,"w":960,"h":540},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":960,"h":540},
@@ -10,7 +10,7 @@
 },
 "front01.png":
 {
-	"frame": {"x":4,"y":802,"w":1024,"h":64},
+	"frame": {"x":8,"y":148,"w":1024,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":64},
@@ -18,7 +18,7 @@
 },
 "front02.png":
 {
-	"frame": {"x":4,"y":876,"w":1024,"h":64},
+	"frame": {"x":8,"y":224,"w":1024,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":64},
@@ -26,7 +26,7 @@
 },
 "ground.png":
 {
-	"frame": {"x":4,"y":950,"w":1024,"h":128},
+	"frame": {"x":8,"y":8,"w":1024,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":128},
@@ -34,7 +34,7 @@
 },
 "iceSnow.png":
 {
-	"frame": {"x":974,"y":1500,"w":960,"h":540},
+	"frame": {"x":8,"y":300,"w":960,"h":540},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":960,"h":540},
@@ -42,7 +42,7 @@
 },
 "mountains.png":
 {
-	"frame": {"x":4,"y":1500,"w":960,"h":540},
+	"frame": {"x":980,"y":560,"w":960,"h":540},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":960,"h":540},
@@ -50,7 +50,7 @@
 },
 "trees01.png":
 {
-	"frame": {"x":526,"y":536,"w":512,"h":256},
+	"frame": {"x":8,"y":852,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -58,7 +58,7 @@
 },
 "trees02.png":
 {
-	"frame": {"x":4,"y":536,"w":512,"h":256},
+	"frame": {"x":8,"y":1120,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -66,7 +66,7 @@
 },
 "trees03.png":
 {
-	"frame": {"x":526,"y":4,"w":512,"h":256},
+	"frame": {"x":8,"y":1388,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -74,7 +74,7 @@
 },
 "trees04.png":
 {
-	"frame": {"x":4,"y":4,"w":512,"h":256},
+	"frame": {"x":8,"y":1656,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -82,7 +82,7 @@
 },
 "trees05.png":
 {
-	"frame": {"x":1048,"y":4,"w":512,"h":256},
+	"frame": {"x":532,"y":1112,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -90,7 +90,7 @@
 },
 "trees06.png":
 {
-	"frame": {"x":1048,"y":270,"w":512,"h":256},
+	"frame": {"x":532,"y":1380,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -98,7 +98,7 @@
 },
 "trees07.png":
 {
-	"frame": {"x":4,"y":270,"w":512,"h":256},
+	"frame": {"x":532,"y":1648,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -106,7 +106,7 @@
 },
 "trees08.png":
 {
-	"frame": {"x":526,"y":270,"w":512,"h":256},
+	"frame": {"x":1056,"y":1112,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -114,7 +114,7 @@
 },
 "trees09.png":
 {
-	"frame": {"x":1048,"y":536,"w":512,"h":256},
+	"frame": {"x":1056,"y":1380,"w":512,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":256},
@@ -131,6 +131,6 @@
 	"format": "RGBA8888",
 	"size": {"w":2048,"h":2048},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d8c972fed9141840fea757a30ddc8dca:1cf67626972691f83200292396a5c3e4:85c53bf86215b87303c58b6b9280b1b5$"
+	"smartupdate": "$TexturePacker:SmartUpdate:a7bb341edb57c7b3a8c17b84fdd2f982:1cf67626972691f83200292396a5c3e4:85c53bf86215b87303c58b6b9280b1b5$"
 }
 }
