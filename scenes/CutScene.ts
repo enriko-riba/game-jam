@@ -2,7 +2,7 @@
 import { Button } from "../_engine/Button";
 import { snd } from "../world/SoundMan";
 import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
-import { QUEST_ITEM_STYLE, QUEST_STYLE } from '../constants';
+import { QUEST_STYLE } from '../constants';
 
 export class CutScene extends Scene {
     private callout: PIXI.Sprite;

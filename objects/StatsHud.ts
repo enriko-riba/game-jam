@@ -20,7 +20,10 @@ export class StatsHud extends PIXI.Container {
     private emitter: particles.Emitter;
 
     private statContainer: PIXI.Sprite;
+    
+    private questPanel: PIXI.Sprite;
     private txtQuestMessage: PIXI.extras.BitmapText;
+
     private questMsgEndTime = 0;
     private onCompleteCB?: () => void;
 
@@ -38,49 +41,48 @@ export class StatsHud extends PIXI.Container {
         (this.txtPlayerPosition.anchor as any).set(1, 1);
         this.addChild(this.txtPlayerPosition);
 
+        
         //  top left stat container panel
-        this.statContainer = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@panel.png", true));
+        this.statContainer = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@panel_stats.png", true));
         this.statContainer.position.set(4);
         this.statContainer.name = "TriggerMessage";
         this.statContainer.anchor.set(0);
         this.addChild(this.statContainer);
+        
+        this.questPanel = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@panel.png"));
+        this.questPanel.anchor.set(0);
+        this.questPanel.position.set(4, 88);
+        this.addChild(this.questPanel);
 
         this.txtQuestMessage = new PIXI.extras.BitmapText("", QUEST_STYLE);
-        this.txtQuestMessage.position.set(4, 100);
+        this.txtQuestMessage.position.set(14);
         (this.txtQuestMessage.anchor as any).set(0);
-        this.statContainer.addChild(this.txtQuestMessage);
+        this.questPanel.addChild(this.txtQuestMessage);
 
         let txtPanelStyle: PIXI.extras.BitmapTextStyle = {font:'26px Orbitron', tint: 0xfeff00};
-        let y: number = 5;
+        let y: number = this.statContainer.height/2;
         //  HP
         {
-            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
-            pnl.position.set(25, y);
-            this.statContainer.addChild(pnl);
-
-            this.txtHP = new PIXI.extras.BitmapText("0", txtPanelStyle);//new PIXI.Text("0", TEXT_STYLE);
+            this.txtHP = new PIXI.extras.BitmapText("0", txtPanelStyle);
             (this.txtHP.anchor as any).set(0, 0.5);
-            this.txtHP.position = new PIXI.Point(70, pnl.height/2);
-            pnl.addChild(this.txtHP);
+            this.txtHP.position = new PIXI.Point(84, this.statContainer.height/2);
+            this.statContainer.addChild(this.txtHP);
 
             let spr = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@heart.png"));
-            spr.position.set(8, y + 4);
-            pnl.addChild(spr);
+            spr.anchor.set(0.5);
+            spr.position.set(45, this.statContainer.height/2);
+            this.statContainer.addChild(spr);
         }
 
         //  pixi dust
         {
-            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));
-            pnl.position.set(281, y);
-            this.statContainer.addChild(pnl);
-
             this.txtDust = new PIXI.extras.BitmapText("0", txtPanelStyle);            
             (this.txtDust.anchor as any).set(0, 0.5);
-            this.txtDust.position = new PIXI.Point(70, pnl.height/2);
-            pnl.addChild(this.txtDust);
+            this.txtDust.position = new PIXI.Point(334, this.statContainer.height/2);
+            this.statContainer.addChild(this.txtDust);
 
-            this.emitter = createParticleEmitter(pnl, [TextureLoader.Get("assets/objects-atlas.json@star.png")]);
-            this.emitter.updateOwnerPos(32, 55);
+            this.emitter = createParticleEmitter(this.statContainer, [TextureLoader.Get("assets/objects-atlas.json@star.png")]);
+            this.emitter.updateOwnerPos(292, 64);
             this.emitter.maxLifetime = 0.6;
             this.emitter.maxParticles = 50;
             this.emitter.emit = true;
@@ -88,18 +90,15 @@ export class StatsHud extends PIXI.Container {
 
         //  coins
         {
-            let pnl = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@stat_panel.png"));            
-            pnl.position.set(537, y);
-            this.statContainer.addChild(pnl);
-
             this.txtCoins = new PIXI.extras.BitmapText("0", txtPanelStyle);
             (this.txtCoins.anchor as any).set(0, 0.5);
-            this.txtCoins.position = new PIXI.Point(70, pnl.height/2);
-            pnl.addChild(this.txtCoins);
+            this.txtCoins.position = new PIXI.Point(586, this.statContainer.height/2);
+            this.statContainer.addChild(this.txtCoins);
 
             let spr = new PIXI.Sprite(TextureLoader.Get("assets/gui-atlas.json@coin.png"));
-            spr.position.set(8, y + 4);
-            pnl.addChild(spr);
+            spr.anchor.set(0.5);
+            spr.position.set(544, this.statContainer.height/2);
+            this.statContainer.addChild(spr);
         }
 
         //  Exp
@@ -142,8 +141,15 @@ export class StatsHud extends PIXI.Container {
     public onUpdate(dt: number) {
         this.emitter.update(dt * 0.001);
 
-        if (this.txtQuestMessage.visible && this.questMsgEndTime < performance.now()) {
-            this.txtQuestMessage.visible = false;
+        // if (this.txtQuestMessage.visible && this.questMsgEndTime < performance.now()) {
+        //     this.txtQuestMessage.visible = false;
+        //     if (this.onCompleteCB) {
+        //         this.onCompleteCB();
+        //     }
+        // }
+
+        if (this.questPanel.visible && this.questMsgEndTime < performance.now()) {
+            this.questPanel.visible = false;
             if (this.onCompleteCB) {
                 this.onCompleteCB();
             }
@@ -187,8 +193,8 @@ export class StatsHud extends PIXI.Container {
      * @param message the message to be added
      * @param style optional PIXI.ITextStyle
      */
-    public addQuestItemMessage(message: string, style?: PIXI.TextStyle): void {
-        var stl = style || QUEST_ITEM_STYLE;
+    public addQuestItemMessage(message: string): void {
+        var stl = QUEST_ITEM_STYLE;
         var txtInfo = new PIXI.Text(message, stl);
         txtInfo.anchor.set(0.5, 0.5);
         txtInfo.position.set(SCENE_HALF_WIDTH, 150);
@@ -212,8 +218,8 @@ export class StatsHud extends PIXI.Container {
      */
     public setQuestMessage(msg: string, ttlMilis: number = 8000, onCompleteCB: () => void = null) {
         this.txtQuestMessage.text = msg;
-        this.statContainer.visible = true;
-        this.txtQuestMessage.visible = true;
+        this.questPanel.visible = true;
+        //this.txtQuestMessage.visible = true;
         this.questMsgEndTime = performance.now() + ttlMilis;
         this.onCompleteCB = onCompleteCB;
     }

@@ -71,6 +71,6 @@ export const QUEST_ITEM_STYLE: PIXI.TextStyleOptions =
     export const QUEST_STYLE: PIXI.extras.BitmapTextStyle =
     {
         align: "left",
-        font: "27px Orbitron",
-        tint: 0xffffff,
+        font: "24px Orbitron",
+        tint: 0xfeffcc,
     };
