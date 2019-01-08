@@ -55,6 +55,7 @@ const config: webpack.Configuration = {
             { from: 'assets/*.json'},
             { from: 'assets/audio/*.*'},
             { from: 'assets/audio/effects/*.*'},
+            { from: 'assets/font/*.*'},
         ]),
         new ExtractTextPlugin({filename: 'style.css'}),
         new webpack.HotModuleReplacementPlugin()

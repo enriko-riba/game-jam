@@ -3,5 +3,10 @@ import * as merge from 'webpack-merge';
 
 module.exports = merge(common, {      
     mode: 'production',
-    devtool: 'source-map',
+    devtool: false,
+    performance: {
+        assetFilter: function(assetFilename) {
+          return assetFilename.endsWith('.js');
+        }
+      }
 });
