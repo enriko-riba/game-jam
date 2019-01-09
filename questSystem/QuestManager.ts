@@ -177,10 +177,6 @@ export class QuestManager {
                     ]);
                     break;
 
-                // case 202:   //  seek the hanshi Kendo master
-                //     this.genericQuestHandler(quest, state, body);
-                //     break;
-
                 case 203:   //  hanshi Kendo master dojo: collect 10 ki
                     this.genericQuestHandler(quest, state, body, [
                         () => { stats.HasJumpAtack = true; },
@@ -189,10 +185,6 @@ export class QuestManager {
                         () => { }
                     ]);
                     break;
-
-                // case 204:   //  hanshi Kendo master dojo: collect 25 ki
-                //     this.genericQuestHandler(quest, state, body);
-                //     break;
 
                 default:
                     this.genericQuestHandler(quest, state, body);
