@@ -9,8 +9,7 @@ import { BootScene } from './scenes/BootScene';
 
 const PRELOAD_FONTS = [
                         'Permanent Marker',
-                        'Orbitron',
-                        'Farsan',
+                        'Orbitron'
                     ];
 
 //------------------------

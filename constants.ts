@@ -4,11 +4,9 @@ export const SCENE_HALF_WIDTH = SCENE_WIDTH / 2;
 export const SCENE_HALF_HEIGHT = SCENE_HEIGHT / 2;
 export const BTN_WIDTH: number = 120;
 export const BTN_HEIGHT: number = 60;
-export const MENU_LINE_HEIGHT = 60;
 export const GUI_FONT = "Orbitron";
 
 export const SCENE_BACKCOLOR = 0x112233;
-
 
 export const ANIMATION_FPS_NORMAL = 14;
 export const ANIMATION_FPS_SLOW = 4;
@@ -57,15 +55,11 @@ export const MSG_WARN_STYLE: PIXI.extras.BitmapTextStyle =
     tint: 0xff0011,
 };
 
-export const QUEST_ITEM_STYLE: PIXI.TextStyleOptions =
+export const QUEST_ITEM_STYLE: PIXI.extras.BitmapTextStyle =
     {
         align: "center",
-        padding: 0,
-        fontSize: 28,
-        fontFamily: "Farsan",
-        fill: 0x84c2f2,
-        strokeThickness: 4,
-        stroke: 0x111121
+        font: "28px Orbitron",
+        tint: 0x84c2f2        
     };
 
     export const QUEST_STYLE: PIXI.extras.BitmapTextStyle =

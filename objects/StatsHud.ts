@@ -194,13 +194,10 @@ export class StatsHud extends PIXI.Container {
      * @param style optional PIXI.ITextStyle
      */
     public addQuestItemMessage(message: string): void {
-        var stl = QUEST_ITEM_STYLE;
-        var txtInfo = new PIXI.Text(message, stl);
-        txtInfo.anchor.set(0.5, 0.5);
+        var txtInfo = new PIXI.extras.BitmapText(message, QUEST_ITEM_STYLE);
+        (txtInfo.anchor as any).set(0.5);
         txtInfo.position.set(SCENE_HALF_WIDTH, 150);
-
         this.addChild(txtInfo);
-
         var scale = new TWEEN.Tween(txtInfo.scale)
             .to({ x: 1.8, y: 1.8 }, 2200)
             .easing(TWEEN.Easing.Linear.None);
