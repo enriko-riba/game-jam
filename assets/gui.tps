@@ -102,7 +102,7 @@
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
-            <enum type="AlgorithmSettings::AlgorithmId">Basic</enum>
+            <enum type="AlgorithmSettings::AlgorithmId">MaxRects</enum>
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
@@ -296,16 +296,16 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">gui/panel_open.png</key>
+            <key type="filename">gui/panel_stats.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>192,29,384,59</rect>
+                <rect>191,20,381,40</rect>
                 <key>scale9Paddings</key>
-                <rect>192,29,384,59</rect>
+                <rect>191,20,381,40</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -319,19 +319,6 @@
                 <rect>92,66,185,131</rect>
                 <key>scale9Paddings</key>
                 <rect>92,66,185,131</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">gui/stat_panel.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0,0</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>58,16,115,32</rect>
-                <key>scale9Paddings</key>
-                <rect>58,16,115,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
