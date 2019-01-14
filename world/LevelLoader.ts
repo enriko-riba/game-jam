@@ -7,7 +7,7 @@ import { Mob } from '../mobs/Mob';
 import { IRootObject, ILevel, ILevelDefinition, IMapEntity, IMobEntity, ISpawnPoint, IDisplayObjectDefinition, IInteractionType, IBodyDefinition } from './LevelInterfaces';
 import { getEntityDefinition } from './LevelHelper';
 import { SCENE_HEIGHT, SCENE_WIDTH } from '../constants';
-import { Dictionary, TextureLoader } from '../_engine';
+import { Dictionary, TextureLoader } from '..';
 
 declare type Fn = (definition: IDisplayObjectDefinition) => PIXI.DisplayObject;
 

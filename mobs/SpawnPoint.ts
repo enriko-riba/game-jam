@@ -1,7 +1,7 @@
 ﻿import { LevelLoader } from "../world/LevelLoader";
 import { wp2 } from "../world/WorldP2";
 import { Mob } from "../mobs/Mob";
-import { AnimatedSprite, AnimationSequence } from "../_engine/AnimatedSprite";
+import { AnimatedSprite, AnimationSequence } from "..";
 import { stats } from '../objects/PlayerStats';
 import { Global } from '..';
 

@@ -1,4 +1,4 @@
-﻿import { AnimatedSprite, AnimationSequence } from "../_engine/AnimatedSprite";
+﻿import { AnimatedSprite, AnimationSequence } from "..";
 import { Bullet } from "../objects/Bullet";
 import { snd } from "../world/SoundMan";
 import { AI } from "./AI";

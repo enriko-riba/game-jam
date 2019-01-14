@@ -1,5 +1,4 @@
-﻿import { Scene } from "../_engine/Scene";
-import { Button } from "../_engine/Button";
+﻿import { Scene, Button } from "..";
 import { snd } from "../world/SoundMan";
 import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
 import { QUEST_STYLE } from '../constants';

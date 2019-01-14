@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as particles from "pixi-particles";
-import { SceneManager } from "./_engine";
+import { SceneManager } from "pixi-scenegraph";
 import { IRootObject } from './world/LevelInterfaces';
 import { SCENE_HEIGHT, SCENE_WIDTH } from './constants';
 

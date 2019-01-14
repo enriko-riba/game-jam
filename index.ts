@@ -4,5 +4,5 @@ export var PIXI = pixi;
 import * as g from "./global";
 export var Global = g;
 
-export * from "./_engine";
+export * from "pixi-scenegraph";
 export * from "./constants";

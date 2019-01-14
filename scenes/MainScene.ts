@@ -36,10 +36,10 @@ export class MainScene extends Scene {
     constructor(scm: SceneManager) {
         super(scm, "Main");
         this.BackGroundColor = SCENE_BACKCOLOR;
-        this.setup();
+        this.setup();       
     }
 
-    public onUpdate(dt: number) {
+    public onUpdate(dt: number, timestamp: number) {
         //-------------------------------------------
         //  update world & world container position
         //-------------------------------------------        
@@ -47,6 +47,8 @@ export class MainScene extends Scene {
         this.worldContainer.x = (SCENE_HALF_WIDTH - this.hero.x);
         this.worldContainer.y = (SCENE_HEIGHT - 70);
         
+        TWEEN.update(timestamp);
+
         //-------------------------------------------
         //  update parallax
         //-------------------------------------------
@@ -76,8 +78,7 @@ export class MainScene extends Scene {
                         this.questMngr.handleTriggerEvent(body);
                     }
                 }
-            }
-            
+            }            
         }
 
         //-------------------------------------------

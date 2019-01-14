@@ -1,6 +1,6 @@
 ﻿import * as p2 from "p2";
 import { Global } from '..';
-import {Dictionary} from '../_engine/Dictionary';
+import {Dictionary} from '..';
 import { COL_GRP_GROUND, COL_GRP_SCENE, COL_GRP_NPC, COL_GRP_PLAYER, COL_GRP_BULLET } from './CollisionGroups';
 
 /**

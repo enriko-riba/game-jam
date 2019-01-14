@@ -2,7 +2,7 @@
 import { COL_GRP_PLAYER, COL_GRP_BULLET, COL_GRP_SCENE, COL_GRP_GROUND } from '../world/CollisionGroups';
 import { wp2 } from '../world/WorldP2';
 import { Global } from '..';
-import { TextureLoader } from '../_engine';
+import { TextureLoader } from '..';
 
 /**
  * Base for bullets, decals etc.

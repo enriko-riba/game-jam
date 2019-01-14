@@ -1,4 +1,4 @@
-import { Global, PIXI, Scene, Button, SceneManager } from "..";
+import { PIXI, Scene, Button, SceneManager } from "..";
 import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_BACKCOLOR, BTN_WIDTH, SCENE_HEIGHT, BTN_HEIGHT, BTN_STYLE } from '../constants';
 
 /**

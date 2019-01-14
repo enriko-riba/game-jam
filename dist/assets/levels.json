@@ -1254,8 +1254,8 @@
 							10
 						],
 						"area": 2000,
-						"maxMobCount": 5,
-						"respawnSeconds": 5,
+						"maxMobCount": 6,
+						"respawnSeconds": 4,
 						"isActive": false,
 						"entity": {
 							"template": "ki_slime",
