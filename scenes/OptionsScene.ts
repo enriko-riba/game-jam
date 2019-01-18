@@ -1,4 +1,4 @@
-import { PIXI, Scene, Button, SceneManager } from "..";
+import { PIXI, Scene, SpriteButton, SceneManager } from "..";
 import { SCENE_HALF_WIDTH, TEXT_STYLE, SCENE_BACKCOLOR, BTN_WIDTH, SCENE_HEIGHT, BTN_HEIGHT, BTN_STYLE } from '../constants';
 
 /**
@@ -19,11 +19,11 @@ export class OptionsScene extends Scene {
     }
 
     public onActivate =()=>{
-        var btnOptions = this.sceneManager.MasterHudOverlay.children.find((obj, idx)=> obj.name == "BTN_OPTIONS");
+        var btnOptions = this.sceneManager.MasterHudOverlay.children.find((obj)=> obj.name == "BTN_OPTIONS");
         btnOptions!.visible = false;
     }
     public onDeactivate =()=>{
-        var btnOptions = this.sceneManager.MasterHudOverlay.children.find((obj, idx)=> obj.name == "BTN_OPTIONS");
+        var btnOptions = this.sceneManager.MasterHudOverlay.children.find((obj)=> obj.name == "BTN_OPTIONS");
         btnOptions!.visible = true;
     }
     private setup = () => {
@@ -39,7 +39,7 @@ export class OptionsScene extends Scene {
         //--------------------
         //  back to game
         //--------------------
-        var btnBack = new Button("assets/gui-atlas.json@gui_button1.png", OFFSET, y, BTN_WIDTH, BTN_HEIGHT);
+        var btnBack = new SpriteButton("assets/gui-atlas.json@gui_button1.png", OFFSET, y, BTN_WIDTH, BTN_HEIGHT);
         btnBack.text = new PIXI.Text("Back to game", BTN_STYLE);
         btnBack.onClick = () => {
             //this.resetSounds();

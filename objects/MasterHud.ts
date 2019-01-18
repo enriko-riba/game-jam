@@ -1,4 +1,4 @@
-import { SceneManager, Button, SCENE_WIDTH } from "..";
+import { SceneManager, SpriteButton, SCENE_WIDTH } from "..";
 
 const BTN_X = SCENE_WIDTH - 48;
 const BTN_Y = 4;
@@ -29,12 +29,12 @@ export class MasterHud extends PIXI.Container {
         //  add full screen, options and 
         //  back buttons
         //--------------------------------       
-        var btnFullScreen = new Button("assets/gui-atlas.json@gui_fs_enter.png", BTN_X, BTN_Y);
+        var btnFullScreen = new SpriteButton("assets/gui-atlas.json@gui_fs_enter.png", BTN_X, BTN_Y);
         btnFullScreen.onClick = () => this.toggleFullScreen();
         btnFullScreen.scale.set(BTN_SCALE);
         this.addChild(btnFullScreen);
 
-        var btnOptions = new Button("assets/gui-atlas.json@gui_options.png", BTN_X - 48, BTN_Y);
+        var btnOptions = new SpriteButton("assets/gui-atlas.json@gui_options.png", BTN_X - 48, BTN_Y);
         btnOptions.onClick = () => this.sceneManager.ActivateScene("Options");
         btnOptions.name = "BTN_OPTIONS";
         btnOptions.scale.set(BTN_SCALE);

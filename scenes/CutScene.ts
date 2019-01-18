@@ -1,4 +1,4 @@
-﻿import { Scene, Button } from "..";
+﻿import { Scene, SpriteButton } from "..";
 import { snd } from "../world/SoundMan";
 import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
 import { QUEST_STYLE } from '../constants';
@@ -9,7 +9,7 @@ export class CutScene extends Scene {
     private backSprite: PIXI.Sprite;
     private deathScene: boolean = false;
     private corpse: PIXI.Sprite;
-    private btnContinue: Button;
+    private btnContinue: SpriteButton;
 
     private corpseBlurFilter: PIXI.filters.BlurFilter;
 
@@ -40,7 +40,7 @@ export class CutScene extends Scene {
         //--------------------------------
         //  btn for next level
         //--------------------------------
-        this.btnContinue = new Button(  "assets/gui-atlas.json@gui_button1.png",
+        this.btnContinue = new SpriteButton(  "assets/gui-atlas.json@gui_button1.png",
                                         (SCENE_WIDTH - BTN_WIDTH) / 2,
                                         this.callout.height + BTN_HEIGHT,
                                         BTN_WIDTH, 
