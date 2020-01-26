@@ -1,8 +1,8 @@
 ﻿import * as p2 from "p2";
 import { COL_GRP_PLAYER, COL_GRP_BULLET, COL_GRP_SCENE, COL_GRP_GROUND } from '../world/CollisionGroups';
 import { wp2 } from '../world/WorldP2';
-import { Global } from '..';
-import { TextureLoader } from '..';
+import { Global, PIXI } from '..';
+import { TextureLoader } from '../utility/TextureLoader';
 
 /**
  * Base for bullets, decals etc.
@@ -87,7 +87,7 @@ export class Bullet extends PIXI.Sprite {
     }
 
     private static bullets: Bullet[] = [];
-    public static emitBullet = (textureName: string, position: PIXI.Point, target:any, damage: number): Bullet => {
+    public static emitBullet = (textureName: string, position: PIXI.IPoint, target:any, damage: number): Bullet => {
         let bullet = Bullet.findDeadBullet();
         if (!bullet) {
 

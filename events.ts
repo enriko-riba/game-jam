@@ -1,3 +1,4 @@
+import {PIXI} from '.';
 import { StatType } from './enums';
 
 export var eventEmitter = new PIXI.utils.EventEmitter();

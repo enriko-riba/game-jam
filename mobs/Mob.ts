@@ -1,10 +1,11 @@
-﻿import { AnimatedSprite, AnimationSequence } from "..";
-import { Bullet } from "../objects/Bullet";
+﻿import { Bullet } from "../objects/Bullet";
 import { snd } from "../world/SoundMan";
 import { AI } from "./AI";
 import { BasicStaticAI } from "./BasicStaticAI";
 import { wp2 } from '../world/WorldP2';
 import { DirectionH, AtrType } from '../enums';
+import { AnimationSequence } from '../objects/AnimationSequence';
+import { AnimatedSprite } from '../objects/AnimatedSprite';
 
 const FRAME_SIZE: number = 48;
 

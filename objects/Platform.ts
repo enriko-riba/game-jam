@@ -1,4 +1,4 @@
-﻿import { TextureLoader } from '..';
+﻿import { PIXI, TextureLoader } from '..';
 
 export class Platform extends PIXI.Container {
 
@@ -51,7 +51,7 @@ export class Platform extends PIXI.Container {
         if (tilesX > 1) {
             let w = texture.width * tilesX;
             let h = texture.height;
-            spr = new PIXI.extras.TilingSprite(texture, w, h);
+            spr = new PIXI.TilingSprite(texture, w, h);
             spr.position.set(x, 0);
             x += w;
         } else {

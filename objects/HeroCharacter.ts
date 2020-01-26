@@ -1,10 +1,8 @@
 import * as particles from "pixi-particles";
-import * as TWEEN from "@tweenjs/tween.js";
 
 import { createParticleEmitter } from '../global';
-import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL, TextureLoader } from '..';
+import { ANIMATION_FPS_SLOW, ANIMATION_FPS_NORMAL, Global, TWEEN } from '..';
 import { MOVE_TOPIC, GROUND_SHAKE, eventEmitter } from '../events';
-import { AnimatedSprite, AnimationSequence, Global } from '..';
 import { MovementController, MovementState } from './MovementController';
 import { wp2 } from '../world/WorldP2';
 import { stats } from './PlayerStats';
@@ -14,6 +12,9 @@ import { IInteractionType } from '../world/LevelInterfaces';
 import { snd } from '../world/SoundMan';
 import { Bullet } from './Bullet';
 import { StatType, AtrType } from '../enums';
+import { AnimatedSprite } from './AnimatedSprite';
+import { TextureLoader } from '../utility/TextureLoader';
+import { AnimationSequence } from './AnimationSequence';
 
 const HERO_FRAME_SIZE: number = 64;
 

@@ -1,6 +1,5 @@
 import * as p2 from 'p2';
-import * as TWEEN from "@tweenjs/tween.js";
-import { PIXI, SceneManager, Scene, Parallax, Global } from "..";
+import { PIXI, TWEEN, SceneManager, Scene, Parallax, Global } from "..";
 import { wp2 } from '../world/WorldP2';
 import { HeroCharacter } from '../objects/HeroCharacter';
 import { StatsHud } from '../objects/StatsHud';
@@ -17,7 +16,6 @@ import { CutScene } from './CutScene';
 import { QuestManager } from '../questSystem/QuestManager';
 import { StatType, DamageType } from '../enums';
 
-
 export class MainScene extends Scene {
     private worldContainer: PIXI.Container;
     private hero: HeroCharacter;
@@ -33,8 +31,8 @@ export class MainScene extends Scene {
     private shakeY: number;
     private readonly SHAKE_COUNT = 15;
 
-    constructor(scm: SceneManager) {
-        super(scm, "Main");
+    constructor(private sceneManager: SceneManager) {
+        super("Main");
         this.BackGroundColor = SCENE_BACKCOLOR;
         this.setup();       
     }
@@ -47,7 +45,7 @@ export class MainScene extends Scene {
         this.worldContainer.x = (SCENE_HALF_WIDTH - this.hero.x);
         this.worldContainer.y = (SCENE_HEIGHT - 70);
         
-        TWEEN.update(timestamp);
+        TWEEN.update();
 
         //-------------------------------------------
         //  update parallax

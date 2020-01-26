@@ -19,8 +19,8 @@ export class LoaderScene extends Scene {
         'assets/background-atlas.json',     
     ];
 
-    constructor(scm:SceneManager) {
-        super(scm, "Loader");
+    constructor(private sceneManager:SceneManager) {
+        super("Loader");
         this.BackGroundColor = 0;
         this.loadingMessage = new PIXI.Text("loading ...", { 
             fontSize: 36, 
@@ -35,7 +35,7 @@ export class LoaderScene extends Scene {
         this.loadingMessage.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT - 80);
         this.addChild(this.loadingMessage);
 
-        var loadingTexture = PIXI.Texture.fromImage("assets/loading.png");
+        var loadingTexture = PIXI.Texture.from("assets/loading.png");
         this.spinner = new PIXI.Sprite(loadingTexture);
         this.spinner.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT);
         this.spinner.anchor.set(0.5, 0.5);
@@ -55,7 +55,7 @@ export class LoaderScene extends Scene {
         assets = assets.concat(this.preloadAssets, 'assets/font/orbitron.fnt', 'assets/font/orbitron_outline.fnt','assets/font/bauhaus.fnt');
         assets = getUniqueItems(assets);
         
-        PIXI.loader
+        PIXI.Loader.shared
             .reset()
             .add(assets)
             .load(this.handleLevelLoading)
@@ -82,7 +82,7 @@ export class LoaderScene extends Scene {
     }
 
     
-    private onProgress = (loader: PIXI.loaders.Loader, resource: PIXI.loaders.Resource) => {
+    private onProgress = (loader: PIXI.Loader, resource: PIXI.LoaderResource) => {
         var progress = loader.progress;
         console.log("progress: " + progress.toFixed(0) + "%, asset: " + resource.name);
         this.loadingMessage.text = "Loading " + progress.toFixed(0) + " %";

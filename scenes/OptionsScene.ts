@@ -12,8 +12,8 @@ export class OptionsScene extends Scene {
     /**
      *   Creates a new scene instance.
      */
-    constructor(scm:SceneManager) {
-        super(scm, "Options");
+    constructor(private sceneManager:SceneManager) {
+        super("Options");
         this.BackGroundColor = SCENE_BACKCOLOR;
         this.setup();
     }
@@ -27,7 +27,7 @@ export class OptionsScene extends Scene {
         btnOptions!.visible = true;
     }
     private setup = () => {
-        var title = new PIXI.extras.BitmapText("Options", TEXT_STYLE);
+        var title = new PIXI.BitmapText("Options", TEXT_STYLE);
         this.addChild(title);
         (title.anchor as any).set(0.5);
         title.x = SCENE_HALF_WIDTH;

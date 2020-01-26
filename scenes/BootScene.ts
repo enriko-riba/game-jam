@@ -18,11 +18,10 @@ const PRELOAD_BOOT_ASSETS = [
  */
 export class BootScene extends Scene {
     private loadingMessage!: PIXI.Text;
-    private spinner!: PIXI.Sprite;
+    private spinner!: PIXI.Sprite;    
     
-    
-    constructor(scm:SceneManager) {
-        super(scm, "Boot");
+    constructor(private sceneManager:SceneManager) {
+        super("Boot");
         this.BackGroundColor = 0;
     }
 
@@ -48,7 +47,7 @@ export class BootScene extends Scene {
         //------------------------------------------------------
         //  get loading image and define callback on image load
         //------------------------------------------------------
-        PIXI.loader.reset()
+        PIXI.Loader.shared.reset()
         .add("assets/loading.png")
         .load(this.startPreloading);
     };
@@ -59,7 +58,7 @@ export class BootScene extends Scene {
     private startPreloading = async () => {
         
         //   first add a loading spinner
-        var loadingTexture = PIXI.Texture.fromImage("assets/loading.png");
+        var loadingTexture = PIXI.Texture.from("assets/loading.png");
         this.spinner = new PIXI.Sprite(loadingTexture);
         this.spinner.position.set(SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT);
         this.spinner.anchor.set(0.5, 0.5);
@@ -67,7 +66,7 @@ export class BootScene extends Scene {
         this.addChild(this.spinner);
         
         console.log('initializing common assets preloading ...', PRELOAD_BOOT_ASSETS);
-        PIXI.loader
+        PIXI.Loader.shared
             .add(PRELOAD_BOOT_ASSETS)
             .load(this.onPreloadFinished); 
     }
@@ -85,8 +84,8 @@ export class BootScene extends Scene {
         document.body.style.cursor = defaultIcon;
 
         // save levels and quests
-        Global.LevelDefinitions = PIXI.loader.resources["assets/levels.json"].data;
-        var questsObj = PIXI.loader.resources["assets/quests.json"].data;
+        Global.LevelDefinitions = PIXI.Loader.shared.resources["assets/levels.json"].data;
+        var questsObj = PIXI.Loader.shared.resources["assets/quests.json"].data;
         Global.LevelDefinitions.quests = questsObj.quests as Array<Quest>;
         Global.LevelDefinitions.quests.forEach((q: Quest) => {
             q.itemId = q.itemId || 0;

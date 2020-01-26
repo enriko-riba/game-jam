@@ -1,18 +1,16 @@
 import * as particles from "pixi-particles";
-import * as TWEEN from "@tweenjs/tween.js";
-import { Global, TextureLoader } from '..';
-import { createParticleEmitter } from '../global';
+import { PIXI, TWEEN, Global, TextureLoader, createParticleEmitter } from '..';
 import { stats } from './PlayerStats';
 import { eventEmitter, STATCHANGE_TOPIC, DAMAGE_TOPIC, IStatChangeEvent, IDpsChangeEvent } from '../events';
 import { SCENE_HALF_WIDTH, SCENE_HEIGHT, SCENE_HALF_HEIGHT, MSG_HP_STYLE, QUEST_ITEM_STYLE, SCENE_WIDTH, QUEST_STYLE, GUI_FONT, MSG_EXP_STYLE } from '../constants';
 import { StatType } from '../enums';
 
 export class StatsHud extends PIXI.Container {
-    private txtHP: PIXI.extras.BitmapText;
-    private txtDust: PIXI.extras.BitmapText;
-    private txtCoins: PIXI.extras.BitmapText;
-    private txtExp: PIXI.extras.BitmapText;
-    private txtLevel: PIXI.extras.BitmapText;
+    private txtHP: PIXI.BitmapText;
+    private txtDust: PIXI.BitmapText;
+    private txtCoins: PIXI.BitmapText;
+    private txtExp: PIXI.BitmapText;
+    private txtLevel: PIXI.BitmapText;
     private expPreFiller: PIXI.Sprite;
     private expFiller: PIXI.Sprite;
     private fillLen: number;
@@ -22,12 +20,12 @@ export class StatsHud extends PIXI.Container {
     private statContainer: PIXI.Sprite;
     
     private questPanel: PIXI.Sprite;
-    private txtQuestMessage: PIXI.extras.BitmapText;
+    private txtQuestMessage: PIXI.BitmapText;
 
     private questMsgEndTime = 0;
     private onCompleteCB?: () => void;
 
-    private txtPlayerPosition: PIXI.extras.BitmapText;
+    private txtPlayerPosition: PIXI.BitmapText;
 
     constructor() {
         super();
@@ -36,7 +34,7 @@ export class StatsHud extends PIXI.Container {
 
     private setup() {
         //  TODO: remove or make a hud for player position
-        this.txtPlayerPosition = new PIXI.extras.BitmapText("", QUEST_STYLE);
+        this.txtPlayerPosition = new PIXI.BitmapText("0", QUEST_STYLE);
         this.txtPlayerPosition.position = new PIXI.Point(SCENE_WIDTH, SCENE_HEIGHT);
         (this.txtPlayerPosition.anchor as any).set(1, 1);
         this.addChild(this.txtPlayerPosition);
@@ -54,16 +52,16 @@ export class StatsHud extends PIXI.Container {
         this.questPanel.position.set(4, 88);
         this.addChild(this.questPanel);
 
-        this.txtQuestMessage = new PIXI.extras.BitmapText("", QUEST_STYLE);
+        this.txtQuestMessage = new PIXI.BitmapText("", QUEST_STYLE);
         this.txtQuestMessage.position.set(14);
         (this.txtQuestMessage.anchor as any).set(0);
         this.questPanel.addChild(this.txtQuestMessage);
 
-        let txtPanelStyle: PIXI.extras.BitmapTextStyle = {font:'26px Orbitron', tint: 0xfeff00};
+        let txtPanelStyle: PIXI.IBitmapTextStyle = {font:{name: 'Orbitron', size: 26}, tint: 0xfeff00};
         let y: number = this.statContainer.height/2;
         //  HP
         {
-            this.txtHP = new PIXI.extras.BitmapText("0", txtPanelStyle);
+            this.txtHP = new PIXI.BitmapText("0", txtPanelStyle);
             (this.txtHP.anchor as any).set(0, 0.5);
             this.txtHP.position = new PIXI.Point(84, this.statContainer.height/2);
             this.statContainer.addChild(this.txtHP);
@@ -76,7 +74,7 @@ export class StatsHud extends PIXI.Container {
 
         //  pixi dust
         {
-            this.txtDust = new PIXI.extras.BitmapText("0", txtPanelStyle);            
+            this.txtDust = new PIXI.BitmapText("0", txtPanelStyle);            
             (this.txtDust.anchor as any).set(0, 0.5);
             this.txtDust.position = new PIXI.Point(334, this.statContainer.height/2);
             this.statContainer.addChild(this.txtDust);
@@ -90,7 +88,7 @@ export class StatsHud extends PIXI.Container {
 
         //  coins
         {
-            this.txtCoins = new PIXI.extras.BitmapText("0", txtPanelStyle);
+            this.txtCoins = new PIXI.BitmapText("0", txtPanelStyle);
             (this.txtCoins.anchor as any).set(0, 0.5);
             this.txtCoins.position = new PIXI.Point(586, this.statContainer.height/2);
             this.statContainer.addChild(this.txtCoins);
@@ -119,8 +117,8 @@ export class StatsHud extends PIXI.Container {
             pnl.addChild(this.expFiller);
             this.fillLen = pnl.width - 6; // 3 pixels for left/right border;
 
-            let txtExpStyle = {font:'18px Bauhaus'}
-            this.txtExp = new PIXI.extras.BitmapText("0 / 1000", txtExpStyle);
+            let txtExpStyle = {font:{name: 'Bauhaus', size: 18}}
+            this.txtExp = new PIXI.BitmapText("0 / 1000", txtExpStyle);
             this.txtExp.pivot.set(0.5);
             (this.txtExp.anchor as any).set(0.5);
             this.txtExp.position = new PIXI.Point(pnl.width / 2, pnl.height / 2);
@@ -128,7 +126,7 @@ export class StatsHud extends PIXI.Container {
             pnl.addChild(this.txtExp);
 
             //  character level
-            this.txtLevel = new PIXI.extras.BitmapText(`Level ${stats.characterLevel}`, txtExpStyle);
+            this.txtLevel = new PIXI.BitmapText(`Level ${stats.characterLevel}`, txtExpStyle);
             this.txtLevel.position.set(pnl.x + pnl.width + 4, pnl.y);
             this.txtLevel.tint = 0xfeff44;
             this.addChild(this.txtLevel);
@@ -164,9 +162,9 @@ export class StatsHud extends PIXI.Container {
      * @param message the message to be added
      * @param style optional PIXI.ITextStyle
      */
-    public addInfoMessage(position: PIXI.PointLike | { x: number, y: number }, message: string, style?: PIXI.extras.BitmapTextStyle, offsetX?: number): void {
-        var stl = {...{font:'24px Orbitron', tint: 0xffffff}, ...style};
-        var txtInfo = new PIXI.extras.BitmapText(message, stl);
+    public addInfoMessage(position: PIXI.Point | { x: number, y: number }, message: string, style?: PIXI.IBitmapTextStyle, offsetX?: number): void {
+        var stl = {...{font:'Orbitron', size: 24, tint: 0xffffff}, ...style};
+        var txtInfo = new PIXI.BitmapText(message, stl);
         offsetX = offsetX || 0;
         txtInfo.position.set(SCENE_HALF_WIDTH + offsetX, SCENE_HEIGHT - position.y - 70);
         txtInfo.scale.set(1, 1);
@@ -194,7 +192,7 @@ export class StatsHud extends PIXI.Container {
      * @param style optional PIXI.ITextStyle
      */
     public addQuestItemMessage(message: string): void {
-        var txtInfo = new PIXI.extras.BitmapText(message, QUEST_ITEM_STYLE);
+        var txtInfo = new PIXI.BitmapText(message, QUEST_ITEM_STYLE);
         (txtInfo.anchor as any).set(0.5);
         txtInfo.position.set(SCENE_HALF_WIDTH, 150);
         this.addChild(txtInfo);
@@ -226,7 +224,7 @@ export class StatsHud extends PIXI.Container {
      * @param message the message to be added
      */
     private addLvlUpMessage(message: string): void {
-        var stl: PIXI.TextStyleOptions = {
+        var stl: PIXI.ITextStyle = {
             align: "center",
             padding: 0,
             fontSize: "64px",

@@ -66,7 +66,7 @@ export class MovementController {
     }
 
     public StartJump(direction: MovementState.JumpLeft | MovementState.JumpRight | MovementState.JumpUp): void {
-        var forceVector: Array<number>;
+        var forceVector: [number, number];
 
         if (direction === MovementState.JumpUp) {
             forceVector = [0, this.JUMP_FORCE];
@@ -98,7 +98,7 @@ export class MovementController {
         }
         console.log("state change: " + MovementState[this.movementState] + " -> " + MovementState[this.newState]);
         
-        var forceVector: number[] = [0, this.JUMP_ATTACK_FORCE];
+        var forceVector: [number, number] = [0, this.JUMP_ATTACK_FORCE];
         this.world.playerBody.setZeroForce();
         this.world.playerBody.applyImpulse(forceVector);
         this.nextJumpDownAllowed = performance.now() + this.JUMP_ATTACK_COOLDOWN;

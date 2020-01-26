@@ -1,4 +1,4 @@
-﻿import { TextureLoader } from '..';
+﻿import { PIXI, TextureLoader } from '..';
 
 const TEXTURE_BUMPER = "assets/objects-atlas.json@bumper_01.png";
 const TEXTURE_ROTOR =  "assets/objects-atlas.json@bumper_rotor_01.png";

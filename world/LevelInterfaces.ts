@@ -27,7 +27,7 @@ export interface IParallaxDefinition {
 export interface IBodyDefinition {
     shape: string;
     type: number; /* DYNAMIC = 1, DYNAMIC = 1, STATIC = 2 */
-    xy: number[];
+    xy: [number, number];
     size?: number[] | number;
     mass: number;
     angle: number;

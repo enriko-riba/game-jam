@@ -1,9 +1,10 @@
 ﻿import { LevelLoader } from "../world/LevelLoader";
 import { wp2 } from "../world/WorldP2";
 import { Mob } from "../mobs/Mob";
-import { AnimatedSprite, AnimationSequence } from "..";
 import { stats } from '../objects/PlayerStats';
 import { Global } from '..';
+import { AnimatedSprite } from '../objects/AnimatedSprite';
+import { AnimationSequence } from '../objects/AnimationSequence';
 
 export class SpawnPoint {
     private mobCount: number = 0;

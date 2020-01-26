@@ -1,4 +1,4 @@
-import { SceneManager, SpriteButton, SCENE_WIDTH } from "..";
+import { PIXI, SceneManager, SpriteButton, SCENE_WIDTH } from "..";
 
 const BTN_X = SCENE_WIDTH - 48;
 const BTN_Y = 4;

@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as particles from "pixi-particles";
-import { SceneManager } from "pixi-scenegraph";
+import { SceneManager, IRendererOptions } from "pixi-scenegraph";
 import { IRootObject } from './world/LevelInterfaces';
 import { SCENE_HEIGHT, SCENE_WIDTH } from './constants';
 
@@ -12,15 +12,16 @@ import { SCENE_HEIGHT, SCENE_WIDTH } from './constants';
 export function getScm() {
     if (!sceneManager) {
         const canvas: HTMLCanvasElement = document.getElementById("stage") as HTMLCanvasElement;
-        const renderOptions: PIXI.RendererOptions = {
+        const renderOptions: IRendererOptions = {
+            width:SCENE_WIDTH,
+            height: SCENE_HEIGHT,
             view: canvas,
             backgroundColor: 0,
             antialias: false,
             transparent: false,
-            roundPixels: false,
             resolution: window.devicePixelRatio
         };
-        sceneManager = new SceneManager(SCENE_WIDTH, SCENE_HEIGHT, renderOptions);
+        sceneManager = new SceneManager(renderOptions/*, SCENE_WIDTH, SCENE_HEIGHT, */);
     }
     return sceneManager;
 }
@@ -39,7 +40,7 @@ export var position = new PIXI.Point();
 
 export var worldContainer : PIXI.Container;
 
-export function createParticleEmitter(container: PIXI.Container, textures: PIXI.Texture[], config?: any): particles.Emitter {
+export function createParticleEmitter(container: PIXI.Container, textures: PIXI.Texture[], config?: any) {
     "use strict";
     var cfg: any = {
         alpha: {

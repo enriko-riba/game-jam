@@ -1,4 +1,5 @@
-﻿import { AnimatedSprite, AnimationSequence } from "..";
+﻿import { AnimatedSprite } from './AnimatedSprite';
+import { AnimationSequence } from './AnimationSequence';
 
 export class Lava extends AnimatedSprite {
     private readonly FRAME_SIZE_X: number = 64;

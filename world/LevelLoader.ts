@@ -1,13 +1,12 @@
 ﻿import * as Global from "../global";
 import * as p2 from "p2";
-import { Parallax, AnimatedSprite, AnimationSequence  } from "..";
+import { PIXI, Parallax, Dictionary, AnimatedSprite, AnimationSequence, TextureLoader} from "..";
 import { COL_GRP_PLAYER, COL_GRP_GROUND, COL_GRP_NPC, COL_GRP_SCENE, COL_GRP_BULLET } from "./CollisionGroups";
 import { SpawnPoint } from '../mobs/SpawnPoint';
 import { Mob } from '../mobs/Mob';
 import { IRootObject, ILevel, ILevelDefinition, IMapEntity, IMobEntity, ISpawnPoint, IDisplayObjectDefinition, IInteractionType, IBodyDefinition } from './LevelInterfaces';
 import { getEntityDefinition } from './LevelHelper';
 import { SCENE_HEIGHT, SCENE_WIDTH } from '../constants';
-import { Dictionary, TextureLoader } from '..';
 
 declare type Fn = (definition: IDisplayObjectDefinition) => PIXI.DisplayObject;
 

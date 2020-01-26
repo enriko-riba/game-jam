@@ -1,11 +1,11 @@
-﻿import { Scene, SpriteButton } from "..";
+﻿import { PIXI, Scene, SpriteButton } from "..";
 import { snd } from "../world/SoundMan";
 import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
 import { QUEST_STYLE } from '../constants';
 
 export class CutScene extends Scene {
     private callout: PIXI.Sprite;
-    private textMessage: PIXI.extras.BitmapText;
+    private textMessage: PIXI.BitmapText;
     private backSprite: PIXI.Sprite;
     private deathScene: boolean = false;
     private corpse: PIXI.Sprite;
@@ -13,8 +13,8 @@ export class CutScene extends Scene {
 
     private corpseBlurFilter: PIXI.filters.BlurFilter;
 
-    constructor(scm: SceneManager) {
-        super(scm, "CutScene");
+    constructor(private sceneManager: SceneManager) {
+        super("CutScene");
         this.BackGroundColor = 0x1099bb;
 
         this.corpse = new PIXI.Sprite(TextureLoader.Get("assets/objects-atlas.json@hero-dead.png"));
@@ -32,7 +32,7 @@ export class CutScene extends Scene {
         this.callout.position.set(SCENE_HALF_WIDTH, SCENE_HEIGHT / 5);
         this.addChild(this.callout);
 
-        this.textMessage = new PIXI.extras.BitmapText("", QUEST_STYLE);
+        this.textMessage = new PIXI.BitmapText("", QUEST_STYLE);
         (this.textMessage.anchor as any).set(0.5);
         this.textMessage.position.set(0, 0);
         this.callout.addChild(this.textMessage);
@@ -97,7 +97,7 @@ export class CutScene extends Scene {
         if (this.deathScene) {
             this.corpseBlurFilter.blur = 0;
             var clm = new PIXI.filters.ColorMatrixFilter();
-            clm.sepia();
+            clm.sepia(false);
             this.backSprite.filters = [clm];
         } else {
             this.backSprite.filters = null;

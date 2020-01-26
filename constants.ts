@@ -21,50 +21,50 @@ export const BTN_STYLE = {
     stroke: 0x0
 };
 
-export const TEXT_STYLE: PIXI.extras.BitmapTextStyle = {
+export const TEXT_STYLE: PIXI.IBitmapTextStyle = {
     align: "left",
-    font: "21px Orbitron",
+    font: {name: "Orbitron", size: 21},
     tint: 0xE5E51B,
 };
 
-export const MSG_COIN_STYLE : PIXI.extras.BitmapTextStyle =
+export const MSG_COIN_STYLE : PIXI.IBitmapTextStyle =
 {
     align: "left",
-    font: "22px Orbitron",
+    font: {name: "Orbitron", size: 22},
     tint: 0xfeff44,
 };
 
-export const MSG_HP_STYLE: PIXI.extras.BitmapTextStyle =
+export const MSG_HP_STYLE: PIXI.IBitmapTextStyle =
 {
     align: "center",
-    font: "24px Orbitron",
+    font: {name: "Orbitron", size: 24},
     tint: 0xff1111    
 };
 
-export const MSG_EXP_STYLE: PIXI.extras.BitmapTextStyle =
+export const MSG_EXP_STYLE: PIXI.IBitmapTextStyle =
     {
         align: "center",
-        font: "24px Orbitron",
+        font: {name: "Orbitron", size: 24},
         tint: 0x84c202,
     };
 
-export const MSG_WARN_STYLE: PIXI.extras.BitmapTextStyle =
+export const MSG_WARN_STYLE: PIXI.IBitmapTextStyle =
 {
     align: "center",
-    font: "27px Orbitron",
+    font: {name: "Orbitron", size: 27},
     tint: 0xff0011,
 };
 
-export const QUEST_ITEM_STYLE: PIXI.extras.BitmapTextStyle =
+export const QUEST_ITEM_STYLE: PIXI.IBitmapTextStyle =
     {
         align: "center",
-        font: "28px Orbitron",
+        font: {name: "Orbitron", size: 28},
         tint: 0x84c2f2        
     };
 
-    export const QUEST_STYLE: PIXI.extras.BitmapTextStyle =
+    export const QUEST_STYLE: PIXI.IBitmapTextStyle =
     {
         align: "left",
-        font: "24px Orbitron",
+        font: {name: "Orbitron", size: 24},
         tint: 0xfeffcc,
     };
