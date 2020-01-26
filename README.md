@@ -4,7 +4,7 @@ HTML5 platformer developed in typescript using pixi.js, pixi-scenegraph, howler 
 **gameplay screenshot**
 ![gameplay image](./assets/img/jam_01.jpg)
 
-## Motivations
+## Motivation
 Mostly educational to demonstrate game development with typescript
 
 ## Features
