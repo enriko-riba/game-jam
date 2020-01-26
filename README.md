@@ -1,6 +1,8 @@
 # jam_2018
 HTML5 platformer developed in typescript using pixi.js, pixi-scenegraph, howler and p2 physics
 
+[![Car](./assets/img/jam_01.jpg)]
+
 ## Motivations
 Mostly educational to demonstrate game development with typescript
 

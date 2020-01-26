@@ -164,7 +164,7 @@ class PlayerStats {
 
     public loadLevel(){
         this.loadUserState();
-        this.currentLevel =  this.LevelLoader.buildLevel(this.currentGameLevel);
+        this.currentLevel = this.LevelLoader.buildLevel(this.currentGameLevel);
     }
 
     /**
