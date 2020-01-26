@@ -1,6 +1,5 @@
-﻿import { PIXI, Scene, SpriteButton } from "..";
+﻿import { PIXI, Scene, SpriteButton, SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
 import { snd } from "../world/SoundMan";
-import { SceneManager, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT, SCENE_HEIGHT, BTN_WIDTH, SCENE_WIDTH, BTN_HEIGHT, BTN_STYLE, TextureLoader } from '..';
 import { QUEST_STYLE } from '../constants';
 
 export class CutScene extends Scene {

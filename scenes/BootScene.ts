@@ -1,7 +1,5 @@
-﻿import { PIXI, Scene, Global} from "..";
-import { SceneManager } from "..";
+﻿import { PIXI, SceneManager, Scene, Global, SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT} from "..";
 import { LoaderScene } from "./LoaderScene";
-import { SCENE_HALF_WIDTH, SCENE_HALF_HEIGHT } from '..';
 import { Quest } from '../QuestSystem/Quest';
 
 const PRELOAD_BOOT_ASSETS = [
