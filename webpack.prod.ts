@@ -1,12 +1,13 @@
 import * as common from './webpack.common';
 import * as merge from 'webpack-merge';
 
-module.exports = merge(common, {      
+const config = merge(common, {      
     mode: 'production',
-    devtool: false,
+    devtool: 'source-map',
     performance: {
         assetFilter: function(assetFilename) {
           return assetFilename.endsWith('.js');
         }
       }
 });
+module.exports = config;

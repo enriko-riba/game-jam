@@ -3,7 +3,7 @@ import * as merge from 'webpack-merge';
 
 const config = merge(common, {      
     mode: 'development',    
-    devtool: "inline-source-map"
+    devtool: 'cheap-module-eval-source-map'
 });
 
 //  will be passed to webpack-dev-server (only if dev server is used)

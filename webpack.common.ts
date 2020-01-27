@@ -2,6 +2,7 @@ import * as webpack from 'webpack';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as  CopyWebpackPlugin from 'copy-webpack-plugin';
 import * as  ExtractTextPlugin  from 'extract-text-webpack-plugin';
+import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const config: webpack.Configuration = {
       
@@ -22,7 +23,7 @@ const config: webpack.Configuration = {
     module: {
         rules: [
             { test: /\.js$/, loader: "source-map-loader", enforce: 'pre' },
-            { test: /\.ts$/, loader: "ts-loader" },
+            { test: /\.tsx?$/, loader: "ts-loader", options: {transpileOnly: true }},
             //{ test: /\.css$/, use: ['style-loader', 'css-loader']},
             { test: /\.css$/, use: ExtractTextPlugin.extract({fallback: 'style-loader', use: ['css-loader', 'sass-loader']})},
             { test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
@@ -41,6 +42,7 @@ const config: webpack.Configuration = {
     },
 
     plugins: [
+        new ForkTsCheckerWebpackPlugin(),
         new HtmlWebpackPlugin({
             template:"./index.html",
             minify: {
