@@ -8,12 +8,15 @@ const config: webpack.Configuration = {
       
     entry: {
         main:   "./app.ts",
-        common: ["@tweenjs/tween.js", "pixi.js", "pixi-filters"],
+        common: ["@tweenjs/tween.js", "howler", "p2" ],
+        pixi: [ "pixi.js", "pixi-filters"],
+        //common: ["@tweenjs/tween.js", "pixi.js", "pixi-filters"],
         //frb: ["firebase/app","firebase/auth", "firebaseui"],
     },
     
     output: {
-        filename: "./[name].[hash].js",
+        filename: "[name].js",
+        chunkFilename: '[name].bundle.js'
     },
 
     resolve: {
