@@ -314,7 +314,7 @@
 					"name": "Far",
 					"parallaxFactor": 0.45,
 					"y": 25,
-					"scale": 1.6,
+					"scale": 1.0,
 					"textures": [
 						"assets/background-atlas.json@trees06.png",
 						"assets/background-atlas.json@trees07.png",
@@ -322,11 +322,11 @@
 					]
 				},
 				{
-					"index": 2,
+					"index": 1.2,
 					"name": "Near",
 					"parallaxFactor": 0.65,
 					"y": 10,
-					"scale": 1.3,
+					"scale": 2,
 					"textures": [
 						"assets/background-atlas.json@trees01.png",
 						"assets/background-atlas.json@trees05.png",

@@ -5,6 +5,7 @@ import { IRootObject } from './world/LevelInterfaces';
 import { SCENE_HEIGHT, SCENE_WIDTH } from './constants';
 
 
+PIXI.settings.ROUND_PIXELS = true;
 
 /**
  * The global scene manager.
