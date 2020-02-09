@@ -19,7 +19,7 @@
     "pixi-filters": "3.0.3",
     "pixi-particles": "^4.2.0",
     "pixi-scenegraph": "^1.6.3",
-    "pixi.js": "^5.2.0"
+    "pixi.js": "^5.2.1"
   },
   "devDependencies": {
     "@types/p2": "^0.7.36",
