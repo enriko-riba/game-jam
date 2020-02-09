@@ -1,4 +1,5 @@
-﻿import * as Global from "../global";
+﻿import {PIXI} from "..";
+import * as Global from "../global";
 import { QuestState } from "./QuestState";
 import { Quest } from "./Quest";
 import { ITriggerDefinition } from "../world/LevelInterfaces";

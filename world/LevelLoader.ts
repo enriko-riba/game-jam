@@ -29,9 +29,8 @@ export class LevelLoader {
     }
 
     /**
-     * Loads the level.
-     * @param name
-     * @param container
+     * Builds the level.
+     * @param id
      */
     public buildLevel(id: number): ILevel {
 
@@ -225,7 +224,7 @@ export class LevelLoader {
                 if(factory)
                     dispObj = factory(definition);
                 else
-                    throw "Factory not found for object name: " + definition.typeName;
+                    throw "Factory not found for typeName: " + definition.typeName;
                 break;            
         }
         (dispObj).scale.set(definition.scale[0], definition.scale[1] * -1); //  the worldContainer has -y scale so we must flip it up again 

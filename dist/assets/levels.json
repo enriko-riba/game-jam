@@ -363,7 +363,7 @@
 						"name": "balloon_vv",
 						"displayObject": {
 							"typeName": "Sprite",
-							"texture": "assets/objects-atlas.json@bumper_01.png"
+							"texture": "assets/objects-atlas.json@bumper_rotor_01.png"
 						},
 						"body": {
 							"shape": "Box",

@@ -6,7 +6,7 @@ body {
 }
 canvas {
     padding: 0;
-    margin: auto;
-    display: block;
+    margin: auto;    
     cursor: "url('assets/gui/cur_default.png'),auto";
+    vertical-align: middle;
 }

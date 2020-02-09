@@ -18,18 +18,18 @@
     "p2": "^0.7.1",
     "pixi-filters": "3.0.3",
     "pixi-particles": "^4.2.0",
-    "pixi-scenegraph": "^1.6.0",
+    "pixi-scenegraph": "^1.6.3",
     "pixi.js": "^5.2.0"
   },
   "devDependencies": {
     "@types/p2": "^0.7.36",
     "@types/tween.js": "^17.2.0",
-    "@types/webpack": "^4.41.3",
+    "@types/webpack": "^4.41.5",
     "@types/webpack-merge": "^4.1.5",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.2",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
-    "fork-ts-checker-webpack-plugin": "^4.0.2",
+    "fork-ts-checker-webpack-plugin": "^4.0.3",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
@@ -40,8 +40,8 @@
     "tslib": "^1.10.0",
     "typescript": "^3.7.5",
     "webpack": "^4.41.5",
-    "webpack-cli": "3.3.10",
-    "webpack-dev-server": "^3.10.1",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2"
   },
   "pre-push": []
